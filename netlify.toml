@@ -1,6 +1,6 @@
 [build]
-  publish = "dist/drive-flow-web/browser"
-  command = "npm run build"
+  publish = "dist/drive-flow-web"
+  command = "npm run build && cp -r dist/drive-flow-web/browser/* dist/drive-flow-web/"
 
 [build.environment]
   NODE_VERSION = "18"
