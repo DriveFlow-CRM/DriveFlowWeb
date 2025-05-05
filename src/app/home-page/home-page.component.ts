@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgIf, NgClass, NgFor, NgStyle } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { PublicNavbarComponent } from '../shared/public-navbar/public-navbar.component';
+import { AuthService } from '../services/auth.service';
+import { Subscription } from 'rxjs';
 import {
   faCar, faKey, faMobile, faChartBar, faClock,
   faPen, faRoad, faTrafficLight, faCalendar,
@@ -13,11 +17,11 @@ import {
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [NgIf, NgClass, NgFor, NgStyle, FontAwesomeModule],
+  imports: [NgIf, NgClass, NgFor, NgStyle, FontAwesomeModule, RouterModule, PublicNavbarComponent],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit, OnDestroy {
   // Font Awesome icons
   faCar = faCar;
   faKey = faKey;
@@ -48,6 +52,40 @@ export class HomePageComponent {
   totalFeatures = 4;
   touchStartX = 0;
   touchEndX = 0;
+
+  // Authentication state
+  isLoggedIn = false;
+  private authSubscription?: Subscription;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    // Check for URL fragment and scroll to that section if it exists
+    this.route.fragment.subscribe(fragment => {
+      if (fragment) {
+        // Wait for the page to be fully rendered
+        setTimeout(() => {
+          this.scrollToElement(fragment);
+        }, 100);
+      }
+    });
+
+    // Subscribe to authentication state
+    this.authSubscription = this.authService.isAuthenticated$.subscribe(isAuthenticated => {
+      this.isLoggedIn = isAuthenticated;
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscription
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -93,7 +131,12 @@ export class HomePageComponent {
   // Smooth scroll to section
   scrollToSection(sectionId: string, event: Event) {
     event.preventDefault();
-    const element = document.getElementById(sectionId);
+    this.scrollToElement(sectionId);
+  }
+
+  // Helper method to scroll to an element by ID
+  private scrollToElement(elementId: string): void {
+    const element = document.getElementById(elementId);
     if (element) {
       // Close mobile menu if it's open
       if (this.isMenuOpen) {

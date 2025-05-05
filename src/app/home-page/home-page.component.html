@@ -1,48 +1,6 @@
 <div class="min-h-screen flex flex-col">
-  <!-- Header with logo colors -->
-  <header class="sticky top-0 z-50 bg-white shadow-sm py-4 px-6">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="text-2xl font-bold text-dark">
-        <img src="assets/images/logo/logo-compact.svg" alt="DriveFlow Logo" class="h-12 w-auto">
-      </div>
-      <div class="hidden md:flex items-center space-x-6">
-        <nav class="flex space-x-6">
-          <a href="#product" (click)="scrollToSection('product', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300 font-medium">Produs</a>
-          <a href="#features" (click)="scrollToSection('features', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300 font-medium">Features</a>
-          <a href="#pricing" (click)="scrollToSection('pricing', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300 font-medium">Prețuri</a>
-          <a href="#reviews" (click)="scrollToSection('reviews', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300 font-medium">Recenzii</a>
-        </nav>
-        <div class="flex items-center space-x-4">
-          <a href="#" class="px-4 py-2 text-white bg-primary-dark font-bold rounded-lg hover:bg-primary transition-all duration-300">
-            Autentificare
-          </a>
-          <a href="#demo-request" (click)="scrollToSection('demo-request', $event)" class="px-4 py-2 border-2 border-primary-dark text-primary-dark font-bold rounded-lg hover:bg-primary-dark hover:text-white transition-all duration-300">
-            Programează demo
-          </a>
-        </div>
-      </div>
-      <button (click)="toggleMenu()" class="md:hidden text-dark focus:outline-none">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-    </div>
-    <!-- Mobile Menu -->
-    <div *ngIf="isMenuOpen" class="md:hidden bg-white absolute top-16 left-0 w-full z-50 shadow-md py-4 px-6 transition-all duration-300 ease-in-out">
-      <nav class="flex flex-col space-y-4">
-        <a href="#product" (click)="scrollToSection('product', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300">Produs</a>
-        <a href="#features" (click)="scrollToSection('features', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300">Features</a>
-        <a href="#pricing" (click)="scrollToSection('pricing', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300">Prețuri</a>
-        <a href="#reviews" (click)="scrollToSection('reviews', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300">Recenzii</a>
-        <a href="#" class="px-4 py-2 text-white bg-primary-dark font-bold rounded-lg hover:bg-primary transition-all duration-300 inline-block text-center">
-          Autentificare
-        </a>
-        <a href="#demo-request" (click)="scrollToSection('demo-request', $event)" class="px-4 py-2 border-2 border-primary-dark text-primary-dark font-bold rounded-lg hover:bg-primary-dark hover:text-white transition-all duration-300 inline-block text-center mt-2">
-          Programează demo
-        </a>
-      </nav>
-    </div>
-  </header>
+  <!-- Use the shared navbar component -->
+  <app-public-navbar></app-public-navbar>
 
   <!-- Hero Section with gradient background using logo colors -->
   <section id="hero" class="relative py-16 md:py-24 px-6 overflow-hidden">
@@ -155,11 +113,22 @@
           DriveFlow este soluția completă pentru școlile de șoferi care simplifică gestionarea elevilor, programarea orelor de conducere, monitorizarea instructorilor și administrarea documentelor.
         </p> -->
         <div class="flex flex-col sm:flex-row mt-5 justify-center gap-4">
-          <a href="#demo-request" (click)="scrollToSection('demo-request', $event)" class="px-8 py-4 bg-primary text-white font-bold rounded-lg shadow-xl hover:bg-primary-dark transition-all duration-300 transform hover:scale-105 border-2 border-primary">
+          <a href="#demo-request" (click)="scrollToSection('demo-request', $event)"
+             *ngIf="!isLoggedIn"
+             class="px-8 py-4 bg-primary text-white font-bold rounded-lg shadow-xl hover:bg-primary-dark transition-all duration-300 transform hover:scale-105 border-2 border-primary">
             Programează demo
           </a>
-          <a href="#" class="px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white text-dark font-bold rounded-lg hover:bg-white hover:text-primary transition-all duration-300 shadow-xl">
+          <a routerLink="/auth"
+             *ngIf="!isLoggedIn"
+             class="px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white text-dark font-bold rounded-lg hover:bg-white hover:text-primary transition-all duration-300 shadow-xl">
             Autentificare
+          </a>
+
+          <!-- Dashboard button when logged in -->
+          <a routerLink="/dashboard"
+             *ngIf="isLoggedIn"
+             class="px-8 py-4 bg-primary text-white font-bold rounded-lg shadow-xl hover:bg-primary-dark transition-all duration-300 transform hover:scale-105">
+            Dashboard
           </a>
         </div>
       </div>
