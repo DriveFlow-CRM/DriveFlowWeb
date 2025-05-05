@@ -12,6 +12,9 @@ module.exports = {
         'light': '#F8FAFC',        // Very light gray
         'gray': '#1A1A1A',         // Gray from logo
       },
+      fontFamily: {
+        'sans': ['Inter', 'Helvetica', 'Arial', 'sans-serif'],
+      },
     },
   },
   plugins: [],

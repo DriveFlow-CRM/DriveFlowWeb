@@ -6,5 +6,5 @@
 /* Custom global styles */
 body {
   font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
-  @apply bg-light text-dark;
+  @apply bg-white text-[#1D1D1B];
 }
