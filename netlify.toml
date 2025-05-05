@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/drive-flow-web/browser"
+  publish = "dist/drive-flow-web"
   command = "npm run build"
 
 [build.environment]
