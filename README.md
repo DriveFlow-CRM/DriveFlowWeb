@@ -38,11 +38,29 @@ cd DriveFlowWeb
 # Install dependencies
 npm install
 
+# Set up environment variables
+cp sample.env .env
+# Edit .env file with your actual API URL and other configurations
+
 # Start the development server
 ng serve
 ```
 
 Access the application by opening your browser and navigating to `http://localhost:4200/`.
+
+## Environment Variables
+
+DriveFlow uses environment variables for configuration. These are loaded from a `.env` file in the project root.
+
+### Required Variables
+- `API_BASE_URL`: Base URL for the DriveFlow API (e.g., `https://api.driveflow.com/api/`)
+
+### Setting Up Environment Variables
+1. Copy the sample environment file: `cp sample.env .env`
+2. Edit the `.env` file with your actual values
+3. Restart the development server if it's already running
+
+⚠️ **Note**: Never commit the `.env` file to version control as it may contain sensitive information. The `.env` file is already added to `.gitignore`.
 
 ## Deployment
 
