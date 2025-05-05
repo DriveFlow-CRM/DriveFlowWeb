@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, throwError, catchError } from 'rxjs';
 import { ConfigService } from './config.service';
+import { Router } from '@angular/router';
 
 // Matches LoginDto from API
 export interface LoginRequest {
@@ -44,7 +45,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private router: Router
   ) {
     this.API_URL = this.configService.getApiBaseUrl();
     this.checkAuthStatus();
@@ -87,6 +89,33 @@ export class AuthService {
           }
 
           this.setSession(response);
+
+          // Get the path for the specific dashboard based on user role
+          const userRole = response.userType;
+          let dashboardPath = '/auth'; // Default fallback
+
+          switch (userRole) {
+            case 'SuperAdmin':
+              dashboardPath = '/dashboard/super-admin';
+              break;
+            case 'SchoolAdmin':
+              dashboardPath = '/dashboard/school-admin';
+              break;
+            case 'Instructor':
+              dashboardPath = '/dashboard/instructor';
+              break;
+            case 'Student':
+              dashboardPath = '/dashboard/student';
+              break;
+            default:
+              console.warn(`Unknown user role: ${userRole}, using default route`);
+          }
+
+          // Use setTimeout to ensure the navigation happens after Angular's change detection cycle
+          setTimeout(() => {
+            console.log('Navigating to:', dashboardPath);
+            this.router.navigate([dashboardPath]);
+          }, 0);
         }),
         catchError(error => {
           console.error('Login error:', error);

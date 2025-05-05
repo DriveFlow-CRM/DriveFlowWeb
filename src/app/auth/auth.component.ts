@@ -119,9 +119,7 @@ export class AuthComponent implements OnInit {
         next: (response) => {
           this.isLoading = false;
           console.log('Login successful:', response);
-          // Redirect to returnUrl if available, otherwise go to dashboard
-          const redirectUrl = this.returnUrl || '/dashboard';
-          this.router.navigateByUrl(redirectUrl);
+          // Navigation is handled in the auth service
         },
         error: (error) => {
           this.isLoading = false;
