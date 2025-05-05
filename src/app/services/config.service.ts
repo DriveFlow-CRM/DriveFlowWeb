@@ -16,7 +16,7 @@ export class ConfigService {
     // In a production environment, this would be injected during build
     // For Angular applications, we can use build-time environment injection
     this.apiBaseUrl = this.getEnvironmentApiUrl();
-    console.log('ConfigService initialized');
+    console.log('ConfigService initialized with API URL:', this.apiBaseUrl);
   }
 
   /**
@@ -34,15 +34,20 @@ export class ConfigService {
   }
 
   /**
-   * Get API URL from environment - this is a placeholder for the actual implementation
-   * In a real application, this would use build-time configuration
+   * Get API URL from environment - using process.env variables
+   * These are injected by webpack from .env locally or from Netlify environment variables in production
    */
   private getEnvironmentApiUrl(): string {
-    // Default development URL
-    const defaultUrl = 'https://drive-flow-crm-api-cb1a9f783ea2.herokuapp.com/api/';
+    // First try to get from process.env (injected by webpack)
+    // @ts-ignore - process.env is available at runtime thanks to webpack.DefinePlugin
+    const envUrl = typeof process !== 'undefined' && process.env && process.env.API_BASE_URL;
 
-    // In Angular, environment variables would be injected at build time
-    // This is a placeholder implementation
+    if (envUrl) {
+      return envUrl;
+    }
+
+    // Default development URL as fallback
+    const defaultUrl = 'https://drive-flow-crm-api-cb1a9f783ea2.herokuapp.com/api/';
     return defaultUrl;
   }
 }

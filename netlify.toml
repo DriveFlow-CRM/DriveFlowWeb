@@ -1,0 +1,12 @@
+[build]
+  publish = "dist/drive-flow-web/browser"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Redirect and rewrite rules to support Angular's client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
