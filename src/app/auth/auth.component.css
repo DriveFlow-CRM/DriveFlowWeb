@@ -1,0 +1,348 @@
+/* Add a background gradient for the login page */
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+/* Add animation for the login form */
+.max-w-md {
+  animation: fadeIn 0.5s ease-in-out;
+  box-shadow: 0 8px 32px rgba(68, 217, 230, 0.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button hover effect */
+button:not([disabled]):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* Sign in button special effects */
+.signin-btn {
+  background: linear-gradient(135deg, #44D9E6 0%, #2A878F 100%);
+  box-shadow: 0 4px 15px rgba(42, 135, 143, 0.4);
+  border: none;
+}
+
+.signin-btn:hover:not([disabled]) {
+  box-shadow: 0 6px 20px rgba(42, 135, 143, 0.6);
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* Glow effect for form inputs */
+.glow-input:focus {
+  box-shadow: 0 0 10px rgba(68, 217, 230, 0.4);
+  border-color: rgba(68, 217, 230, 0.8);
+}
+
+/* Moving background animations */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Floating animations for icons */
+@keyframes float-1 {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes float-2 {
+  0%, 100% {
+    transform: translateY(0) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(-5deg);
+  }
+}
+
+@keyframes float-3 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-15px, -15px);
+  }
+}
+
+@keyframes float-4 {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(15px);
+  }
+}
+
+@keyframes float-5 {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes float-6 {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes float-7 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(10px, -10px) rotate(5deg);
+  }
+}
+
+@keyframes float-8 {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.05);
+  }
+}
+
+@keyframes float-9 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-10px, 10px) rotate(-5deg);
+  }
+}
+
+@keyframes float-10 {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+  }
+  50% {
+    transform: translateX(10px) scale(0.95);
+  }
+}
+
+/* Shimmer particle animations */
+@keyframes shimmer-1 {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes shimmer-2 {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes shimmer-3 {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.2); }
+}
+
+/* Apply animations to elements */
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+}
+
+.emoji-float-1 {
+  animation: float-1 6s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-2 {
+  animation: float-2 7s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-3 {
+  animation: float-3 8s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-4 {
+  animation: float-4 9s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-5 {
+  animation: float-5 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-6 {
+  animation: float-6 6s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-7 {
+  animation: float-7 7s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-8 {
+  animation: float-8 8s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-9 {
+  animation: float-9 9s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-10 {
+  animation: float-10 6s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-11 {
+  animation: float-4 9s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-12 {
+  animation: float-7 11s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-13 {
+  animation: float-3 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-14 {
+  animation: float-4 6s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-15 {
+  animation: float-5 7s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-16 {
+  animation: float-6 8s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-17 {
+  animation: float-7 9s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-18 {
+  animation: float-6 8.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-19 {
+  animation: float-9 11.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-20 {
+  animation: float-10 9s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-21 {
+  animation: float-3 10s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.emoji-float-22 {
+  animation: float-7 12s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.shimmer-particle-1 {
+  animation: shimmer-1 4s ease-in-out infinite;
+}
+
+.shimmer-particle-2 {
+  animation: shimmer-2 5s ease-in-out infinite;
+}
+
+.shimmer-particle-3 {
+  animation: shimmer-3 4.5s ease-in-out infinite;
+}
+
+.shimmer-particle-4 {
+  animation: shimmer-1 5.5s ease-in-out infinite;
+}
+
+.shimmer-particle-5 {
+  animation: shimmer-2 4.2s ease-in-out infinite;
+}
+
+.shimmer-particle-6 {
+  animation: shimmer-3 5.2s ease-in-out infinite;
+}
+
+.shimmer-particle-7 {
+  animation: shimmer-1 4.7s ease-in-out infinite;
+}
+
+.shimmer-particle-8 {
+  animation: shimmer-2 5.7s ease-in-out infinite;
+}
+
+.shimmer-particle-9 {
+  animation: shimmer-3 4.3s ease-in-out infinite;
+}
+
+.shimmer-particle-10 {
+  animation: shimmer-1 5.3s ease-in-out infinite;
+}
+
+/* Glass card effect matching hero section exactly */
+.glass-card {
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  border-radius: 1rem;
+}
+
+/* Password visibility toggle button styling */
+.password-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.password-toggle-btn:hover {
+  color: #44D9E6;
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+}
