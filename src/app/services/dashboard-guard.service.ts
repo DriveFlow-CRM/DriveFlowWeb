@@ -13,10 +13,13 @@ export class DashboardGuardService {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    console.log('DashboardGuard checking access to:', state.url);
+
     const userData = this.authService.getUserData();
 
     // User should already be authenticated (authGuard should handle this)
     if (!userData) {
+      console.log('No user data found, redirecting to auth');
       this.router.navigate(['/auth']);
       return false;
     }
@@ -26,12 +29,19 @@ export class DashboardGuardService {
     const userRole = userData.userType;
     const authorizedPath = this.getRoleSpecificPath(userRole);
 
-    // If user tries to access dashboard they're not authorized for, redirect to their correct one
-    if (requestedPath !== authorizedPath) {
+    console.log('User role:', userRole);
+    console.log('Authorized path:', authorizedPath);
+    console.log('Requested path:', requestedPath);
+
+    // Check if the user is trying to access their authorized dashboard
+    // Instead of exact match, check if the requested path starts with the authorized path
+    if (!requestedPath.startsWith(authorizedPath)) {
+      console.log('User not authorized for this path, redirecting to:', authorizedPath);
       this.router.navigate([authorizedPath]);
       return false;
     }
 
+    console.log('Dashboard access granted');
     // User is accessing their authorized dashboard
     return true;
   }
