@@ -54,9 +54,24 @@ export class AuthService {
   }
 
   private checkAuthStatus(): void {
+    console.log('Checking auth status');
+
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
+    const userData = localStorage.getItem(this.USER_DATA_KEY);
+
+    console.log('Token exists:', !!token);
+    console.log('Refresh token exists:', !!refreshToken);
+    console.log('User data exists:', !!userData);
+
     const isValid = this.hasValidToken();
+    console.log('Token is valid:', isValid);
+
     this.isAuthenticatedSubject.next(isValid);
-    if (!isValid) {
+
+    // Only clear data if we're actually logged in but have invalid tokens
+    if (!isValid && (token || refreshToken)) {
+      console.log('Invalid token found, clearing auth state');
       this.logout();
     }
   }
@@ -111,11 +126,11 @@ export class AuthService {
               console.warn(`Unknown user role: ${userRole}, using default route`);
           }
 
-          // Use setTimeout to ensure the navigation happens after Angular's change detection cycle
-          setTimeout(() => {
-            console.log('Navigating to:', dashboardPath);
-            this.router.navigate([dashboardPath]);
-          }, 0);
+          // Remove setTimeout and use navigate with a promise to handle errors
+          console.log('Navigating to:', dashboardPath);
+          this.router.navigate([dashboardPath]).catch(navError => {
+            console.error('Navigation error:', navError);
+          });
         }),
         catchError(error => {
           console.error('Login error:', error);
@@ -127,14 +142,13 @@ export class AuthService {
           } else if (error.status === 404) {
             errorMessage = 'Account not found';
           } else if (error.status === 0) {
-            errorMessage = 'Cannot connect to the server. This may be due to CORS restrictions or the server being offline.';
+            errorMessage = 'Cannot connect to the server. Please check your internet connection or try again later.';
 
-            // Suggest solutions for CORS issues
+            // Log CORS debugging information
             console.warn(
-              'This is likely a CORS issue. Try:\n' +
-              '1. Using a CORS browser extension like "CORS Unblock"\n' +
-              '2. For development, start Chrome with --disable-web-security flag\n' +
-              '3. Contact API administrator to enable CORS for this origin'
+              'This might be a CORS issue. Server details:',
+              'API URL:', this.API_URL,
+              'Request headers:', headers
             );
           }
 
