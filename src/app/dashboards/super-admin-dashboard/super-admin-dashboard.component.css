@@ -19,9 +19,67 @@ h1 {
   border-left: 4px solid #3498db;
 }
 
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #f5f7fa;
+  min-height: 100vh; /* Ensure it takes full height */
+}
+
 .dashboard-content {
-  background-color: white;
-  padding: 2rem;
+  margin-top: 70px; /* Match navbar height */
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(240, 242, 245, 0.5) 100%);
+  min-height: calc(100vh - 70px);
+  width: 100%;
+  display: block; /* Force content to display */
+}
+
+/* Scrollbar styling */
+.dashboard-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dashboard-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 15px;
+  }
+}
+
+/* Fix for white screen - ensure content is visible */
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Force Material Icons to display properly */
+::ng-deep .material-icons {
+  display: inline-block !important;
+  vertical-align: middle;
+}
+
+/* Force content visibility */
+::ng-deep router-outlet + * {
+  display: block !important;
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService, LoginRequest } from '../services/auth.service';
-import { PublicNavbarComponent } from '../shared/public-navbar/public-navbar.component';
+import { PublicNavbarComponent } from '../components/public-navbar/public-navbar.component';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -117,9 +117,16 @@ export class AuthComponent implements OnInit {
     this.authService.login(loginRequest)
       .subscribe({
         next: (response) => {
-          this.isLoading = false;
           console.log('Login successful:', response);
-          // Navigation is handled in the auth service
+          // Wait a short time to make sure navigation completes or fails
+          setTimeout(() => {
+            // If we're still on the auth page, assume navigation failed
+            if (this.router.url.includes('/auth')) {
+              this.isLoading = false;
+              this.errorMessage = 'Login successful but navigation to dashboard failed. Please try again.';
+              console.error('Navigation failed after login');
+            }
+          }, 3000);
         },
         error: (error) => {
           this.isLoading = false;

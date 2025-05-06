@@ -35,17 +35,24 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(modifiedReq).pipe(
     catchError(error => {
       if (error instanceof HttpErrorResponse) {
+        console.log(`HTTP error: ${error.status} for URL: ${req.url}`);
+
         if (error.status === 401) {
-          return handle401Error(modifiedReq, next, authService);
+          // Don't try to refresh token for auth endpoints
+          if (!req.url.includes(`${apiBaseUrl}Auth`)) {
+            return handle401Error(modifiedReq, next, authService);
+          } else {
+            console.log('Auth endpoint returned 401 - not refreshing token');
+            return throwError(() => error);
+          }
         } else if (error.status === 0) {
           // CORS error or network issue
-          console.error('CORS or network error in interceptor:', error);
-          console.warn(
-            'This is likely a CORS issue. Try:\n' +
-            '1. Using a CORS browser extension like "CORS Unblock"\n' +
-            '2. For development, start Chrome with --disable-web-security flag\n' +
-            '3. Contact API administrator to enable CORS for this origin'
-          );
+          console.error('Network error in interceptor:', error);
+          console.error('Request details:', {
+            url: req.url,
+            method: req.method,
+            headers: modifiedReq.headers
+          });
         }
       }
       return throwError(() => error);

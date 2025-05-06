@@ -11,6 +11,12 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
 
+// Super Admin Dashboard Pages
+import { OverviewComponent } from './dashboards/super-admin-dashboard/pages/overview/overview.component';
+import { SchoolsComponent } from './dashboards/super-admin-dashboard/pages/schools/schools.component';
+import { PaymentsComponent } from './dashboards/super-admin-dashboard/pages/payments/payments.component';
+import { StatisticsComponent } from './dashboards/super-admin-dashboard/pages/statistics/statistics.component';
+
 export const routes: Routes = [
   // Public routes
   { path: 'auth', component: AuthComponent },
@@ -59,12 +65,21 @@ export const routes: Routes = [
     component: HomePageComponent // This won't be rendered, just a fallback
   },
 
-  // Role-specific dashboard routes
+  // Super Admin Dashboard routes
   {
     path: 'dashboard/super-admin',
     component: SuperAdminDashboardComponent,
-    canActivate: [authGuard, dashboardGuard]
+    canActivate: [authGuard, dashboardGuard],
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: OverviewComponent },
+      { path: 'schools', component: SchoolsComponent },
+      { path: 'payments', component: PaymentsComponent },
+      { path: 'statistics', component: StatisticsComponent },
+    ]
   },
+
+  // Other role-specific dashboard routes
   {
     path: 'dashboard/school-admin',
     component: SchoolAdminDashboardComponent,

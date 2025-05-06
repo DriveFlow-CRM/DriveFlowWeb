@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgIf, NgClass, NgFor, NgStyle } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
-import { PublicNavbarComponent } from '../shared/public-navbar/public-navbar.component';
+import { PublicNavbarComponent } from '../components/public-navbar/public-navbar.component';
 import { AuthService } from '../services/auth.service';
 import { Subscription } from 'rxjs';
 import {
