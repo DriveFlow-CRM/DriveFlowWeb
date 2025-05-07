@@ -1,26 +1,30 @@
 import { Routes } from '@angular/router';
-import { HomePageComponent } from './home-page/home-page.component';
-import { AuthComponent } from './auth/auth.component';
-import { authGuard } from './services/auth-guard.service';
-import { SuperAdminDashboardComponent } from './dashboards/super-admin-dashboard/super-admin-dashboard.component';
-import { SchoolAdminDashboardComponent } from './dashboards/school-admin-dashboard/school-admin-dashboard.component';
-import { InstructorDashboardComponent } from './dashboards/instructor-dashboard/instructor-dashboard.component';
-import { StudentDashboardComponent } from './dashboards/student-dashboard/student-dashboard.component';
-import { dashboardGuard } from './services/dashboard-guard.service';
+import { HomePageComponent } from './features/home/pages/home/home-page.component';
+import { AuthComponent } from './features/auth/pages/login/auth.component';
+import { authGuard } from './core/guards/auth-guard.service';
+import { SuperAdminDashboardComponent } from './features/dashboard/pages/super-admin-dashboard/super-admin-dashboard.component';
+import { SchoolAdminDashboardComponent } from './features/dashboard/pages/school-admin-dashboard/school-admin-dashboard.component';
+import { InstructorDashboardComponent } from './features/dashboard/pages/instructor-dashboard/instructor-dashboard.component';
+import { StudentDashboardComponent } from './features/dashboard/pages/student-dashboard/student-dashboard.component';
+import { dashboardGuard } from './core/guards/dashboard-guard.service';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './core/services/auth.service';
 
 // Super Admin Dashboard Pages
-import { OverviewComponent } from './dashboards/super-admin-dashboard/pages/overview/overview.component';
-import { SchoolsComponent } from './dashboards/super-admin-dashboard/pages/schools/schools.component';
-import { PaymentsComponent } from './dashboards/super-admin-dashboard/pages/payments/payments.component';
-import { StatisticsComponent } from './dashboards/super-admin-dashboard/pages/statistics/statistics.component';
+import { OverviewComponent } from './features/dashboard/pages/super-admin-dashboard/pages/overview/overview.component';
+import { SchoolsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/schools/schools.component';
+import { PaymentsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/payments/payments.component';
+import { StatisticsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/statistics/statistics.component';
+
+// School Profile Page
+import { SchoolProfileComponent } from './features/school/pages/school-profile/school-profile.component';
 
 export const routes: Routes = [
   // Public routes
   { path: 'auth', component: AuthComponent },
   { path: '', component: HomePageComponent }, // Homepage accessible without login
+  { path: 'school/:id/:name', component: SchoolProfileComponent }, // School profile page
 
   // Root dashboard route - redirects to specific dashboard based on user role
   {
