@@ -1,0 +1,74 @@
+[
+  {
+    "categ": "AM",
+    "descriere": "Mopede"
+  },
+  {
+    "categ": "A1",
+    "descriere": "Motociclete ușoare cu cilindree de până la 125 cm³"
+  },
+  {
+    "categ": "A2",
+    "descriere": "Motociclete cu putere maximă de 35 kW"
+  },
+  {
+    "categ": "A",
+    "descriere": "Motociclete"
+  },
+  {
+    "categ": "B1",
+    "descriere": "Cvadricicluri"
+  },
+  {
+    "categ": "B",
+    "descriere": "Autovehicule cu masa maximă de 3500 kg și maximum 8 locuri"
+  },
+  {
+    "categ": "BE",
+    "descriere": "Autovehicule categoria B cu remorcă"
+  },
+  {
+    "categ": "C1",
+    "descriere": "Autovehicule cu masa între 3500 și 7500 kg"
+  },
+  {
+    "categ": "C",
+    "descriere": "Autovehicule pentru transport marfă cu masa peste 3500 kg"
+  },
+  {
+    "categ": "C1E",
+    "descriere": "Autovehicule categoria C1 cu remorcă"
+  },
+  {
+    "categ": "CE",
+    "descriere": "Autovehicule categoria C cu remorcă"
+  },
+  {
+    "categ": "D1",
+    "descriere": "Autovehicule pentru transport persoane cu 9-16 locuri"
+  },
+  {
+    "categ": "D",
+    "descriere": "Autovehicule pentru transport persoane cu peste 8 locuri"
+  },
+  {
+    "categ": "D1E",
+    "descriere": "Autovehicule categoria D1 cu remorcă"
+  },
+  {
+    "categ": "DE",
+    "descriere": "Autovehicule categoria D cu remorcă"
+  },
+  {
+    "categ": "Tr",
+    "descriere": "Tractoare agricole sau forestiere"
+  },
+  {
+    "categ": "Tb",
+    "descriere": "Troleibuze"
+  },
+  {
+    "categ": "Tv",
+    "descriere": "Tramvaie"
+  }
+]
