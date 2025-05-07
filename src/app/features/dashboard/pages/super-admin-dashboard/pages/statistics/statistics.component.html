@@ -1,0 +1,271 @@
+<div class="statistics-container">
+  <h1 class="page-title">Platform Statistics</h1>
+
+  <div class="time-filter">
+    <button class="time-btn active">Last Week</button>
+    <button class="time-btn">Last Month</button>
+    <button class="time-btn">Last Quarter</button>
+    <button class="time-btn">Last Year</button>
+    <button class="time-btn custom">Custom Range</button>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card large">
+      <div class="chart-header">
+        <h3>Overall Platform Growth</h3>
+        <div class="chart-controls">
+          <select class="metric-selector">
+            <option selected>Schools</option>
+            <option>Students</option>
+            <option>Revenue</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="placeholder-chart area">
+          <div class="placeholder-axis y-axis">
+            <span>100</span>
+            <span>75</span>
+            <span>50</span>
+            <span>25</span>
+            <span>0</span>
+          </div>
+          <div class="chart-content">
+            <!-- Simulated area chart -->
+            <div class="area-curve"></div>
+          </div>
+          <div class="placeholder-axis x-axis">
+            <span>Jan</span>
+            <span>Feb</span>
+            <span>Mar</span>
+            <span>Apr</span>
+            <span>May</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Student Distribution</h3>
+      </div>
+      <div class="chart-body">
+        <div class="placeholder-chart pie">
+          <div class="pie-segment segment-1" style="--segment-size: 45%"></div>
+          <div class="pie-segment segment-2" style="--segment-size: 30%"></div>
+          <div class="pie-segment segment-3" style="--segment-size: 15%"></div>
+          <div class="pie-segment segment-4" style="--segment-size: 10%"></div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="color-indicator segment-1-color"></div>
+            <span>New Students (45%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-indicator segment-2-color"></div>
+            <span>In Progress (30%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-indicator segment-3-color"></div>
+            <span>Test Scheduled (15%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-indicator segment-4-color"></div>
+            <span>Graduated (10%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Revenue Sources</h3>
+      </div>
+      <div class="chart-body">
+        <div class="placeholder-chart donut">
+          <div class="donut-segment segment-5" style="--segment-size: 60%"></div>
+          <div class="donut-segment segment-6" style="--segment-size: 25%"></div>
+          <div class="donut-segment segment-7" style="--segment-size: 15%"></div>
+          <div class="donut-center">$124.5K</div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="color-indicator segment-5-color"></div>
+            <span>School Subscriptions (60%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-indicator segment-6-color"></div>
+            <span>Premium Features (25%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-indicator segment-7-color"></div>
+            <span>Student Direct Payments (15%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Top Performing Schools</h3>
+      </div>
+      <div class="chart-body">
+        <div class="placeholder-chart bar-horizontal">
+          <div class="bar-item">
+            <div class="bar-label">DriveRight Academy</div>
+            <div class="bar-container">
+              <div class="bar-fill" style="width: 90%"></div>
+              <span class="bar-value">90%</span>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">CitySafe Driving</div>
+            <div class="bar-container">
+              <div class="bar-fill" style="width: 85%"></div>
+              <span class="bar-value">85%</span>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Premier Driving</div>
+            <div class="bar-container">
+              <div class="bar-fill" style="width: 75%"></div>
+              <span class="bar-value">75%</span>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Sunshine Academy</div>
+            <div class="bar-container">
+              <div class="bar-fill" style="width: 65%"></div>
+              <span class="bar-value">65%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card large">
+      <div class="chart-header">
+        <h3>Monthly New Registrations</h3>
+        <div class="chart-controls">
+          <div class="trend-indicator positive">
+            <span class="material-icons">trending_up</span>
+            <span>12.5% vs last month</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="placeholder-chart column">
+          <div class="placeholder-axis y-axis">
+            <span>400</span>
+            <span>300</span>
+            <span>200</span>
+            <span>100</span>
+            <span>0</span>
+          </div>
+          <div class="column-container">
+            <div class="column-group">
+              <div class="column-item students" style="height: 60%"></div>
+              <div class="column-item schools" style="height: 25%"></div>
+              <div class="column-label">Jan</div>
+            </div>
+            <div class="column-group">
+              <div class="column-item students" style="height: 65%"></div>
+              <div class="column-item schools" style="height: 20%"></div>
+              <div class="column-label">Feb</div>
+            </div>
+            <div class="column-group">
+              <div class="column-item students" style="height: 80%"></div>
+              <div class="column-item schools" style="height: 30%"></div>
+              <div class="column-label">Mar</div>
+            </div>
+            <div class="column-group">
+              <div class="column-item students" style="height: 75%"></div>
+              <div class="column-item schools" style="height: 35%"></div>
+              <div class="column-label">Apr</div>
+            </div>
+            <div class="column-group">
+              <div class="column-item students" style="height: 90%"></div>
+              <div class="column-item schools" style="height: 40%"></div>
+              <div class="column-label">May</div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-legend horizontal">
+          <div class="legend-item">
+            <div class="color-indicator students-color"></div>
+            <span>Students</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-indicator schools-color"></div>
+            <span>Schools</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics-section">
+    <h2 class="section-title">Key Performance Indicators</h2>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-header">
+          <h3>Average Completion Rate</h3>
+          <span class="material-icons info-icon">info</span>
+        </div>
+        <div class="metric-value-container">
+          <div class="metric-value">78%</div>
+          <div class="metric-trend positive">
+            <span class="material-icons">arrow_upward</span>
+            <span>5.2%</span>
+          </div>
+        </div>
+        <div class="metric-description">Percentage of students completing their training programs</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <h3>Pass Rate</h3>
+          <span class="material-icons info-icon">info</span>
+        </div>
+        <div class="metric-value-container">
+          <div class="metric-value">85%</div>
+          <div class="metric-trend positive">
+            <span class="material-icons">arrow_upward</span>
+            <span>3.8%</span>
+          </div>
+        </div>
+        <div class="metric-description">Success rate of students on their driving tests</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <h3>Average Revenue Per School</h3>
+          <span class="material-icons info-icon">info</span>
+        </div>
+        <div class="metric-value-container">
+          <div class="metric-value">$5,187</div>
+          <div class="metric-trend positive">
+            <span class="material-icons">arrow_upward</span>
+            <span>12.3%</span>
+          </div>
+        </div>
+        <div class="metric-description">Monthly average revenue generated by each active school</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <h3>Instructor-Student Ratio</h3>
+          <span class="material-icons info-icon">info</span>
+        </div>
+        <div class="metric-value-container">
+          <div class="metric-value">1:12</div>
+          <div class="metric-trend negative">
+            <span class="material-icons">arrow_downward</span>
+            <span>2.1%</span>
+          </div>
+        </div>
+        <div class="metric-description">Average number of students per instructor across all schools</div>
+      </div>
+    </div>
+  </div>
+</div>

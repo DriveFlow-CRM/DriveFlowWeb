@@ -1,0 +1,91 @@
+<!-- Public Navbar -->
+<header class="sticky top-0 z-50 bg-white shadow-sm py-4 px-6">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <div class="text-2xl font-bold text-dark">
+      <a routerLink="/">
+        <img src="assets/images/logo/logo-compact.svg" alt="DriveFlow Logo" class="h-12 w-auto">
+      </a>
+    </div>
+    <div class="hidden md:flex items-center space-x-6">
+      <nav class="flex space-x-6">
+        <a href="#product" (click)="scrollToSection('product', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300 font-medium">Produs</a>
+        <a href="#features" (click)="scrollToSection('features', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300 font-medium">Features</a>
+        <a href="#pricing" (click)="scrollToSection('pricing', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300 font-medium">Prețuri</a>
+        <a href="#reviews" (click)="scrollToSection('reviews', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300 font-medium">Recenzii</a>
+      </nav>
+      <div class="flex items-center space-x-4">
+        <!-- Show Auth button when logged out -->
+        <ng-container *ngIf="!isLoggedIn">
+          <a routerLink="/auth" class="px-4 py-2 text-white bg-primary-dark font-bold rounded-lg hover:bg-primary transition-all duration-300">
+            Autentificare
+          </a>
+
+          <a href="#demo-request" (click)="scrollToSection('demo-request', $event)" class="px-4 py-2 border-2 border-primary-dark text-primary-dark font-bold rounded-lg hover:bg-primary-dark hover:text-white transition-all duration-300">
+            Programează demo
+          </a>
+        </ng-container>
+
+        <!-- Show Logout button when logged in -->
+        <ng-container *ngIf="isLoggedIn">
+          <a routerLink="/dashboard" class="px-4 py-2 text-white bg-primary font-bold rounded-lg hover:bg-primary-dark transition-all duration-300 mr-2">
+            Dashboard
+          </a>
+          <button (click)="handleLogout()" class="px-4 py-2 text-white bg-red-600 font-bold rounded-lg hover:bg-red-700 transition-all duration-300">
+            Logout
+          </button>
+
+          <!-- User name in card with icon -->
+          <div class="ml-4 bg-gray-200 px-3 py-2 rounded-lg flex items-center shadow-sm border border-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-dark mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span class="text-dark font-medium">{{ userName }}</span>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <button (click)="toggleMenu()" class="md:hidden text-dark focus:outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+  <!-- Mobile Menu -->
+  <div *ngIf="isMenuOpen" class="md:hidden bg-white absolute top-16 left-0 w-full z-50 shadow-md py-4 px-6 transition-all duration-300 ease-in-out">
+    <nav class="flex flex-col space-y-4">
+      <a href="#product" (click)="scrollToSection('product', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300">Produs</a>
+      <a href="#features" (click)="scrollToSection('features', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300">Features</a>
+      <a href="#pricing" (click)="scrollToSection('pricing', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300">Prețuri</a>
+      <a href="#reviews" (click)="scrollToSection('reviews', $event)" class="text-dark hover:text-primary-dark transition-colors duration-300">Recenzii</a>
+
+      <!-- Show Auth button when logged out (mobile) -->
+      <ng-container *ngIf="!isLoggedIn">
+        <a routerLink="/auth" class="px-4 py-2 text-white bg-primary-dark font-bold rounded-lg hover:bg-primary transition-all duration-300 inline-block text-center">
+          Autentificare
+        </a>
+
+        <a href="#demo-request" (click)="scrollToSection('demo-request', $event)" class="px-4 py-2 border-2 border-primary-dark text-primary-dark font-bold rounded-lg hover:bg-primary-dark hover:text-white transition-all duration-300 inline-block text-center mt-2">
+          Programează demo
+        </a>
+      </ng-container>
+
+      <!-- Show Logout button when logged in (mobile) -->
+      <ng-container *ngIf="isLoggedIn">
+        <!-- User name in card with icon for mobile -->
+        <div class="bg-gray-200 px-3 py-2 rounded-lg flex items-center shadow-sm mb-3 border border-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-dark mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <span class="text-dark font-medium">{{ userName }}</span>
+        </div>
+
+        <a routerLink="/dashboard" class="px-4 py-2 text-white bg-primary font-bold rounded-lg hover:bg-primary-dark transition-all duration-300 inline-block text-center w-full mt-2">
+          Dashboard
+        </a>
+        <button (click)="handleLogout()" class="px-4 py-2 text-white bg-red-600 font-bold rounded-lg hover:bg-red-700 transition-all duration-300 inline-block text-center w-full mt-2">
+          Logout
+        </button>
+      </ng-container>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,533 @@
+<div class="min-h-screen flex flex-col">
+  <!-- Use the shared navbar component -->
+  <app-public-navbar></app-public-navbar>
+
+  <!-- Hero Section with gradient background using logo colors -->
+  <section id="hero" class="relative py-16 md:py-24 px-6 overflow-hidden">
+    <!-- Moving background with colors -->
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-gradient-to-br from-primary to-primary-dark animate-gradient"></div>
+      <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+        <!-- Floating Emojis Animation -->
+        <div class="absolute w-full h-full">
+          <!-- Driving School Related Icons -->
+          <div class="absolute text-4xl opacity-80 left-[15%] top-[20%] emoji-float-1 drop-shadow-xl">
+            <fa-icon [icon]="faCar" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[75%] top-[15%] emoji-float-2 drop-shadow-xl">
+            <fa-icon [icon]="faKey" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[35%] top-[75%] emoji-float-3 drop-shadow-xl">
+            <fa-icon [icon]="faMobile" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[85%] top-[65%] emoji-float-4 drop-shadow-xl">
+            <fa-icon [icon]="faChartBar" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[25%] top-[40%] emoji-float-5 drop-shadow-xl">
+            <fa-icon [icon]="faClock" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[65%] top-[30%] emoji-float-6 drop-shadow-xl">
+            <fa-icon [icon]="faPen" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[10%] top-[60%] emoji-float-7 drop-shadow-xl">
+            <fa-icon [icon]="faRoad" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[50%] top-[10%] emoji-float-8 drop-shadow-xl">
+            <fa-icon [icon]="faTrafficLight" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[90%] top-[80%] emoji-float-9 drop-shadow-xl">
+            <fa-icon [icon]="faCalendar" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[40%] top-[55%] emoji-float-10 drop-shadow-xl">
+            <fa-icon [icon]="faBriefcase" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[60%] top-[85%] emoji-float-11 drop-shadow-xl">
+            <fa-icon [icon]="faChartLine" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-4xl opacity-80 left-[30%] top-[25%] emoji-float-12 drop-shadow-xl">
+            <fa-icon [icon]="faFlag" class="text-white"></fa-icon>
+          </div>
+
+          <!-- Second layer of smaller icons -->
+          <div class="absolute text-2xl opacity-60 left-[22%] top-[33%] emoji-float-13 drop-shadow-xl">
+            <fa-icon [icon]="faSync" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-2xl opacity-60 left-[45%] top-[68%] emoji-float-14 drop-shadow-xl">
+            <fa-icon [icon]="faPhone" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-2xl opacity-60 left-[78%] top-[42%] emoji-float-15 drop-shadow-xl">
+            <fa-icon [icon]="faClipboard" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-2xl opacity-60 left-[12%] top-[88%] emoji-float-16 drop-shadow-xl">
+            <fa-icon [icon]="faCheckCircle" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-2xl opacity-60 left-[55%] top-[22%] emoji-float-17 drop-shadow-xl">
+            <fa-icon [icon]="faStar" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-2xl opacity-60 left-[88%] top-[38%] emoji-float-18 drop-shadow-xl">
+            <fa-icon [icon]="faSearch" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-2xl opacity-60 left-[32%] top-[92%] emoji-float-19 drop-shadow-xl">
+            <fa-icon [icon]="faLaptop" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-2xl opacity-60 left-[72%] top-[78%] emoji-float-20 drop-shadow-xl">
+            <fa-icon [icon]="faMoneyBill" class="text-white"></fa-icon>
+          </div>
+
+          <!-- Additional icons -->
+          <div class="absolute text-3xl opacity-70 left-[18%] top-[72%] emoji-float-21 drop-shadow-xl">
+            <fa-icon [icon]="faGraduationCap" class="text-white"></fa-icon>
+          </div>
+          <div class="absolute text-3xl opacity-70 left-[82%] top-[25%] emoji-float-22 drop-shadow-xl">
+            <fa-icon [icon]="faMapMarker" class="text-white"></fa-icon>
+          </div>
+
+          <!-- Shimmer particles (smaller white dots) -->
+          <div class="absolute w-[4px] h-[4px] rounded-full bg-white/40 left-[18%] top-[27%] shimmer-particle-1"></div>
+          <div class="absolute w-[3px] h-[3px] rounded-full bg-white/30 left-[47%] top-[63%] shimmer-particle-2"></div>
+          <div class="absolute w-[5px] h-[5px] rounded-full bg-white/50 left-[82%] top-[37%] shimmer-particle-3"></div>
+          <div class="absolute w-[4px] h-[4px] rounded-full bg-white/40 left-[27%] top-[52%] shimmer-particle-4"></div>
+          <div class="absolute w-[3px] h-[3px] rounded-full bg-white/30 left-[67%] top-[18%] shimmer-particle-5"></div>
+          <div class="absolute w-[5px] h-[5px] rounded-full bg-white/50 left-[37%] top-[83%] shimmer-particle-6"></div>
+          <div class="absolute w-[4px] h-[4px] rounded-full bg-white/40 left-[92%] top-[72%] shimmer-particle-7"></div>
+          <div class="absolute w-[3px] h-[3px] rounded-full bg-white/30 left-[12%] top-[47%] shimmer-particle-8"></div>
+          <div class="absolute w-[5px] h-[5px] rounded-full bg-white/50 left-[52%] top-[33%] shimmer-particle-9"></div>
+          <div class="absolute w-[4px] h-[4px] rounded-full bg-white/40 left-[77%] top-[57%] shimmer-particle-10"></div>
+        </div>
+
+        <!-- Shimmering effect -->
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white/5 to-transparent"></div>
+      </div>
+    </div>
+
+    <!-- Glass card container -->
+    <div class="max-w-7xl mx-auto backdrop-blur-md bg-white/40 rounded-2xl p-8 md:p-12 shadow-xl border border-white/30">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-dark mb-6">
+          NU PIERDEȚI <span class="text-primary-dark">CLIENȚII</span>
+        </h1>
+        <p class="text-lg md:text-xl text-dark/60 max-w-3xl mx-auto italic">
+          Optimizați-vă școala auto și creșteți profitabilitatea!
+        </p>
+        <!-- <p class="text-lg md:text-xl mb-10 text-dark/90 max-w-3xl mx-auto">
+          DriveFlow este soluția completă pentru școlile de șoferi care simplifică gestionarea elevilor, programarea orelor de conducere, monitorizarea instructorilor și administrarea documentelor.
+        </p> -->
+        <div class="flex flex-col sm:flex-row mt-5 justify-center gap-4">
+          <a href="#demo-request" (click)="scrollToSection('demo-request', $event)"
+             *ngIf="!isLoggedIn"
+             class="px-8 py-4 bg-primary text-white font-bold rounded-lg shadow-xl hover:bg-primary-dark transition-all duration-300 transform hover:scale-105 border-2 border-primary">
+            Programează demo
+          </a>
+          <a routerLink="/auth"
+             *ngIf="!isLoggedIn"
+             class="px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white text-dark font-bold rounded-lg hover:bg-white hover:text-primary transition-all duration-300 shadow-xl">
+            Autentificare
+          </a>
+
+          <!-- Dashboard button when logged in -->
+          <a routerLink="/dashboard"
+             *ngIf="isLoggedIn"
+             class="px-8 py-4 bg-primary text-white font-bold rounded-lg shadow-xl hover:bg-primary-dark transition-all duration-300 transform hover:scale-105">
+            Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Section -->
+  <section id="product" class="py-16 md:py-24 px-6 bg-dark">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-white">Ce este <span class="text-primary">DriveFlow</span>?</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div class="flex flex-col items-center">
+          <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 text-white text-center">Eficiență crescută</h3>
+          <p class="text-gray-300 text-center">Reduceți timpul petrecut pe sarcini administrative și concentrați-vă pe instruirea studenților.</p>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 text-white text-center">Profitabilitate îmbunătățită</h3>
+          <p class="text-gray-300 text-center">Monitorizați veniturile, optimizați costurile și creșteți profitabilitatea afacerii dvs.</p>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 text-white text-center">Conformitate garantată</h3>
+          <p class="text-gray-300 text-center">Nu mai ratați termene importante și mențineți-vă în conformitate cu reglementările legale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section with logo colors -->
+  <section id="features" class="py-16 md:py-24 px-6">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-dark">Features</h2>
+
+      <!-- Desktop Grid (Hidden on Mobile) -->
+      <div class="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border-t-4 border-primary">
+          <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 text-dark text-center">Programări studenți</h3>
+          <p class="text-gray text-center">Gestionați cu ușurință programările studenților și planificați lecțiile în mod eficient.</p>
+        </div>
+
+        <div class="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border-t-4 border-primary">
+          <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 text-dark text-center">Management instructori</h3>
+          <p class="text-gray text-center">Optimizați programul instructorilor și maximizați eficiența timpului lor de lucru.</p>
+        </div>
+
+        <div class="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border-t-4 border-primary">
+          <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 text-dark text-center">Statistici și date</h3>
+          <p class="text-gray text-center">Accesați statistici detaliate și gestionați datele financiare pentru afacerea dvs.</p>
+        </div>
+
+        <div class="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border-t-4 border-primary">
+          <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 text-dark text-center">Gestionare dosare</h3>
+          <p class="text-gray text-center">Urmăriți expirarea documentelor pentru mașini și studenți pentru a rămâne în conformitate.</p>
+        </div>
+      </div>
+
+      <!-- Mobile Carousel (Hidden on Desktop) -->
+      <div class="md:hidden">
+        <div class="relative px-4">
+          <!-- Carousel Container -->
+          <div class="overflow-hidden carousel-container">
+            <!-- Carousel Slides -->
+            <div
+              class="flex transition-transform duration-300 ease-in-out"
+              [ngStyle]="{'transform': 'translateX(-' + currentFeatureIndex * 100 + '%)'}"
+              (touchstart)="handleTouchStart($event)"
+              (touchend)="handleTouchEnd($event)">
+              <!-- Feature 1 -->
+              <div class="w-full flex-shrink-0 p-6 bg-white rounded-xl shadow-md transition-shadow duration-300 border-t-4 border-primary">
+                <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-dark text-center">Programări studenți</h3>
+                <p class="text-gray text-center">Gestionați cu ușurință programările studenților și planificați lecțiile în mod eficient.</p>
+              </div>
+
+              <!-- Feature 2 -->
+              <div class="w-full flex-shrink-0 p-6 bg-white rounded-xl shadow-md transition-shadow duration-300 border-t-4 border-primary">
+                <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-dark text-center">Management instructori</h3>
+                <p class="text-gray text-center">Optimizați programul instructorilor și maximizați eficiența timpului lor de lucru.</p>
+              </div>
+
+              <!-- Feature 3 -->
+              <div class="w-full flex-shrink-0 p-6 bg-white rounded-xl shadow-md transition-shadow duration-300 border-t-4 border-primary">
+                <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-dark text-center">Statistici și date</h3>
+                <p class="text-gray text-center">Accesați statistici detaliate și gestionați datele financiare pentru afacerea dvs.</p>
+              </div>
+
+              <!-- Feature 4 -->
+              <div class="w-full flex-shrink-0 p-6 bg-white rounded-xl shadow-md transition-shadow duration-300 border-t-4 border-primary">
+                <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-dark text-center">Gestionare dosare</h3>
+                <p class="text-gray text-center">Urmăriți expirarea documentelor pentru mașini și studenți pentru a rămâne în conformitate.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Carousel Navigation Buttons -->
+          <button (click)="prevFeature()" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-primary rounded-full p-2 shadow-lg z-10 text-white hover:bg-primary-dark transition-colors duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button (click)="nextFeature()" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-primary rounded-full p-2 shadow-lg z-10 text-white hover:bg-primary-dark transition-colors duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Carousel Indicators -->
+        <div class="flex justify-center mt-6 space-x-3">
+          <button *ngFor="let _ of [0, 1, 2, 3]; let i = index"
+                  (click)="setFeature(i)"
+                  [ngClass]="{'bg-primary indicator-active': currentFeatureIndex === i, 'bg-gray-300': currentFeatureIndex !== i}"
+                  class="w-3 h-3 rounded-full transition-colors duration-300"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section End -->
+
+  <!-- Decorative Separator -->
+  <div class="relative py-8">
+    <div class="absolute inset-0 flex items-center" aria-hidden="true">
+      <div class="w-full border-t border-gray-200"></div>
+    </div>
+    <div class="relative flex justify-center">
+      <div class="bg-white px-4">
+        <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zm-5-7h10v-2H7v2zm0-4h10V7H7v2z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schools Section -->
+  <section id="schools" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-dark mb-4">Școli de șoferi partenere</h2>
+        <p class="text-gray-600 max-w-3xl mx-auto">
+          Alătură-te rețelei noastre de școli de șoferi și optimizează-ți activitatea.
+          Iată câteva școli care folosesc deja platforma DriveFlow.
+        </p>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoadingSchools" class="flex justify-center items-center py-16">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoadingSchools && schools.length === 0" class="text-center py-16">
+        <p class="text-gray-500 text-lg">Nu există școli disponibile momentan.</p>
+      </div>
+
+      <!-- Schools Grid -->
+      <div *ngIf="!isLoadingSchools && schools.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div *ngFor="let school of schools" class="h-full">
+          <app-school-card [school]="school"></app-school-card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Decorative Separator -->
+  <div class="relative py-8">
+    <div class="absolute inset-0 flex items-center" aria-hidden="true">
+      <div class="w-full border-t border-gray-200"></div>
+    </div>
+    <div class="relative flex justify-center">
+      <div class="bg-white px-4">
+        <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zm-5-7h10v-2H7v2zm0-4h10V7H7v2z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Book a Demo Section -->
+  <section id="demo-request" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-dark mb-4">Programează un demo</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Vedeți cum DriveFlow poate transforma administrarea școlii dvs. de șoferi. Completați formularul și un consultant vă va contacta în 24 de ore.</p>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="grid md:grid-cols-5">
+          <!-- Form Section (3/5 width on desktop) -->
+          <div class="md:col-span-3 p-8 md:p-10">
+            <form class="space-y-6">
+              <div>
+                <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Nume complet</label>
+                <input type="text" id="fullName" name="fullName" placeholder="John Doe" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+              </div>
+
+              <div>
+                <label for="schoolName" class="block text-sm font-medium text-gray-700 mb-1">Numele școlii auto</label>
+                <input type="text" id="schoolName" name="schoolName" placeholder="Auto Expert" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Număr de telefon</label>
+                  <input type="tel" id="phone" name="phone" placeholder="+40 700 000 000" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                </div>
+
+                <div>
+                  <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Adresă email</label>
+                  <input type="email" id="email" name="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                </div>
+              </div>
+
+              <div>
+                <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Adresa școlii sau link Google Maps</label>
+                <input type="text" id="address" name="address" placeholder="Strada Exemplu 123, București sau https://maps.google.com/..." class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+              </div>
+
+              <div>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Mesaj (opțional)</label>
+                <textarea id="message" name="message" rows="4" placeholder="Întrebări sau informații adiționale pentru consultantul nostru..." class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"></textarea>
+              </div>
+
+              <div class="pt-2">
+                <button type="submit" class="w-full bg-primary text-white font-medium py-3 px-6 rounded-lg hover:bg-primary-dark transition-colors duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all flex items-center justify-center space-x-2">
+                  <span>Solicită demo</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Info Section (2/5 width on desktop) -->
+          <div class="md:col-span-2 bg-primary p-8 md:p-10 text-white flex flex-col justify-between">
+            <div>
+              <h3 class="text-xl font-bold mb-6">De ce să programați un demo?</h3>
+
+              <ul class="space-y-4">
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Vedeți toate funcționalitățile platformei personalizate pentru școli auto</span>
+                </li>
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Discutați despre nevoile specifice ale școlii dumneavoastră</span>
+                </li>
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Aflați cum puteți economisi timp și bani cu automatizările noastre</span>
+                </li>
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Primiți o ofertă personalizată bazată pe dimensiunea școlii</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-white/30">
+              <div class="flex items-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                <span>+40 700 000 000</span>
+              </div>
+
+              <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span>contact&#64;driveflow.ro</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section id="cta" class="py-16 md:py-20 px-6 bg-primary">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Pregătiți să îmbunătățiți managementul școlii dvs. de șoferi?</h2>
+      <p class="text-white/90 mb-8 max-w-2xl mx-auto">
+        Alăturați-vă sutelor de școli de șoferi care economisesc timp și bani cu DriveFlow.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="#demo-request" (click)="scrollToSection('demo-request', $event)" class="px-8 py-4 bg-white text-primary font-medium rounded-lg shadow-lg hover:bg-gray-100 transition-colors duration-300 inline-block">
+          Începeți gratuit
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 bg-white">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div>
+        <div class="text-2xl font-bold mb-6">
+          <img src="assets/images/logo/logo-extended-plus.svg" alt="DriveFlow Logo" class="h-28 w-auto">
+        </div>
+        <p class="text-gray-600">
+          Soluția completă pentru managementul școlii dvs. de șoferi.
+        </p>
+      </div>
+      <div>
+        <h3 class="font-semibold mb-4 text-dark">Produse</h3>
+        <ul class="space-y-2 text-gray-600">
+          <li><a href="#features" (click)="scrollToSection('features', $event)" class="hover:text-primary transition-colors duration-300">Funcționalități</a></li>
+          <li><a href="#pricing" (click)="scrollToSection('pricing', $event)" class="hover:text-primary transition-colors duration-300">Prețuri</a></li>
+          <li><a href="#" class="hover:text-primary transition-colors duration-300">Suport</a></li>
+          <li><a href="#" class="hover:text-primary transition-colors duration-300">Întrebări frecvente</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold mb-4 text-dark">Companie</h3>
+        <ul class="space-y-2 text-gray-600">
+          <li><a href="#product" (click)="scrollToSection('product', $event)" class="hover:text-primary transition-colors duration-300">Despre noi</a></li>
+          <li><a href="#" class="hover:text-primary transition-colors duration-300">Blog</a></li>
+          <li><a href="#" class="hover:text-primary transition-colors duration-300">Cariere</a></li>
+          <li><a href="#demo-request" (click)="scrollToSection('demo-request', $event)" class="hover:text-primary transition-colors duration-300">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold mb-4 text-dark">Legal</h3>
+        <ul class="space-y-2 text-gray-600">
+          <li><a href="#" class="hover:text-primary transition-colors duration-300">Confidențialitate</a></li>
+          <li><a href="#" class="hover:text-primary transition-colors duration-300">Termeni și condiții</a></li>
+          <li><a href="#" class="hover:text-primary transition-colors duration-300">Securitate</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto pt-8 mt-8 border-t border-gray-200 text-center text-gray-600">
+      <p>&copy; {{ currentYear }} DriveFlow. Toate drepturile rezervate.</p>
+    </div>
+  </footer>
+</div>

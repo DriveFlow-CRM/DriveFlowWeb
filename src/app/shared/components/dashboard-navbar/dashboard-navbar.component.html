@@ -1,0 +1,48 @@
+<nav class="navbar" [class.expanded]="isExpanded">
+  <div class="navbar-container">
+    <!-- Logo area -->
+    <div class="logo-container">
+      <button class="menu-toggle" (click)="toggleMenu()" [class.expanded]="isExpanded">
+        <span class="material-icons">{{ isExpanded ? 'close' : 'menu' }}</span>
+      </button>
+      <a routerLink="/dashboard" class="logo">
+        <img src="assets/images/logo/logo-compact.png" alt="DriveFlow Logo" class="logo-img">
+      </a>
+    </div>
+
+    <!-- Navigation links -->
+    <div class="nav-links" [class.active]="isExpanded">
+      <a routerLink="/dashboard/super-admin/overview" routerLinkActive="active" (click)="closeMenuOnMobile()">
+        <span class="material-icons">dashboard</span>
+        <span class="link-text">Overview</span>
+      </a>
+      <a routerLink="/dashboard/super-admin/schools" routerLinkActive="active" (click)="closeMenuOnMobile()">
+        <span class="material-icons">school</span>
+        <span class="link-text">Schools</span>
+      </a>
+      <a routerLink="/dashboard/super-admin/payments" routerLinkActive="active" (click)="closeMenuOnMobile()">
+        <span class="material-icons">payments</span>
+        <span class="link-text">Payments</span>
+      </a>
+      <a routerLink="/dashboard/super-admin/statistics" routerLinkActive="active" (click)="closeMenuOnMobile()">
+        <span class="material-icons">bar_chart</span>
+        <span class="link-text">Statistics</span>
+      </a>
+    </div>
+
+    <!-- User actions -->
+    <div class="user-actions">
+      <div class="user-info">
+        <span class="user-email" *ngIf="userEmail">{{ userEmail }}</span>
+        <span class="user-role">Super Admin</span>
+      </div>
+      <button class="logout-button" (click)="handleLogout()">
+        <span class="material-icons">logout</span>
+        <span class="button-text">Logout</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile overlay when menu is open -->
+<div class="mobile-overlay" *ngIf="isExpanded" (click)="closeMenu()"></div>

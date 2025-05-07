@@ -1,0 +1,681 @@
+/* Moving background animations */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Bar chart animations */
+@keyframes bar-rise-1 {
+  0% {
+    height: 20px;
+    opacity: 0.3;
+  }
+  50% {
+    height: 90px;
+    opacity: 0.5;
+  }
+  100% {
+    height: 80px;
+    opacity: 0.5;
+  }
+}
+
+@keyframes bar-rise-2 {
+  0% {
+    height: 40px;
+    opacity: 0.4;
+  }
+  50% {
+    height: 130px;
+    opacity: 0.6;
+  }
+  100% {
+    height: 120px;
+    opacity: 0.6;
+  }
+}
+
+@keyframes bar-rise-3 {
+  0% {
+    height: 30px;
+    opacity: 0.3;
+  }
+  50% {
+    height: 80px;
+    opacity: 0.5;
+  }
+  100% {
+    height: 70px;
+    opacity: 0.5;
+  }
+}
+
+@keyframes bar-rise-4 {
+  0% {
+    height: 70px;
+    opacity: 0.4;
+  }
+  50% {
+    height: 160px;
+    opacity: 0.6;
+  }
+  100% {
+    height: 150px;
+    opacity: 0.6;
+  }
+}
+
+@keyframes bar-rise-5 {
+  0% {
+    height: 50px;
+    opacity: 0.4;
+  }
+  50% {
+    height: 110px;
+    opacity: 0.6;
+  }
+  100% {
+    height: 100px;
+    opacity: 0.6;
+  }
+}
+
+@keyframes bar-rise-6 {
+  0% {
+    height: 60px;
+    opacity: 0.3;
+  }
+  50% {
+    height: 140px;
+    opacity: 0.5;
+  }
+  100% {
+    height: 130px;
+    opacity: 0.5;
+  }
+}
+
+/* Line chart animation */
+@keyframes draw-line {
+  0% {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+  }
+  100% {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes draw-line-delay {
+  0% {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    opacity: 0.6;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  100% {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 0;
+    opacity: 0.8;
+  }
+}
+
+@keyframes draw-line-delay-2 {
+  0% {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    opacity: 0.5;
+  }
+  60% {
+    opacity: 0.5;
+  }
+  100% {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 0;
+    opacity: 0.7;
+  }
+}
+
+/* Data point animations */
+@keyframes data-point-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.8);
+    opacity: 0.9;
+  }
+}
+
+@keyframes data-point-pulse-large {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(2);
+    opacity: 0.8;
+  }
+}
+
+/* Floating shape animations */
+@keyframes float-rotate {
+  0% {
+    transform: translateY(0) rotate(12deg);
+  }
+  25% {
+    transform: translateY(-25px) rotate(5deg);
+  }
+  50% {
+    transform: translateX(15px) translateY(-15px) rotate(8deg);
+  }
+  75% {
+    transform: translateX(25px) translateY(5px) rotate(15deg);
+  }
+  100% {
+    transform: translateY(0) rotate(12deg);
+  }
+}
+
+@keyframes float-scale {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-30px) scale(1.1) rotate(5deg);
+  }
+  66% {
+    transform: translateX(20px) translateY(-10px) scale(0.95) rotate(-5deg);
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes float-diamond {
+  0% {
+    transform: translateY(0) rotate(45deg);
+  }
+  33% {
+    transform: translateY(25px) translateX(-15px) rotate(60deg);
+  }
+  66% {
+    transform: translateY(-15px) translateX(20px) rotate(30deg);
+  }
+  100% {
+    transform: translateY(0) rotate(45deg);
+  }
+}
+
+@keyframes float-rectangle {
+  0% {
+    transform: translateY(0) rotate(-15deg) scale(1);
+  }
+  25% {
+    transform: translateY(-20px) rotate(-10deg) scale(1.05);
+  }
+  50% {
+    transform: translateX(-15px) translateY(-10px) rotate(-20deg) scale(0.95);
+  }
+  75% {
+    transform: translateX(20px) translateY(15px) rotate(-5deg) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) rotate(-15deg) scale(1);
+  }
+}
+
+/* Percentage fade animations */
+@keyframes fade-percentage {
+  0% {
+    opacity: 0.1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 0.1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-percentage-right {
+  0% {
+    opacity: 0.1;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateX(15px);
+  }
+  100% {
+    opacity: 0.1;
+    transform: translateX(0);
+  }
+}
+
+/* Animation classes */
+:host ::ng-deep .animate-gradient {
+  animation: gradient-shift 15s ease infinite;
+  background-size: 200% 200%;
+}
+
+:host ::ng-deep .animate-bar-1 {
+  animation: bar-rise-1 4s ease-in-out infinite alternate;
+}
+
+:host ::ng-deep .animate-bar-2 {
+  animation: bar-rise-2 5s ease-in-out infinite alternate;
+}
+
+:host ::ng-deep .animate-bar-3 {
+  animation: bar-rise-3 4.5s ease-in-out infinite alternate;
+}
+
+:host ::ng-deep .animate-bar-4 {
+  animation: bar-rise-4 6s ease-in-out infinite alternate;
+}
+
+:host ::ng-deep .animate-bar-5 {
+  animation: bar-rise-5 5.5s ease-in-out infinite alternate;
+}
+
+:host ::ng-deep .animate-bar-6 {
+  animation: bar-rise-6 5s ease-in-out infinite alternate;
+}
+
+:host ::ng-deep .animate-line-chart {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: draw-line 6s ease-in-out infinite alternate;
+}
+
+:host ::ng-deep .animate-line-chart-2 {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: draw-line-delay 6s ease-in-out 0.8s infinite alternate;
+}
+
+:host ::ng-deep .animate-line-chart-3 {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: draw-line-delay-2 6s ease-in-out 1.5s infinite alternate;
+}
+
+:host ::ng-deep .animate-data-point {
+  animation: data-point-pulse 4s ease-in-out infinite;
+}
+
+:host ::ng-deep .animate-data-point-delay-1 {
+  animation: data-point-pulse-large 4.5s ease-in-out 0.5s infinite;
+}
+
+:host ::ng-deep .animate-data-point-delay-2 {
+  animation: data-point-pulse 4s ease-in-out 1s infinite;
+}
+
+:host ::ng-deep .animate-data-point-delay-3 {
+  animation: data-point-pulse-large 5s ease-in-out 1.5s infinite;
+}
+
+:host ::ng-deep .animate-data-point-delay-4 {
+  animation: data-point-pulse 4.5s ease-in-out 2s infinite;
+}
+
+:host ::ng-deep .animate-float-shape {
+  animation: float-rotate 18s ease-in-out infinite;
+}
+
+:host ::ng-deep .animate-float-shape-delay {
+  animation: float-scale 20s ease-in-out infinite;
+}
+
+:host ::ng-deep .animate-float-shape-delay-2 {
+  animation: float-diamond 22s ease-in-out infinite;
+}
+
+:host ::ng-deep .animate-float-shape-delay-3 {
+  animation: float-rectangle 24s ease-in-out infinite;
+}
+
+:host ::ng-deep .animate-fade-in-out {
+  animation: fade-percentage 7s ease-in-out infinite;
+}
+
+:host ::ng-deep .animate-fade-in-out-delay {
+  animation: fade-percentage-right 8s ease-in-out 2s infinite;
+}
+
+:host ::ng-deep .animate-fade-in-out-delay-2 {
+  animation: fade-percentage 9s ease-in-out 4s infinite;
+}
+
+:host ::ng-deep .animate-fade-in-out-delay-3 {
+  animation: fade-percentage-right 10s ease-in-out 3s infinite;
+}
+
+/* Emoji floating animations - each with unique timing */
+@keyframes float-1 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-15px, -10px) rotate(-5deg); }
+  50% { transform: translate(0, -20px) rotate(0deg); }
+  75% { transform: translate(15px, -10px) rotate(5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-2 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(10px, -20px) rotate(10deg); }
+  50% { transform: translate(20px, -10px) rotate(15deg); }
+  75% { transform: translate(10px, 5px) rotate(5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-3 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  30% { transform: translate(-10px, -15px) rotate(-10deg); }
+  60% { transform: translate(15px, -5px) rotate(5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-4 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-5px, -20px) rotate(-8deg); }
+  40% { transform: translate(-15px, -10px) rotate(-12deg); }
+  60% { transform: translate(-8px, 5px) rotate(-5deg); }
+  80% { transform: translate(5px, 10px) rotate(8deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-5 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(15px, -15px) rotate(15deg); }
+  66% { transform: translate(-15px, -10px) rotate(-10deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-6 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(5px, -25px) rotate(3deg); }
+  50% { transform: translate(15px, -15px) rotate(6deg); }
+  75% { transform: translate(5px, 0px) rotate(3deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-7 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-8px, -12px) rotate(-5deg); }
+  40% { transform: translate(-12px, -18px) rotate(-15deg); }
+  60% { transform: translate(-5px, -6px) rotate(-10deg); }
+  80% { transform: translate(5px, 3px) rotate(5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-8 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(20px, 5px) rotate(10deg); }
+  50% { transform: translate(0, 15px) rotate(0deg); }
+  75% { transform: translate(-15px, 5px) rotate(-10deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-9 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  15% { transform: translate(-10px, -5px) rotate(-5deg); }
+  35% { transform: translate(-15px, -15px) rotate(-15deg); }
+  65% { transform: translate(5px, -10px) rotate(5deg); }
+  85% { transform: translate(10px, -5px) rotate(15deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-10 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(12px, -8px) rotate(8deg); }
+  40% { transform: translate(18px, -12px) rotate(12deg); }
+  60% { transform: translate(8px, -18px) rotate(4deg); }
+  80% { transform: translate(2px, -4px) rotate(2deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* Shimmer particle animations */
+@keyframes shimmer-1 {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.5); opacity: 0.7; }
+}
+
+@keyframes shimmer-2 {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.8); opacity: 0.6; }
+}
+
+@keyframes shimmer-3 {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.3); opacity: 0.8; }
+}
+
+/* Apply animations to floating emojis */
+:host ::ng-deep .emoji-float-1 {
+  animation: float-1 8s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-2 {
+  animation: float-2 9s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-3 {
+  animation: float-3 7.5s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-4 {
+  animation: float-4 11s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-5 {
+  animation: float-5 9.5s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-6 {
+  animation: float-6 10s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-7 {
+  animation: float-7 8.5s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-8 {
+  animation: float-8 12s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-9 {
+  animation: float-9 9s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-10 {
+  animation: float-10 10.5s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-11 {
+  animation: float-4 9s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-12 {
+  animation: float-7 11s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-13 {
+  animation: float-2 8s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-14 {
+  animation: float-5 7s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-15 {
+  animation: float-8 12.5s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-16 {
+  animation: float-1 10s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-17 {
+  animation: float-3 9.5s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-18 {
+  animation: float-6 8.5s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-19 {
+  animation: float-9 11.5s ease-in-out infinite;
+}
+
+:host ::ng-deep .emoji-float-20 {
+  animation: float-10 9s ease-in-out infinite;
+}
+
+/* Shimmer particle animations */
+:host ::ng-deep .shimmer-particle-1 {
+  animation: shimmer-1 4s ease-in-out infinite;
+}
+
+:host ::ng-deep .shimmer-particle-2 {
+  animation: shimmer-2 5s ease-in-out infinite;
+}
+
+:host ::ng-deep .shimmer-particle-3 {
+  animation: shimmer-3 4.5s ease-in-out infinite;
+}
+
+:host ::ng-deep .shimmer-particle-4 {
+  animation: shimmer-1 5.5s ease-in-out infinite;
+}
+
+:host ::ng-deep .shimmer-particle-5 {
+  animation: shimmer-2 4.2s ease-in-out infinite;
+}
+
+:host ::ng-deep .shimmer-particle-6 {
+  animation: shimmer-3 5.2s ease-in-out infinite;
+}
+
+:host ::ng-deep .shimmer-particle-7 {
+  animation: shimmer-1 4.7s ease-in-out infinite;
+}
+
+:host ::ng-deep .shimmer-particle-8 {
+  animation: shimmer-2 5.7s ease-in-out infinite;
+}
+
+:host ::ng-deep .shimmer-particle-9 {
+  animation: shimmer-3 4.3s ease-in-out infinite;
+}
+
+:host ::ng-deep .shimmer-particle-10 {
+  animation: shimmer-1 5.3s ease-in-out infinite;
+}
+
+/* Mobile Features Carousel */
+.carousel-container {
+  touch-action: pan-y; /* Allow vertical scrolling but capture horizontal swipes */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Carousel slide animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Indicator animation */
+@keyframes indicatorPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+:host ::ng-deep .indicator-active {
+  animation: indicatorPulse 1.5s ease-in-out infinite;
+}
+
+/* New float animations for additional icons */
+@keyframes float-11 {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-15px, 10px);
+  }
+  50% {
+    transform: translate(-5px, 20px);
+  }
+  75% {
+    transform: translate(10px, 15px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes float-12 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(8px, -12px) rotate(5deg);
+  }
+  66% {
+    transform: translate(-8px, -6px) rotate(-3deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+/* Animation classes for new icons */
+:host ::ng-deep .emoji-float-21 {
+  animation: float-11 10s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+:host ::ng-deep .emoji-float-22 {
+  animation: float-12 12s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+/* Update existing float animations to add shadow */
+:host ::ng-deep .emoji-float-1,
+:host ::ng-deep .emoji-float-2,
+:host ::ng-deep .emoji-float-3,
+:host ::ng-deep .emoji-float-4,
+:host ::ng-deep .emoji-float-5,
+:host ::ng-deep .emoji-float-6,
+:host ::ng-deep .emoji-float-7,
+:host ::ng-deep .emoji-float-8,
+:host ::ng-deep .emoji-float-9,
+:host ::ng-deep .emoji-float-10,
+:host ::ng-deep .emoji-float-11,
+:host ::ng-deep .emoji-float-12,
+:host ::ng-deep .emoji-float-13,
+:host ::ng-deep .emoji-float-14,
+:host ::ng-deep .emoji-float-15,
+:host ::ng-deep .emoji-float-16,
+:host ::ng-deep .emoji-float-17,
+:host ::ng-deep .emoji-float-18,
+:host ::ng-deep .emoji-float-19,
+:host ::ng-deep .emoji-float-20 {
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}

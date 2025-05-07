@@ -1,0 +1,24 @@
+<div class="rounded-lg p-7 bg-white shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col transform hover:scale-[1.02]">
+  <div class="flex-1">
+    <div class="flex justify-between items-start mb-4">
+      <div>
+        <h3 class="text-xl font-semibold text-dark mb-1">{{ school.name }}</h3>
+      </div>
+      <span [ngClass]="getStatusClass()" class="text-xs px-3 py-1 rounded-full inline-block">
+        {{ school.status | titlecase }}
+      </span>
+    </div>
+
+    <p class="text-gray-600 mb-6 leading-relaxed">{{ school.description }}</p>
+  </div>
+
+  <div class="mt-auto">
+    <a [routerLink]="['/school', getSchoolId(), getSchoolSlug()]"
+       class="group block w-full bg-primary text-white text-center py-3 px-4 rounded-full font-medium hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center space-x-2">
+      <span>Vezi mai multe</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    </a>
+  </div>
+</div>

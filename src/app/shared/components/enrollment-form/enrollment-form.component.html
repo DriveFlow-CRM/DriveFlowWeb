@@ -1,0 +1,186 @@
+<div class="enrollment-form-container">
+  <div class="success-message" *ngIf="submissionSuccess">
+    <div class="success-icon">
+      <i class="material-icons">check_circle</i>
+    </div>
+    <h3>Enrollment Submitted Successfully!</h3>
+    <p>Thank you for your interest. A representative will contact you shortly.</p>
+    <button class="reset-button" (click)="resetForm()">Submit Another Enrollment</button>
+  </div>
+
+  <form [formGroup]="enrollmentForm" (ngSubmit)="onSubmit()" *ngIf="!submissionSuccess">
+    <h2>Enroll in this Driving School</h2>
+    <p class="form-subtitle">Fill out the form below to enroll or request more information.</p>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="firstName">First Name*</label>
+        <input
+          type="text"
+          id="firstName"
+          formControlName="firstName"
+          [ngClass]="{'invalid': enrollmentForm.get('firstName')?.invalid && enrollmentForm.get('firstName')?.touched}"
+        >
+        <div class="error-message" *ngIf="enrollmentForm.get('firstName')?.invalid && enrollmentForm.get('firstName')?.touched">
+          First name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name*</label>
+        <input
+          type="text"
+          id="lastName"
+          formControlName="lastName"
+          [ngClass]="{'invalid': enrollmentForm.get('lastName')?.invalid && enrollmentForm.get('lastName')?.touched}"
+        >
+        <div class="error-message" *ngIf="enrollmentForm.get('lastName')?.invalid && enrollmentForm.get('lastName')?.touched">
+          Last name is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="email">Email Address*</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          [ngClass]="{'invalid': enrollmentForm.get('email')?.invalid && enrollmentForm.get('email')?.touched}"
+        >
+        <div class="error-message" *ngIf="enrollmentForm.get('email')?.invalid && enrollmentForm.get('email')?.touched">
+          Please enter a valid email address
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number*</label>
+        <input
+          type="tel"
+          id="phone"
+          formControlName="phone"
+          [ngClass]="{'invalid': enrollmentForm.get('phone')?.invalid && enrollmentForm.get('phone')?.touched}"
+        >
+        <div class="error-message" *ngIf="enrollmentForm.get('phone')?.invalid && enrollmentForm.get('phone')?.touched">
+          Phone number is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="dob">Date of Birth*</label>
+        <input
+          type="date"
+          id="dob"
+          formControlName="dob"
+          [ngClass]="{'invalid': enrollmentForm.get('dob')?.invalid && enrollmentForm.get('dob')?.touched}"
+        >
+        <div class="error-message" *ngIf="enrollmentForm.get('dob')?.invalid && enrollmentForm.get('dob')?.touched">
+          Date of birth is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address*</label>
+      <input
+        type="text"
+        id="address"
+        formControlName="address"
+        [ngClass]="{'invalid': enrollmentForm.get('address')?.invalid && enrollmentForm.get('address')?.touched}"
+      >
+      <div class="error-message" *ngIf="enrollmentForm.get('address')?.invalid && enrollmentForm.get('address')?.touched">
+        Address is required
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="city">City*</label>
+        <input
+          type="text"
+          id="city"
+          formControlName="city"
+          [ngClass]="{'invalid': enrollmentForm.get('city')?.invalid && enrollmentForm.get('city')?.touched}"
+        >
+        <div class="error-message" *ngIf="enrollmentForm.get('city')?.invalid && enrollmentForm.get('city')?.touched">
+          City is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="state">State*</label>
+        <input
+          type="text"
+          id="state"
+          formControlName="state"
+          [ngClass]="{'invalid': enrollmentForm.get('state')?.invalid && enrollmentForm.get('state')?.touched}"
+        >
+        <div class="error-message" *ngIf="enrollmentForm.get('state')?.invalid && enrollmentForm.get('state')?.touched">
+          State is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="zip">ZIP Code*</label>
+        <input
+          type="text"
+          id="zip"
+          formControlName="zip"
+          [ngClass]="{'invalid': enrollmentForm.get('zip')?.invalid && enrollmentForm.get('zip')?.touched}"
+        >
+        <div class="error-message" *ngIf="enrollmentForm.get('zip')?.invalid && enrollmentForm.get('zip')?.touched">
+          ZIP code is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="licenseNumber">Driver's License Number (if applicable)</label>
+        <input type="text" id="licenseNumber" formControlName="licenseNumber">
+      </div>
+
+      <div class="form-group">
+        <label for="permitNumber">Learner's Permit Number (if applicable)</label>
+        <input type="text" id="permitNumber" formControlName="permitNumber">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="preferredStartDate">Preferred Start Date</label>
+        <input type="date" id="preferredStartDate" formControlName="preferredStartDate">
+      </div>
+
+      <div class="form-group">
+        <label for="preferredTimeSlot">Preferred Time Slot</label>
+        <select id="preferredTimeSlot" formControlName="preferredTimeSlot">
+          <option value="">Select a time slot</option>
+          <option value="morning">Morning (8AM - 12PM)</option>
+          <option value="afternoon">Afternoon (12PM - 5PM)</option>
+          <option value="evening">Evening (5PM - 9PM)</option>
+          <option value="weekend">Weekend Only</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Additional Message</label>
+      <textarea id="message" rows="4" formControlName="message"></textarea>
+    </div>
+
+    <div class="form-error" *ngIf="submissionError">
+      <p>{{submissionError}}</p>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="submit-button" [disabled]="submitting">
+        <span *ngIf="!submitting">Submit Enrollment</span>
+        <span *ngIf="submitting">Submitting...</span>
+      </button>
+    </div>
+  </form>
+</div>
