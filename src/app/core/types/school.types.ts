@@ -1,1 +1,1 @@
-export type SchoolStatus = 'active' | 'Active' | 'inactive' | 'Inactive' | 'pending' | 'Pending';
+export type SchoolStatus = 'active' | 'restricted' | 'demo';

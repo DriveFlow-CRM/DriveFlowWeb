@@ -77,14 +77,14 @@ export class DashboardGuardService implements CanActivate {
           return false;
         }
 
-        const userData = this.authService.getUserData();
-        if (!userData) {
+    const userData = this.authService.getUserData();
+    if (!userData) {
           console.log('No user data, redirecting to auth');
           if (!currentUrl.includes('/auth')) {
             this.redirectToUrl('/auth');
           }
-          return false;
-        }
+      return false;
+    }
 
         console.log('Dashboard guard - user type:', userData.userType);
 
@@ -105,8 +105,8 @@ export class DashboardGuardService implements CanActivate {
         if (currentPath === '/auth' && isAuthenticated) {
           console.log(`Redirecting from auth to dashboard: ${dashboardPath}`);
           this.redirectToUrl(dashboardPath);
-          return false;
-        }
+      return false;
+    }
 
         if (currentPath !== targetPath && !currentPath.startsWith(targetPath + '/')) {
           // Make sure we're not in an infinite loop
@@ -117,7 +117,7 @@ export class DashboardGuardService implements CanActivate {
           }
         }
 
-        return true;
+    return true;
       })
     );
   }

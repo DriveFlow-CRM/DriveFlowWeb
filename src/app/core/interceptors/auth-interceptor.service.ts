@@ -19,7 +19,7 @@ export const authInterceptor: HttpInterceptorFn = (
       request.url.includes('auth/login') ||
       request.url.includes('auth/refresh')) {
     return next(request);
-  }
+    }
 
   const token = authService.getToken();
   if (token) {
@@ -49,13 +49,13 @@ function handle401Error(
   next: HttpHandlerFn,
   authService: AuthService
 ): Observable<HttpEvent<unknown>> {
-  return authService.refreshToken().pipe(
+    return authService.refreshToken().pipe(
     switchMap(token => {
-      return next(addToken(request, token.token));
-    }),
+        return next(addToken(request, token.token));
+      }),
     catchError(error => {
-      authService.logout();
-      return throwError(() => error);
-    })
-  );
+        authService.logout();
+        return throwError(() => error);
+      })
+    );
 }

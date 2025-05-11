@@ -1,16 +1,37 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LicenseService, License } from '../../../../../../core/services/license.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.css'
 })
-export class OverviewComponent implements OnInit, AfterViewInit {
-  constructor(private cdr: ChangeDetectorRef) {
-    console.log('OverviewComponent initialized');
+export class OverviewComponent implements OnInit, AfterViewInit, OnDestroy {
+  licenses: License[] = [];
+  isLoading = false;
+  showLicenseCard = false;
+  showLicenseForm = false;
+  isCreating = true;
+  licenseForm: FormGroup;
+  selectedLicense: License | null = null;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
+
+  private subscription = new Subscription();
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private licenseService: LicenseService,
+    private fb: FormBuilder
+  ) {
+    this.licenseForm = this.fb.group({
+      type: ['', [Validators.required, Validators.maxLength(10)]]
+    });
   }
 
   ngOnInit(): void {
@@ -36,5 +57,118 @@ export class OverviewComponent implements OnInit, AfterViewInit {
       // Force another change detection cycle after view init
       this.cdr.detectChanges();
     }, 100);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  toggleLicenseCard(): void {
+    this.showLicenseCard = !this.showLicenseCard;
+    if (this.showLicenseCard) {
+      this.loadLicenses();
+    }
+  }
+
+  loadLicenses(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    this.subscription.add(
+      this.licenseService.getLicenses().subscribe({
+        next: (data) => {
+          this.licenses = data;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error loading licenses:', error);
+          this.errorMessage = 'Error loading licenses. Please try again.';
+          this.isLoading = false;
+        }
+      })
+    );
+  }
+
+  openCreateForm(): void {
+    this.licenseForm.reset();
+    this.isCreating = true;
+    this.selectedLicense = null;
+    this.showLicenseForm = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+  }
+
+  openEditForm(license: License): void {
+    this.licenseForm.setValue({
+      type: license.type
+    });
+    this.isCreating = false;
+    this.selectedLicense = license;
+    this.showLicenseForm = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+  }
+
+  cancelForm(): void {
+    this.showLicenseForm = false;
+    this.licenseForm.reset();
+  }
+
+  submitLicenseForm(): void {
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    if (this.licenseForm.valid) {
+      const licenseData = { type: this.licenseForm.value.type };
+
+      if (this.isCreating) {
+        this.subscription.add(
+          this.licenseService.createLicense(licenseData).subscribe({
+            next: () => {
+              this.successMessage = 'License created successfully.';
+              this.loadLicenses();
+              this.showLicenseForm = false;
+              this.licenseForm.reset();
+            },
+            error: (error) => {
+              console.error('Error creating license:', error);
+              this.errorMessage = error.error?.message || 'Error creating license. Type may already exist.';
+            }
+          })
+        );
+      } else if (this.selectedLicense) {
+        this.subscription.add(
+          this.licenseService.updateLicense(this.selectedLicense.licenseId, licenseData).subscribe({
+            next: () => {
+              this.successMessage = 'License updated successfully.';
+              this.loadLicenses();
+              this.showLicenseForm = false;
+              this.licenseForm.reset();
+            },
+            error: (error) => {
+              console.error('Error updating license:', error);
+              this.errorMessage = error.error?.message || 'Error updating license. Type may already exist.';
+            }
+          })
+        );
+      }
+    }
+  }
+
+  deleteLicense(license: License): void {
+    if (confirm(`Are you sure you want to delete license type ${license.type}?`)) {
+      this.subscription.add(
+        this.licenseService.deleteLicense(license.licenseId).subscribe({
+          next: () => {
+            this.successMessage = 'License deleted successfully.';
+            this.loadLicenses();
+          },
+          error: (error) => {
+            console.error('Error deleting license:', error);
+            this.errorMessage = error.error?.message || 'Error deleting license.';
+          }
+        })
+      );
+    }
   }
 }

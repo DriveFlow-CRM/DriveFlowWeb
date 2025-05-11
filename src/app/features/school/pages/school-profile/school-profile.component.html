@@ -37,17 +37,17 @@
           <div class="flex items-center gap-4">
             <div class="flex items-center space-x-2">
               <span class="px-3 py-1 rounded-full text-sm font-medium" [ngClass]="{
-                'bg-green-500 text-white': school.status === 'Active' || school.status === 'active',
-                'bg-red-500 text-white': school.status === 'Inactive' || school.status === 'inactive',
-                'bg-yellow-500 text-white': school.status === 'Pending' || school.status === 'pending'
+                'bg-green-500 text-white': school.status === 'active',
+                'bg-orange-500 text-white': school.status === 'restricted',
+                'bg-blue-500 text-white': school.status === 'demo'
               }">
-                {{ school.status }}
+                {{ school.status | titlecase }}
               </span>
             </div>
             <button
-              (click)="toggleEnrollmentForm()"
+              (click)="openEnrollmentModal()"
               class="bg-white text-primary px-6 py-2 rounded-full font-medium hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg">
-              {{ showEnrollmentForm ? 'Ascunde formularul' : 'Înscrie-te acum' }}
+              Înscrie-te acum
             </button>
           </div>
         </div>
@@ -64,68 +64,6 @@
             <p class="text-gray-600 leading-relaxed">{{ school.description }}</p>
           </div>
 
-          <!-- Features Section -->
-          <div class="bg-white rounded-xl shadow-sm p-6">
-            <h2 class="text-xl font-semibold mb-6 text-gray-900">Ce oferim</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="flex items-start space-x-4">
-                <div class="flex-shrink-0">
-                  <div class="p-3 bg-primary/10 rounded-lg">
-                    <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900">Program flexibil</h3>
-                  <p class="text-gray-500">Ore de conducere adaptate programului tău</p>
-                </div>
-              </div>
-
-              <div class="flex items-start space-x-4">
-                <div class="flex-shrink-0">
-                  <div class="p-3 bg-primary/10 rounded-lg">
-                    <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900">Locație accesibilă</h3>
-                  <p class="text-gray-500">Sediu în zona centrală a orașului</p>
-                </div>
-              </div>
-
-              <div class="flex items-start space-x-4">
-                <div class="flex-shrink-0">
-                  <div class="p-3 bg-primary/10 rounded-lg">
-                    <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900">Instructori profesioniști</h3>
-                  <p class="text-gray-500">Experiență vastă în pregătirea cursanților</p>
-                </div>
-              </div>
-
-              <div class="flex items-start space-x-4">
-                <div class="flex-shrink-0">
-                  <div class="p-3 bg-primary/10 rounded-lg">
-                    <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                  </div>
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900">Pregătire completă</h3>
-                  <p class="text-gray-500">Teorie și practică pentru toate categoriile</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Categories Section -->
           <div class="bg-white rounded-xl shadow-sm p-6">
             <h2 class="text-xl font-semibold mb-4 text-gray-900">Categorii disponibile</h2>
@@ -133,6 +71,29 @@
               <div *ngFor="let category of drivingCategories" class="bg-gray-50 rounded-lg p-4">
                 <h3 class="font-medium text-gray-900">Categoria {{ category.categ }}</h3>
                 <p class="text-gray-500 text-sm mt-1">{{ category.descriere }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Information - Moved from sidebar for better mobile flow -->
+          <div class="bg-white rounded-xl shadow-sm p-6 lg:hidden">
+            <h2 class="text-xl font-semibold mb-4 text-gray-900">Detalii suplimentare</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div *ngIf="school.foundedYear" class="bg-gray-50 rounded-lg p-3">
+                <p class="text-sm font-medium text-gray-900">An înființare</p>
+                <p class="text-gray-500">{{ school.foundedYear }}</p>
+              </div>
+              <div *ngIf="school.instructorCount" class="bg-gray-50 rounded-lg p-3">
+                <p class="text-sm font-medium text-gray-900">Instructori</p>
+                <p class="text-gray-500">{{ school.instructorCount }}</p>
+              </div>
+              <div *ngIf="school.studentCount" class="bg-gray-50 rounded-lg p-3">
+                <p class="text-sm font-medium text-gray-900">Studenți</p>
+                <p class="text-gray-500">{{ school.studentCount }}</p>
+              </div>
+              <div *ngIf="school.pricingDetails" class="bg-gray-50 rounded-lg p-3">
+                <p class="text-sm font-medium text-gray-900">Prețuri</p>
+                <p class="text-gray-500">{{ school.pricingDetails }}</p>
               </div>
             </div>
           </div>
@@ -189,8 +150,8 @@
             </div>
           </div>
 
-          <!-- Additional Information -->
-          <div class="bg-white rounded-xl shadow-sm p-6">
+          <!-- Additional Information - Visible only on desktop -->
+          <div class="bg-white rounded-xl shadow-sm p-6 hidden lg:block">
             <h2 class="text-xl font-semibold mb-4 text-gray-900">Detalii suplimentare</h2>
             <div class="space-y-3">
               <div *ngIf="school.foundedYear" class="flex justify-between">
@@ -213,14 +174,57 @@
           </div>
         </div>
       </div>
+    </div>
+  </main>
 
-      <!-- Enrollment Form -->
-      <div *ngIf="showEnrollmentForm" class="mt-8">
-        <div class="bg-white rounded-xl shadow-sm p-8">
-          <h2 class="text-2xl font-semibold mb-6 text-gray-900">Formular de înscriere</h2>
-          <p class="text-gray-600 mb-8">Completați formularul de mai jos pentru a vă înscrie la {{ school.name }}. Veți fi contactat în cel mai scurt timp.</p>
+  <!-- Enrollment Modal -->
+  <div *ngIf="showEnrollmentModal" class="fixed inset-0 flex items-center justify-center z-50 px-4 py-6 sm:px-0">
+    <!-- Backdrop with click handler to close modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" (click)="closeEnrollmentModal()"></div>
 
-          <form [formGroup]="enrollmentForm" (ngSubmit)="submitEnrollment()" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Modal Content -->
+    <div class="bg-white rounded-xl shadow-xl overflow-hidden w-full max-w-lg mx-auto z-10 relative">
+      <!-- Modal Header -->
+      <div class="bg-primary text-white px-6 py-4 flex justify-between items-center">
+        <h2 class="text-xl font-semibold">Înscrie-te la {{ school?.name }}</h2>
+        <button (click)="closeEnrollmentModal()" class="text-white hover:text-gray-200 focus:outline-none">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6">
+        <!-- Success Message -->
+        <div *ngIf="notificationMessage && notificationType === 'success'"
+             class="mb-6 p-4 rounded-lg bg-green-50 border-l-4 border-green-500 flex items-start space-x-3">
+          <div class="text-green-500 flex-shrink-0">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="text-green-700">{{ notificationMessage }}</div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="notificationMessage && notificationType === 'error'"
+             class="mb-6 p-4 rounded-lg bg-red-50 border-l-4 border-red-500 flex items-start space-x-3">
+          <div class="text-red-500 flex-shrink-0">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div class="text-red-700">{{ notificationMessage }}</div>
+        </div>
+
+        <p class="text-gray-600 mb-6">Completați formularul de mai jos pentru a vă înscrie la această școală. Veți fi contactat în cel mai scurt timp.</p>
+
+        <form [formGroup]="enrollmentForm" (ngSubmit)="submitEnrollment()" class="space-y-4">
+          <!-- Name Fields in a single row -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- First Name -->
             <div>
               <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">Prenume</label>
@@ -228,9 +232,9 @@
                 type="text"
                 id="firstName"
                 formControlName="firstName"
-                class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                [class.border-red-300]="formSubmitted && enrollmentForm.get('firstName')?.invalid"
-                [class.border-gray-300]="!formSubmitted || !enrollmentForm.get('firstName')?.invalid"
+                class="w-full px-4 py-3 rounded-lg bg-gray-50/80 border-0 focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-sm transition-all hover:shadow-md hover:bg-blue-50/30"
+                [class.ring-2]="formSubmitted && enrollmentForm.get('firstName')?.invalid"
+                [class.ring-red-300]="formSubmitted && enrollmentForm.get('firstName')?.invalid"
               >
               <div *ngIf="formSubmitted && enrollmentForm.get('firstName')?.invalid" class="text-red-500 text-sm mt-1">
                 Prenumele este obligatoriu
@@ -244,65 +248,86 @@
                 type="text"
                 id="lastName"
                 formControlName="lastName"
-                class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                [class.border-red-300]="formSubmitted && enrollmentForm.get('lastName')?.invalid"
-                [class.border-gray-300]="!formSubmitted || !enrollmentForm.get('lastName')?.invalid"
+                class="w-full px-4 py-3 rounded-lg bg-gray-50/80 border-0 focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-sm transition-all hover:shadow-md hover:bg-blue-50/30"
+                [class.ring-2]="formSubmitted && enrollmentForm.get('lastName')?.invalid"
+                [class.ring-red-300]="formSubmitted && enrollmentForm.get('lastName')?.invalid"
               >
               <div *ngIf="formSubmitted && enrollmentForm.get('lastName')?.invalid" class="text-red-500 text-sm mt-1">
                 Numele este obligatoriu
               </div>
             </div>
+          </div>
 
-            <!-- Phone Number -->
-            <div>
-              <label for="phoneNr" class="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
-              <input
-                type="tel"
-                id="phoneNr"
-                formControlName="phoneNr"
-                class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                [class.border-red-300]="formSubmitted && enrollmentForm.get('phoneNr')?.invalid"
-                [class.border-gray-300]="!formSubmitted || !enrollmentForm.get('phoneNr')?.invalid"
-              >
-              <div *ngIf="formSubmitted && enrollmentForm.get('phoneNr')?.invalid" class="text-red-500 text-sm mt-1">
-                Introduceți un număr de telefon valid (10 cifre)
-              </div>
+          <!-- Phone Number -->
+          <div>
+            <label for="phoneNr" class="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+            <input
+              type="tel"
+              id="phoneNr"
+              formControlName="phoneNr"
+              class="w-full px-4 py-3 rounded-lg bg-gray-50/80 border-0 focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-sm transition-all hover:shadow-md hover:bg-blue-50/30"
+              [class.ring-2]="formSubmitted && enrollmentForm.get('phoneNr')?.invalid"
+              [class.ring-red-300]="formSubmitted && enrollmentForm.get('phoneNr')?.invalid"
+            >
+            <div *ngIf="formSubmitted && enrollmentForm.get('phoneNr')?.invalid" class="text-red-500 text-sm mt-1">
+              Introduceți un număr de telefon valid (10 cifre)
             </div>
+          </div>
 
-            <!-- Driving Category -->
-            <div>
-              <label for="drivingCategory" class="block text-sm font-medium text-gray-700 mb-1">Categorie permis</label>
+          <!-- Driving Category -->
+          <div>
+            <label for="drivingCategory" class="block text-sm font-medium text-gray-700 mb-1">Categorie permis</label>
+            <div class="relative">
               <select
                 id="drivingCategory"
                 formControlName="drivingCategory"
-                class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                [class.border-red-300]="formSubmitted && enrollmentForm.get('drivingCategory')?.invalid"
-                [class.border-gray-300]="!formSubmitted || !enrollmentForm.get('drivingCategory')?.invalid"
+                class="appearance-none w-full px-4 py-3 rounded-lg bg-gray-50/80 border-0 focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-sm transition-all hover:shadow-md hover:bg-blue-50/30"
+                [class.ring-2]="formSubmitted && enrollmentForm.get('drivingCategory')?.invalid"
+                [class.ring-red-300]="formSubmitted && enrollmentForm.get('drivingCategory')?.invalid"
               >
                 <option value="">Selectați categoria</option>
                 <option *ngFor="let category of drivingCategories" [value]="category.categ">
                   Categoria {{ category.categ }} - {{ category.descriere }}
                 </option>
               </select>
-              <div *ngIf="formSubmitted && enrollmentForm.get('drivingCategory')?.invalid" class="text-red-500 text-sm mt-1">
-                Selectați o categorie
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                </svg>
               </div>
             </div>
-
-            <!-- Submit Button -->
-            <div class="md:col-span-2 flex justify-end">
-              <button
-                type="submit"
-                class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-lg"
-              >
-                Trimite cererea
-              </button>
+            <div *ngIf="formSubmitted && enrollmentForm.get('drivingCategory')?.invalid" class="text-red-500 text-sm mt-1">
+              Selectați o categorie
             </div>
-          </form>
-        </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="flex flex-col space-y-3 pt-4">
+            <button
+              type="submit"
+              class="w-full bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-dark transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="isSubmitting || !enrollmentForm.valid"
+            >
+              <span *ngIf="!isSubmitting">Trimite cererea</span>
+              <span *ngIf="isSubmitting" class="flex items-center justify-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Se trimite...
+              </span>
+            </button>
+            <button
+              type="button"
+              (click)="closeEnrollmentModal()"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+              Anulează
+            </button>
+          </div>
+        </form>
       </div>
     </div>
-  </main>
+  </div>
 
   <!-- Footer -->
   <footer class="mt-16 py-8 bg-gray-100">

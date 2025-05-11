@@ -1,12 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Override Angular Material styles with Tailwind-compatible colors */
+:root {
+  --primary-color: #2563EB; /* Tailwind blue-600 */
+  --accent-color: #10B981;  /* Tailwind emerald-500 */
+  --warn-color: #EF4444;    /* Tailwind red-500 */
+}
+
+.mat-stepper-horizontal {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.mat-horizontal-stepper-header-container {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mat-step-header {
+  transition: background-color 0.3s;
+}
+
+.mat-step-header:hover {
+  background-color: #f9fafb;
+}
+
+.mat-step-icon {
+  background-color: var(--primary-color) !important;
+}
+
 /* Custom global styles */
 body {
   font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
-  @apply bg-white text-[#1D1D1B];
+  background-color: white;
+  color: #1D1D1B;
   overflow-x: hidden;
 }
 

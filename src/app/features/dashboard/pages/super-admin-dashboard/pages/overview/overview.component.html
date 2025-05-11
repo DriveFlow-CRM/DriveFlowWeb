@@ -1,162 +1,116 @@
 <div class="overview-container">
   <h1 class="page-title">Dashboard Overview</h1>
 
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon">
-        <span class="material-icons">school</span>
-      </div>
-      <div class="stat-content">
-        <h3>Total Schools</h3>
-        <div class="stat-value">24</div>
-        <div class="stat-trend positive">
-          <span class="material-icons">trending_up</span>
-          <span>+12% this month</span>
-        </div>
-      </div>
+  <!-- License Management Card -->
+  <div class="management-card">
+    <div class="card-header">
+      <h2>Manage Licenses</h2>
+      <p class="card-description">
+        Manage driver's license categories that are available for driving schools.
+      </p>
+      <button (click)="toggleLicenseCard()" class="manage-btn">
+        {{ showLicenseCard ? 'Hide Licenses' : 'Manage Licenses' }}
+      </button>
     </div>
 
-    <div class="stat-card">
-      <div class="stat-icon">
-        <span class="material-icons">people</span>
+    <!-- License Management Content (shows/hides on button click) -->
+    <div *ngIf="showLicenseCard" class="license-management">
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="alert success">
+        <span class="material-icons">check_circle</span>
+        <span>{{ successMessage }}</span>
       </div>
-      <div class="stat-content">
-        <h3>Total Students</h3>
-        <div class="stat-value">1,248</div>
-        <div class="stat-trend positive">
-          <span class="material-icons">trending_up</span>
-          <span>+8% this month</span>
-        </div>
-      </div>
-    </div>
 
-    <div class="stat-card">
-      <div class="stat-icon">
-        <span class="material-icons">calendar_month</span>
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="alert error">
+        <span class="material-icons">error</span>
+        <span>{{ errorMessage }}</span>
       </div>
-      <div class="stat-content">
-        <h3>Lessons Scheduled</h3>
-        <div class="stat-value">312</div>
-        <div class="stat-trend positive">
-          <span class="material-icons">trending_up</span>
-          <span>+15% this month</span>
-        </div>
-      </div>
-    </div>
 
-    <div class="stat-card">
-      <div class="stat-icon">
-        <span class="material-icons">paid</span>
-      </div>
-      <div class="stat-content">
-        <h3>Monthly Revenue</h3>
-        <div class="stat-value">$24,800</div>
-        <div class="stat-trend positive">
-          <span class="material-icons">trending_up</span>
-          <span>+6% this month</span>
+      <!-- License Table -->
+      <div class="license-table-container">
+        <div class="table-actions">
+          <h3>Available License Types</h3>
+          <button (click)="openCreateForm()" class="create-btn">
+            <span class="material-icons">add</span> Add License
+          </button>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="charts-section">
-    <div class="chart-card">
-      <div class="chart-header">
-        <h3>Revenue Growth</h3>
-        <div class="chart-actions">
-          <select class="time-selector">
-            <option>Last 7 days</option>
-            <option selected>Last 30 days</option>
-            <option>Last 3 months</option>
-            <option>Last year</option>
-          </select>
+        <!-- Loading Indicator -->
+        <div *ngIf="isLoading" class="loading-container">
+          <div class="spinner"></div>
+          <span>Loading licenses...</span>
         </div>
-      </div>
-      <div class="chart-placeholder">
-        <!-- Chart would go here -->
-        <div class="placeholder-chart">
-          <div class="bar" style="height: 30%;"></div>
-          <div class="bar" style="height: 50%;"></div>
-          <div class="bar" style="height: 70%;"></div>
-          <div class="bar" style="height: 60%;"></div>
-          <div class="bar" style="height: 80%;"></div>
-          <div class="bar" style="height: 75%;"></div>
-          <div class="bar" style="height: 90%;"></div>
-        </div>
-      </div>
-    </div>
 
-    <div class="chart-card">
-      <div class="chart-header">
-        <h3>New Students</h3>
-        <div class="chart-actions">
-          <select class="time-selector">
-            <option>Last 7 days</option>
-            <option selected>Last 30 days</option>
-            <option>Last 3 months</option>
-            <option>Last year</option>
-          </select>
-        </div>
-      </div>
-      <div class="chart-placeholder">
-        <!-- Chart would go here -->
-        <div class="placeholder-chart">
-          <div class="line"></div>
-          <div class="dot" style="bottom: 30%; left: 10%;"></div>
-          <div class="dot" style="bottom: 50%; left: 25%;"></div>
-          <div class="dot" style="bottom: 45%; left: 40%;"></div>
-          <div class="dot" style="bottom: 65%; left: 55%;"></div>
-          <div class="dot" style="bottom: 60%; left: 70%;"></div>
-          <div class="dot" style="bottom: 80%; left: 85%;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+        <!-- Licenses Table -->
+        <table *ngIf="!isLoading && licenses.length > 0" class="licenses-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>License Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let license of licenses">
+              <td>{{ license.licenseId }}</td>
+              <td>{{ license.type }}</td>
+              <td class="actions-cell">
+                <button (click)="openEditForm(license)" class="edit-btn" title="Edit License">
+                  <span class="material-icons">edit</span>
+                </button>
+                <button (click)="deleteLicense(license)" class="delete-btn" title="Delete License">
+                  <span class="material-icons">delete</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-  <div class="recent-activity">
-    <h2>Recent Activity</h2>
-    <div class="activity-list">
-      <div class="activity-item">
-        <div class="activity-icon">
-          <span class="material-icons">school</span>
-        </div>
-        <div class="activity-content">
-          <div class="activity-title">New School Registered</div>
-          <div class="activity-desc">Sunshine Driving Academy has registered on the platform</div>
-          <div class="activity-time">2 hours ago</div>
+        <!-- No Licenses Message -->
+        <div *ngIf="!isLoading && licenses.length === 0" class="no-data">
+          <span class="material-icons">info</span>
+          <p>No license types found. Click "Add License" to create one.</p>
         </div>
       </div>
 
-      <div class="activity-item">
-        <div class="activity-icon">
-          <span class="material-icons">payment</span>
-        </div>
-        <div class="activity-content">
-          <div class="activity-title">Payment Received</div>
-          <div class="activity-desc">CitySafe Driving School made their monthly payment of $1,200</div>
-          <div class="activity-time">5 hours ago</div>
-        </div>
-      </div>
+      <!-- License Form (Create/Edit) -->
+      <div *ngIf="showLicenseForm" class="license-form-overlay">
+        <div class="license-form-container">
+          <div class="form-header">
+            <h3>{{ isCreating ? 'Add New License' : 'Edit License' }}</h3>
+            <button (click)="cancelForm()" class="close-btn">
+              <span class="material-icons">close</span>
+            </button>
+          </div>
 
-      <div class="activity-item">
-        <div class="activity-icon">
-          <span class="material-icons">support_agent</span>
-        </div>
-        <div class="activity-content">
-          <div class="activity-title">Support Ticket Resolved</div>
-          <div class="activity-desc">Ticket #4851 from DriveRight Academy has been resolved</div>
-          <div class="activity-time">Yesterday</div>
-        </div>
-      </div>
+          <form [formGroup]="licenseForm" (ngSubmit)="submitLicenseForm()">
+            <div class="form-group">
+              <label for="licenseType">License Type:</label>
+              <input
+                type="text"
+                id="licenseType"
+                formControlName="type"
+                placeholder="e.g. A, B, C, D..."
+                class="form-control"
+                maxlength="10"
+              >
+              <div *ngIf="licenseForm.get('type')?.invalid && licenseForm.get('type')?.touched" class="form-error">
+                License type is required and should be fewer than 10 characters.
+              </div>
+            </div>
 
-      <div class="activity-item">
-        <div class="activity-icon">
-          <span class="material-icons">person_add</span>
-        </div>
-        <div class="activity-content">
-          <div class="activity-title">New Admin User</div>
-          <div class="activity-desc">Sarah Johnson was added as a School Admin for Premier Driving School</div>
-          <div class="activity-time">2 days ago</div>
+            <div class="form-actions">
+              <button type="button" (click)="cancelForm()" class="cancel-form-btn">Cancel</button>
+              <button
+                type="submit"
+                [disabled]="licenseForm.invalid"
+                class="submit-form-btn"
+              >
+                {{ isCreating ? 'Create License' : 'Update License' }}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
