@@ -24,9 +24,9 @@ DriveFlow is a modern Customer Relationship Management (CRM) system specifically
 - **Build Tools**: Angular CLI 17.3.0
 - **Styling Preprocessor**: PostCSS 8.4.31 with Autoprefixer 10.4.16
 
-## Installation
+## Installation & Setup
 
-Follow these steps to set up the project locally:
+Follow these steps to set up the project for development:
 
 ```bash
 # Clone the repository
@@ -38,36 +38,66 @@ cd DriveFlowWeb
 # Install dependencies
 npm install
 
-# Set up environment variables
-cp sample.env .env
-# Edit .env file with your actual API URL and other configurations
-
 # Start the development server
 ng serve
 ```
 
 Access the application by opening your browser and navigating to `http://localhost:4200/`.
 
-## Environment Variables
+## Development
 
-DriveFlow uses environment variables for configuration. These are loaded from a `.env` file in the project root.
+### Development Server
 
-### Required Variables
-- `API_BASE_URL`: Base URL for the DriveFlow API (e.g., `https://api.driveflow.com/api/`)
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-### Setting Up Environment Variables
-1. Copy the sample environment file: `cp sample.env .env`
-2. Edit the `.env` file with your actual values
-3. Restart the development server if it's already running
+### Code Scaffolding
 
-⚠️ **Note**: Never commit the `.env` file to version control as it may contain sensitive information. The `.env` file is already added to `.gitignore`.
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Deployment
+## Building for Production
 
-To build the application for production:
+### Build
+
+Run the following command to build the project for production:
 
 ```bash
 ng build --configuration production
 ```
 
-The build artifacts will be stored in the `dist/` directory, ready for deployment to your hosting provider of choice.
+The build artifacts will be stored in the `dist/` directory and are ready for deployment.
+
+### Running Unit Tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+### Running End-to-End Tests
+
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice.
+
+## Deployment
+
+The application is configured for easy deployment to various platforms:
+
+### Static Hosting (Netlify, Vercel, Firebase)
+
+The built application can be deployed to any static hosting provider:
+
+1. Build the application: `ng build --configuration production`
+2. Deploy the contents of the `dist/` directory to your hosting provider
+
+### Heroku
+
+To deploy to Heroku:
+
+1. Install the Heroku CLI: `npm install -g heroku`
+2. Log in to Heroku: `heroku login`
+3. Create a new Heroku app: `heroku create your-app-name`
+4. Deploy: `git push heroku main`
+
+## Configuration
+
+API endpoints and other configuration settings are managed through the ConfigService, which handles environment-specific settings. The application is pre-configured to connect to the production API.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
