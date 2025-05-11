@@ -1,0 +1,235 @@
+<div class="school-details-container">
+  <!-- Back button and title -->
+  <div class="header-section">
+    <button class="back-button" (click)="goBack()" aria-label="Go back to schools list">
+      <span class="material-icons">arrow_back</span>
+    </button>
+
+    <h1 class="page-title" *ngIf="school">{{ school.name }}</h1>
+    <h1 class="page-title" *ngIf="!school">School Details</h1>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="successMessage" class="alert success-alert">
+    <span class="material-icons">check_circle</span>
+    <span>{{ successMessage }}</span>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert error-alert">
+    <span class="material-icons">error</span>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading school data...</p>
+  </div>
+
+  <!-- School Details Content -->
+  <div *ngIf="!isLoading && school" class="details-content">
+    <mat-tab-group animationDuration="300ms" mat-stretch-tabs="false" mat-align-tabs="start">
+      <!-- School Information Tab -->
+      <mat-tab label="School Information">
+        <div class="tab-content">
+          <div class="detail-card">
+            <div class="card-header">
+              <div class="school-logo">{{ school.name.slice(0, 2).toUpperCase() }}</div>
+              <div class="school-status" [ngClass]="getStatusClass(school.status)">{{ school.status | titlecase }}</div>
+            </div>
+
+            <div class="info-section">
+              <h3>School Details</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Name:</span>
+                  <span class="value">{{ school.name }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Email:</span>
+                  <span class="value">{{ school.email }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Phone:</span>
+                  <span class="value">{{ school.phoneNumber }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Website:</span>
+                  <span class="value">
+                    <a [href]="school.webSite" target="_blank" rel="noopener noreferrer">{{ school.webSite }}</a>
+                  </span>
+                </div>
+                <div class="info-item full-width">
+                  <span class="label">Address:</span>
+                  <span class="value">{{ formatAddress(school) }}</span>
+                </div>
+                <div class="info-item full-width">
+                  <span class="label">Description:</span>
+                  <span class="value description">{{ school.description }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h3>School Administrator</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Name:</span>
+                  <span class="value">{{ school.schoolAdmin.firstName }} {{ school.schoolAdmin.lastName }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Email:</span>
+                  <span class="value">{{ school.schoolAdmin.email }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Phone:</span>
+                  <span class="value">{{ school.schoolAdmin.phone }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <button class="action-button" [routerLink]="['/dashboard/super-admin/schools']" [queryParams]="{edit: school.autoSchoolId}">
+                <span class="material-icons">edit</span>
+                Edit School
+              </button>
+              <button class="action-button" [routerLink]="['/dashboard/super-admin/schools']" [queryParams]="{admin: school.autoSchoolId}">
+                <span class="material-icons">admin_panel_settings</span>
+                Edit Admin
+              </button>
+              <button class="action-button delete" (click)="deleteSchool()">
+                <span class="material-icons">delete</span>
+                Delete School
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- School Requests Tab -->
+      <mat-tab label="Requests">
+        <div class="tab-content">
+          <div class="list-card">
+            <h3>School Requests</h3>
+
+            <div *ngIf="requests.length === 0" class="empty-list">
+              <span class="material-icons">assignment</span>
+              <p>No requests found for this school.</p>
+            </div>
+
+            <div *ngIf="requests.length > 0" class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let request of requests">
+                    <td>{{ request.requestId }}</td>
+                    <td>{{ request.firstName }} {{ request.lastName }}</td>
+                    <td>{{ request.phoneNr }}</td>
+                    <td>{{ request.drivingCategory }}</td>
+                    <td>{{ request.requestDate | date:'MMM d, y' }}</td>
+                    <td>
+                      <span class="status-badge" [ngClass]="getRequestStatusColor(request.status)">
+                        {{ request.status }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- School Instructors Tab -->
+      <mat-tab label="Instructors">
+        <div class="tab-content">
+          <div class="list-card">
+            <h3>School Instructors</h3>
+
+            <div *ngIf="instructors.length === 0" class="empty-list">
+              <span class="material-icons">person</span>
+              <p>No instructors found for this school.</p>
+            </div>
+
+            <div *ngIf="instructors.length > 0" class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let instructor of instructors">
+                    <td>{{ instructor.userId }}</td>
+                    <td>{{ instructor.firstName }} {{ instructor.lastName }}</td>
+                    <td>{{ instructor.email }}</td>
+                    <td>{{ instructor.phone }}</td>
+                    <td>
+                      <span class="status-badge" [ngClass]="getStatusClass(instructor.status)">
+                        {{ instructor.status }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- School Students Tab -->
+      <mat-tab label="Students">
+        <div class="tab-content">
+          <div class="list-card">
+            <h3>School Students</h3>
+
+            <div *ngIf="students.length === 0" class="empty-list">
+              <span class="material-icons">school</span>
+              <p>No students found for this school.</p>
+            </div>
+
+            <div *ngIf="students.length > 0" class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let student of students">
+                    <td>{{ student.userId }}</td>
+                    <td>{{ student.firstName }} {{ student.lastName }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.phone }}</td>
+                    <td>
+                      <span class="status-badge" [ngClass]="getStatusClass(student.status)">
+                        {{ student.status }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

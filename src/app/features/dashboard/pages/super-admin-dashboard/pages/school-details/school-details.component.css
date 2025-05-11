@@ -1,0 +1,393 @@
+.school-details-container {
+  padding: 20px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0;
+}
+
+.header-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(74, 108, 247, 0.1);
+  gap: 16px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #4a5568;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.back-button:hover {
+  background: #f7fafc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #4a6cf7;
+}
+
+.back-button .material-icons {
+  font-size: 20px;
+}
+
+/* Alerts */
+.alert {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.success-alert {
+  background-color: #f0fff4;
+  color: #2f855a;
+  border-left: 4px solid #2f855a;
+}
+
+.error-alert {
+  background-color: #fff5f5;
+  color: #c53030;
+  border-left: 4px solid #c53030;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(74, 108, 247, 0.2);
+  border-radius: 50%;
+  border-top-color: #4a6cf7;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Details content */
+.details-content {
+  margin-top: 20px;
+}
+
+.tab-content {
+  padding: 20px 0;
+}
+
+.detail-card, .list-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 20px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.school-logo {
+  width: 60px;
+  height: 60px;
+  background: #4a6cf7;
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 22px;
+}
+
+.school-status {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-weight: 500;
+}
+
+.school-status.active {
+  background: rgba(47, 133, 90, 0.2);
+  color: #2f855a;
+}
+
+.school-status.restricted {
+  background: rgba(221, 107, 32, 0.2);
+  color: #dd6b20;
+}
+
+.school-status.demo {
+  background: rgba(49, 130, 206, 0.2);
+  color: #3182ce;
+}
+
+.status-badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 50px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.status-badge.active, .status-badge.approved {
+  background: rgba(47, 133, 90, 0.2);
+  color: #2f855a;
+}
+
+.status-badge.restricted, .status-badge.rejected {
+  background: rgba(221, 107, 32, 0.2);
+  color: #dd6b20;
+}
+
+.status-badge.demo, .status-badge.pending {
+  background: rgba(49, 130, 206, 0.2);
+  color: #3182ce;
+}
+
+/* Info sections */
+.info-section {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.info-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 16px 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.info-item .label {
+  font-size: 14px;
+  color: #718096;
+  font-weight: 500;
+}
+
+.info-item .value {
+  font-size: 16px;
+  color: #2d3748;
+}
+
+.info-item .value.description {
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  flex: 1;
+  min-width: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(74, 108, 247, 0.1);
+  color: #4a6cf7;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background: rgba(74, 108, 247, 0.2);
+}
+
+.action-button.delete {
+  background: rgba(229, 62, 62, 0.1);
+  color: #e53e3e;
+}
+
+.action-button.delete:hover {
+  background: rgba(229, 62, 62, 0.2);
+}
+
+/* Table styles */
+.table-container {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.data-table th, .data-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.data-table th {
+  background-color: rgba(74, 108, 247, 0.05);
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(74, 108, 247, 0.03);
+}
+
+/* Empty list styles */
+.empty-list {
+  padding: 40px 0;
+  text-align: center;
+  color: #a0aec0;
+}
+
+.empty-list .material-icons {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: #e2e8f0;
+}
+
+/* Material Tab Overrides */
+::ng-deep .mat-mdc-tab-header {
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+::ng-deep .mat-mdc-tab-labels {
+  background-color: transparent;
+}
+
+::ng-deep .mat-mdc-tab.mdc-tab {
+  padding: 0 20px;
+  height: 48px;
+}
+
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: #4a5568;
+  font-weight: 500;
+}
+
+::ng-deep .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label {
+  color: #4a6cf7;
+}
+
+::ng-deep .mat-mdc-tab-header-pagination-chevron {
+  border-color: #4a5568;
+}
+
+::ng-deep .mat-mdc-tab-body-content {
+  overflow: hidden;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .school-details-container {
+    padding: 16px 10px;
+  }
+
+  .header-section {
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+  }
+
+  .page-title {
+    font-size: 20px;
+    line-height: 1.3;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-button {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .school-status {
+    align-self: flex-start;
+  }
+
+  /* Tab adjustments for mobile */
+  ::ng-deep .mat-mdc-tab-header {
+    overflow-x: auto;
+  }
+
+  ::ng-deep .mat-mdc-tab-labels {
+    justify-content: flex-start;
+  }
+
+  ::ng-deep .mat-mdc-tab {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 576px) {
+  .data-table th, .data-table td {
+    padding: 8px;
+    font-size: 13px;
+  }
+}

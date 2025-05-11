@@ -16,6 +16,7 @@ import { OverviewComponent } from './features/dashboard/pages/super-admin-dashbo
 import { SchoolsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/schools/schools.component';
 import { PaymentsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/payments/payments.component';
 import { StatisticsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/statistics/statistics.component';
+import { SchoolDetailsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/school-details/school-details.component';
 
 // School Profile Page
 import { SchoolProfileComponent } from './features/school/pages/school-profile/school-profile.component';
@@ -78,6 +79,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: OverviewComponent },
       { path: 'schools', component: SchoolsComponent },
+      { path: 'schools/:id', component: SchoolDetailsComponent },
       { path: 'payments', component: PaymentsComponent },
       { path: 'statistics', component: StatisticsComponent },
     ]
