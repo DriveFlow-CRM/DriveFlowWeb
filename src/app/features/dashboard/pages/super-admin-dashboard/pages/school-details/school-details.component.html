@@ -168,7 +168,6 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -177,11 +176,6 @@
                     <td>{{ instructor.firstName }} {{ instructor.lastName }}</td>
                     <td>{{ instructor.email }}</td>
                     <td>{{ instructor.phone }}</td>
-                    <td>
-                      <span class="status-badge" [ngClass]="getStatusClass(instructor.status)">
-                        {{ instructor.status }}
-                      </span>
-                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -209,7 +203,6 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -218,11 +211,6 @@
                     <td>{{ student.firstName }} {{ student.lastName }}</td>
                     <td>{{ student.email }}</td>
                     <td>{{ student.phone }}</td>
-                    <td>
-                      <span class="status-badge" [ngClass]="getStatusClass(student.status)">
-                        {{ student.status }}
-                      </span>
-                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -231,5 +219,13 @@
         </div>
       </mat-tab>
     </mat-tab-group>
+  </div>
+
+  <!-- Debug Info (Only visible when there's an error) -->
+  <div *ngIf="errorMessage" class="debug-info">
+    <h3>Debug Information</h3>
+    <p>If you're seeing this, please provide this information to the development team:</p>
+    <p>API URL: {{ getApiUrl() }}</p>
+    <p>Data loading state: {{ isLoading ? 'Loading' : 'Completed' }}</p>
   </div>
 </div>

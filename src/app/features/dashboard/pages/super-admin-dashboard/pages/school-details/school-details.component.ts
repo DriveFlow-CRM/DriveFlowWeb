@@ -11,6 +11,7 @@ import { SchoolUserService, SchoolUser } from '../../../../../../core/services/s
 import { Subscription, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
+import { ConfigService } from '../../../../../../core/services/config.service';
 
 @Component({
   selector: 'app-school-details',
@@ -47,7 +48,8 @@ export class SchoolDetailsComponent implements OnInit, OnDestroy {
     private autoSchoolService: AutoSchoolService,
     private requestService: RequestService,
     private schoolUserService: SchoolUserService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -97,31 +99,34 @@ export class SchoolDetailsComponent implements OnInit, OnDestroy {
 
   loadRelatedData(): void {
     // Load requests, instructors and students in parallel
+    console.log('Loading related data for school ID:', this.schoolId);
+
     this.subscription.add(
-      forkJoin([
-        this.requestService.fetchSchoolRequests(this.schoolId).pipe(
+      forkJoin({
+        requests: this.requestService.fetchSchoolRequests(this.schoolId).pipe(
           catchError(error => {
             console.error('Error loading requests:', error);
             return of([]);
           })
         ),
-        this.schoolUserService.getSchoolInstructors(this.schoolId).pipe(
+        instructors: this.schoolUserService.getSchoolInstructors(this.schoolId).pipe(
           catchError(error => {
             console.error('Error loading instructors:', error);
             return of([]);
           })
         ),
-        this.schoolUserService.getSchoolStudents(this.schoolId).pipe(
+        students: this.schoolUserService.getSchoolStudents(this.schoolId).pipe(
           catchError(error => {
             console.error('Error loading students:', error);
             return of([]);
           })
         )
-      ]).subscribe({
-        next: ([requests, instructors, students]) => {
-          this.requests = requests;
-          this.instructors = instructors;
-          this.students = students;
+      }).subscribe({
+        next: (result) => {
+          console.log('API responses received');
+          this.requests = result.requests || [];
+          this.instructors = result.instructors || [];
+          this.students = result.students || [];
           this.isLoading = false;
         },
         error: (error: any) => {
@@ -135,12 +140,28 @@ export class SchoolDetailsComponent implements OnInit, OnDestroy {
 
   // Format address for display
   formatAddress(school: AutoSchool): string {
+    if (!school || !school.address) {
+      return 'Address not available';
+    }
+
     const address = school.address;
-    return `${address.streetName} ${address.addressNumber}, ${address.city.name}, ${address.city.county.name}, ${address.postcode}`;
+
+    // Handle potential undefined or null values in the address object
+    const streetName = address.streetName || '';
+    const addressNumber = address.addressNumber || '';
+    const cityName = address.city?.name || '';
+    const countyName = address.city?.county?.name || '';
+    const postcode = address.postcode || '';
+
+    return `${streetName} ${addressNumber}, ${cityName}, ${countyName}, ${postcode}`.trim().replace(/, ,/g, ',').replace(/,$/g, '');
   }
 
   // Get status class for styling
-  getStatusClass(status: string): string {
+  getStatusClass(status: string | undefined | null): string {
+    if (!status) {
+      return 'pending'; // Default status class if status is undefined or null
+    }
+
     switch (status.toLowerCase()) {
       case 'active':
         return 'active';
@@ -160,7 +181,11 @@ export class SchoolDetailsComponent implements OnInit, OnDestroy {
   }
 
   // Get color for request status
-  getRequestStatusColor(status: string): string {
+  getRequestStatusColor(status: string | undefined | null): string {
+    if (!status) {
+      return 'pending'; // Default status if status is undefined or null
+    }
+
     switch (status.toUpperCase()) {
       case 'PENDING':
         return 'pending';
@@ -216,5 +241,14 @@ export class SchoolDetailsComponent implements OnInit, OnDestroy {
   // Navigate back to schools list
   goBack(): void {
     this.router.navigate(['/dashboard/super-admin/schools']);
+  }
+
+  // Helper method to get API URL for debugging
+  getApiUrl(): string {
+    try {
+      return this.configService ? this.configService.getApiBaseUrl() : 'ConfigService not available';
+    } catch (error) {
+      return 'Error getting API URL';
+    }
   }
 }

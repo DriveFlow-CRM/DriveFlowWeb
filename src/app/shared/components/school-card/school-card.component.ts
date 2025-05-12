@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { School, SchoolListing } from '../../../core/models/school.model';
-import { SchoolStatus } from '../../../core/types/school.types';
 
 @Component({
   selector: 'app-school-card',

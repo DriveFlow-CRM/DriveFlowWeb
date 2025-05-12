@@ -391,3 +391,25 @@
     font-size: 13px;
   }
 }
+
+/* Debug information styling */
+.debug-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.debug-info h3 {
+  color: #c53030;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.debug-info p {
+  margin-bottom: 10px;
+  font-family: monospace;
+  word-break: break-word;
+}
