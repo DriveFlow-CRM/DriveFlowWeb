@@ -1,0 +1,162 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ data.isEditing ? 'Editează mașina' : 'Adaugă o mașină nouă' }}</h2>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+    <div class="dialog-content">
+      <div class="form-grid">
+        <!-- License Plate Number -->
+        <mat-form-field appearance="outline">
+          <mat-label>Număr de înmatriculare</mat-label>
+          <input matInput formControlName="licensePlateNumber" placeholder="ex. B123ABC" autocapitalize="characters">
+          <mat-hint>(ex. B123ABC)</mat-hint>
+          <mat-error *ngIf="isFieldInvalid('licensePlateNumber')">
+            {{ getErrorMessage('licensePlateNumber') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Brand -->
+        <mat-form-field appearance="outline">
+          <mat-label>Marca</mat-label>
+          <input matInput formControlName="brand" placeholder="ex. Dacia">
+          <mat-error *ngIf="isFieldInvalid('brand')">
+            {{ getErrorMessage('brand') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Model -->
+        <mat-form-field appearance="outline">
+          <mat-label>Model</mat-label>
+          <input matInput formControlName="model" placeholder="ex. Logan">
+          <mat-error *ngIf="isFieldInvalid('model')">
+            {{ getErrorMessage('model') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Year of Production -->
+        <mat-form-field appearance="outline">
+          <mat-label>An fabricație</mat-label>
+          <input matInput type="number" formControlName="yearOfProduction" placeholder="ex. 2020" min="1950" [max]="currentYear">
+          <mat-error *ngIf="isFieldInvalid('yearOfProduction')">
+            {{ getErrorMessage('yearOfProduction') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Color -->
+        <mat-form-field appearance="outline">
+          <mat-label>Culoare</mat-label>
+          <input matInput formControlName="color" placeholder="ex. Alb">
+          <mat-error *ngIf="isFieldInvalid('color')">
+            {{ getErrorMessage('color') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Transmission Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Tip transmisie</mat-label>
+          <mat-select formControlName="transmissionType">
+            <mat-option *ngFor="let type of data.transmissionTypes" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="isFieldInvalid('transmissionType')">
+            {{ getErrorMessage('transmissionType') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Fuel Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Tip combustibil</mat-label>
+          <mat-select formControlName="fuelType">
+            <mat-option *ngFor="let option of data.fuelTypeOptions" [value]="option.value">
+              {{ option.viewValue }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="isFieldInvalid('fuelType')">
+            {{ getErrorMessage('fuelType') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Engine Size -->
+        <mat-form-field appearance="outline">
+          <mat-label>Capacitate motor (litri)</mat-label>
+          <input matInput type="number" formControlName="engineSizeLiters" placeholder="ex. 1.6" step="0.1" min="0.1" max="10">
+          <mat-error *ngIf="isFieldInvalid('engineSizeLiters')">
+            {{ getErrorMessage('engineSizeLiters') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Powertrain Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Tip motorizare</mat-label>
+          <mat-select formControlName="powertrainType">
+            <mat-option *ngFor="let type of data.powertrainTypes" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="isFieldInvalid('powertrainType')">
+            {{ getErrorMessage('powertrainType') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- License Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Tip permis</mat-label>
+          <mat-select formControlName="licenseId">
+            <mat-option *ngIf="loading" disabled>Loading...</mat-option>
+            <mat-option *ngFor="let license of licenses" [value]="license.licenseId">
+              {{ license.type }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="isFieldInvalid('licenseId')">
+            {{ getErrorMessage('licenseId') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- ITP Expiry Date -->
+        <mat-form-field appearance="outline">
+          <mat-label>Data expirare ITP</mat-label>
+          <input matInput [matDatepicker]="itpPicker" formControlName="itpExpiryDate">
+          <mat-datepicker-toggle matIconSuffix [for]="itpPicker"></mat-datepicker-toggle>
+          <mat-datepicker #itpPicker></mat-datepicker>
+          <mat-error *ngIf="isFieldInvalid('itpExpiryDate')">
+            {{ getErrorMessage('itpExpiryDate') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Insurance Expiry Date -->
+        <mat-form-field appearance="outline">
+          <mat-label>Data expirare Asigurare</mat-label>
+          <input matInput [matDatepicker]="insurancePicker" formControlName="insuranceExpiryDate">
+          <mat-datepicker-toggle matIconSuffix [for]="insurancePicker"></mat-datepicker-toggle>
+          <mat-datepicker #insurancePicker></mat-datepicker>
+          <mat-error *ngIf="isFieldInvalid('insuranceExpiryDate')">
+            {{ getErrorMessage('insuranceExpiryDate') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- RCA Expiry Date -->
+        <mat-form-field appearance="outline">
+          <mat-label>Data expirare RCA</mat-label>
+          <input matInput [matDatepicker]="rcaPicker" formControlName="rcaExpiryDate">
+          <mat-datepicker-toggle matIconSuffix [for]="rcaPicker"></mat-datepicker-toggle>
+          <mat-datepicker #rcaPicker></mat-datepicker>
+          <mat-error *ngIf="isFieldInvalid('rcaExpiryDate')">
+            {{ getErrorMessage('rcaExpiryDate') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button mat-button class="cancel-btn" type="button" (click)="onCancel()">Anulare</button>
+      <button mat-raised-button class="submit-btn" color="primary" type="submit">
+        {{ data.isEditing ? 'Salvare' : 'Adăugare' }}
+      </button>
+    </div>
+  </form>
+</div>

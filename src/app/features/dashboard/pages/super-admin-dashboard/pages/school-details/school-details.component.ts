@@ -5,12 +5,15 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { AutoSchoolService, AutoSchool } from '../../../../../../core/services/auto-school.service';
-import { RequestService, SchoolRequest } from '../../../../../../core/services/request.service';
+import { FormsModule } from '@angular/forms';
+import { AutoSchoolService } from '../../../../../../core/services/auto-school.service';
+import { AutoSchool } from '../../../../../../models/interfaces/auto-school.model';
+import { RequestService } from '../../../../../../core/services/request.service';
+import { SchoolRequest } from '../../../../../../models/interfaces/request.model';
 import { SchoolUserService, SchoolUser } from '../../../../../../core/services/school-user.service';
+import { TeachingCategoryService, TeachingCategory } from '../../../../../../core/services/teaching-category.service';
 import { Subscription, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { FormsModule } from '@angular/forms';
 import { ConfigService } from '../../../../../../core/services/config.service';
 
 @Component({
@@ -35,6 +38,31 @@ export class SchoolDetailsComponent implements OnInit, OnDestroy {
   requests: SchoolRequest[] = [];
   instructors: SchoolUser[] = [];
   students: SchoolUser[] = [];
+  teachingCategories: TeachingCategory[] = [];
+
+  // Search properties
+  studentSearchTerm: string = '';
+  instructorSearchTerm: string = '';
+  filteredStudents: SchoolUser[] = [];
+  filteredInstructors: SchoolUser[] = [];
+
+  // Pagination properties
+  pageSize: number = 10;
+
+  // Requests pagination
+  requestsCurrentPage: number = 1;
+  totalRequestsPages: number = 1;
+  paginatedRequests: SchoolRequest[] = [];
+
+  // Instructors pagination
+  instructorsCurrentPage: number = 1;
+  totalInstructorsPages: number = 1;
+  paginatedInstructors: SchoolUser[] = [];
+
+  // Students pagination
+  studentsCurrentPage: number = 1;
+  totalStudentsPages: number = 1;
+  paginatedStudents: SchoolUser[] = [];
 
   isLoading: boolean = true;
   errorMessage: string | null = null;
@@ -48,6 +76,7 @@ export class SchoolDetailsComponent implements OnInit, OnDestroy {
     private autoSchoolService: AutoSchoolService,
     private requestService: RequestService,
     private schoolUserService: SchoolUserService,
+    private teachingCategoryService: TeachingCategoryService,
     private dialog: MatDialog,
     private configService: ConfigService
   ) {}
@@ -120,6 +149,12 @@ export class SchoolDetailsComponent implements OnInit, OnDestroy {
             console.error('Error loading students:', error);
             return of([]);
           })
+        ),
+        teachingCategories: this.teachingCategoryService.getTeachingCategories(this.schoolId).pipe(
+          catchError(error => {
+            console.error('Error loading teaching categories:', error);
+            return of([]);
+          })
         )
       }).subscribe({
         next: (result) => {
@@ -127,6 +162,17 @@ export class SchoolDetailsComponent implements OnInit, OnDestroy {
           this.requests = result.requests || [];
           this.instructors = result.instructors || [];
           this.students = result.students || [];
+          this.teachingCategories = result.teachingCategories || [];
+
+          // Initialize filtered arrays
+          this.filteredStudents = [...this.students];
+          this.filteredInstructors = [...this.instructors];
+
+          // Initialize pagination
+          this.updateRequestsPagination();
+          this.updateInstructorsPagination();
+          this.updateStudentsPagination();
+
           this.isLoading = false;
         },
         error: (error: any) => {
@@ -249,6 +295,142 @@ export class SchoolDetailsComponent implements OnInit, OnDestroy {
       return this.configService ? this.configService.getApiBaseUrl() : 'ConfigService not available';
     } catch (error) {
       return 'Error getting API URL';
+    }
+  }
+
+  // Filter students based on search term
+  filterStudents(): void {
+    const term = this.studentSearchTerm.toLowerCase().trim();
+    if (!term) {
+      this.filteredStudents = [...this.students];
+    } else {
+      this.filteredStudents = this.students.filter(student =>
+        student.firstName.toLowerCase().includes(term) ||
+        student.lastName.toLowerCase().includes(term) ||
+        student.phone.toLowerCase().includes(term)
+      );
+    }
+
+    // Reset pagination when filtering
+    this.studentsCurrentPage = 1;
+    this.updateStudentsPagination();
+  }
+
+  // Filter instructors based on search term
+  filterInstructors(): void {
+    const term = this.instructorSearchTerm.toLowerCase().trim();
+    if (!term) {
+      this.filteredInstructors = [...this.instructors];
+    } else {
+      this.filteredInstructors = this.instructors.filter(instructor =>
+        instructor.firstName.toLowerCase().includes(term) ||
+        instructor.lastName.toLowerCase().includes(term) ||
+        instructor.phone.toLowerCase().includes(term)
+      );
+    }
+
+    // Reset pagination when filtering
+    this.instructorsCurrentPage = 1;
+    this.updateInstructorsPagination();
+  }
+
+  // Update pagination for requests table
+  updateRequestsPagination(): void {
+    this.totalRequestsPages = Math.ceil(this.requests.length / this.pageSize);
+    this.totalRequestsPages = this.totalRequestsPages === 0 ? 1 : this.totalRequestsPages;
+
+    const startIndex = (this.requestsCurrentPage - 1) * this.pageSize;
+    const endIndex = Math.min(startIndex + this.pageSize, this.requests.length);
+    this.paginatedRequests = this.requests.slice(startIndex, endIndex);
+  }
+
+  // Update pagination for instructors table
+  updateInstructorsPagination(): void {
+    this.totalInstructorsPages = Math.ceil(this.filteredInstructors.length / this.pageSize);
+    this.totalInstructorsPages = this.totalInstructorsPages === 0 ? 1 : this.totalInstructorsPages;
+
+    const startIndex = (this.instructorsCurrentPage - 1) * this.pageSize;
+    const endIndex = Math.min(startIndex + this.pageSize, this.filteredInstructors.length);
+    this.paginatedInstructors = this.filteredInstructors.slice(startIndex, endIndex);
+  }
+
+  // Update pagination for students table
+  updateStudentsPagination(): void {
+    this.totalStudentsPages = Math.ceil(this.filteredStudents.length / this.pageSize);
+    this.totalStudentsPages = this.totalStudentsPages === 0 ? 1 : this.totalStudentsPages;
+
+    const startIndex = (this.studentsCurrentPage - 1) * this.pageSize;
+    const endIndex = Math.min(startIndex + this.pageSize, this.filteredStudents.length);
+    this.paginatedStudents = this.filteredStudents.slice(startIndex, endIndex);
+  }
+
+  // Change page for requests
+  changeRequestsPage(page: number): void {
+    if (page >= 1 && page <= this.totalRequestsPages) {
+      this.requestsCurrentPage = page;
+      this.updateRequestsPagination();
+    }
+  }
+
+  // Change page for instructors
+  changeInstructorsPage(page: number): void {
+    if (page >= 1 && page <= this.totalInstructorsPages) {
+      this.instructorsCurrentPage = page;
+      this.updateInstructorsPagination();
+    }
+  }
+
+  // Change page for students
+  changeStudentsPage(page: number): void {
+    if (page >= 1 && page <= this.totalStudentsPages) {
+      this.studentsCurrentPage = page;
+      this.updateStudentsPagination();
+    }
+  }
+
+  // Generate school page URL
+  getSchoolPageUrl(): string {
+    if (!this.school) return '';
+
+    // Get base URL (removes any paths)
+    const baseUrl = window.location.origin;
+
+    // Format school name for URL
+    const schoolSlug = this.school.name
+      .toLowerCase()
+      .replace(/[^\w\s]/gi, '') // Remove special characters
+      .replace(/\s+/g, '-');     // Replace spaces with hyphens
+
+    return `${baseUrl}/school/${this.schoolId}/${schoolSlug}`;
+  }
+
+  // Open school page in new tab
+  openSchoolPage(): void {
+    const url = this.getSchoolPageUrl();
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+
+  // Copy school page URL to clipboard
+  copySchoolPageUrl(): void {
+    const url = this.getSchoolPageUrl();
+    if (url) {
+      navigator.clipboard.writeText(url)
+        .then(() => {
+          // Show success message temporarily
+          this.successMessage = 'School page URL copied to clipboard!';
+          setTimeout(() => {
+            this.successMessage = null;
+          }, 3000);
+        })
+        .catch(err => {
+          console.error('Could not copy text: ', err);
+          this.errorMessage = 'Failed to copy URL to clipboard.';
+          setTimeout(() => {
+            this.errorMessage = null;
+          }, 3000);
+        });
     }
   }
 }

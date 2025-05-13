@@ -3,31 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, throwError, catchError } from 'rxjs';
 import { ConfigService } from './config.service';
 import { Router } from '@angular/router';
-
-// Matches LoginDto from API
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-// Matches RefreshDto from API
-export interface RefreshTokenRequest {
-  refreshToken: string;
-}
-
-// Actual response structure from API auth endpoints
-export interface AuthResponse {
-  token: string;
-  refreshToken: string;
-  expiresIn: number;
-  userId: string;
-  userType: string;
-  userEmail: string;
-  firstName: string;
-  lastName: string;
-  userPhone: string;
-  schoolId: number;
-}
+import { ErrorHandlerService } from './error-handler.service';
+import { AuthResponse, LoginRequest, RefreshTokenRequest } from '../../models/interfaces/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +23,8 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
-    private router: Router
+    private router: Router,
+    private errorHandler: ErrorHandlerService
   ) {
     this.API_URL = this.configService.getApiBaseUrl();
     this.checkAuthStatus();
@@ -107,28 +85,7 @@ export class AuthService {
 
           // No navigation here - let the component handle it
         }),
-        catchError(error => {
-          console.error('Login error:', error);
-
-          let errorMessage = 'An unexpected error occurred';
-
-          if (error.status === 401) {
-            errorMessage = 'Email or password incorrect';
-          } else if (error.status === 404) {
-            errorMessage = 'Account not found';
-          } else if (error.status === 0) {
-            errorMessage = 'Cannot connect to the server. Please check your internet connection or try again later.';
-
-            // Log CORS debugging information
-            console.warn(
-              'This might be a CORS issue. Server details:',
-              'API URL:', this.API_URL,
-              'Request headers:', headers
-            );
-          }
-
-          return throwError(() => new Error(errorMessage));
-        })
+        catchError(error => this.errorHandler.handleHttpError(error))
       );
   }
 
@@ -144,7 +101,9 @@ export class AuthService {
       'Accept': 'application/json'
     });
 
-    return this.http.post<AuthResponse>(`${this.API_URL}Auth/refresh`, { refreshToken }, { headers })
+    const refreshRequest: RefreshTokenRequest = { refreshToken };
+
+    return this.http.post<AuthResponse>(`${this.API_URL}Auth/refresh`, refreshRequest, { headers })
       .pipe(
         tap(response => {
           console.log('Token refresh response:', response);
@@ -153,7 +112,7 @@ export class AuthService {
         catchError(error => {
           console.error('Token refresh error:', error);
           this.logout();
-          return throwError(() => new Error('Failed to refresh token'));
+          return this.errorHandler.handleHttpError(error);
         })
       );
   }

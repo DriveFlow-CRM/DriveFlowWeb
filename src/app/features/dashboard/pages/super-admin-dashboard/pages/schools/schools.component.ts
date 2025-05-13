@@ -4,7 +4,8 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, F
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { RouterModule, Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { AutoSchoolService, AutoSchool, CreateAutoSchoolRequest, UpdateAutoSchoolRequest, UpdateSchoolAdminRequest, County, City, Address } from '../../../../../../core/services/auto-school.service';
+import { AutoSchoolService } from '../../../../../../core/services/auto-school.service';
+import { AutoSchool, CreateAutoSchoolRequest, UpdateAutoSchoolRequest, UpdateSchoolAdminRequest, County, City, Address } from '../../../../../../models/interfaces/auto-school.model';
 import { LocationService, AddressCreateDto, AddressUpdateDto } from '../../../../../../core/services/location.service';
 import { Subscription } from 'rxjs';
 

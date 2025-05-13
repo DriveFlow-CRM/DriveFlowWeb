@@ -1,0 +1,86 @@
+<div class="cars-container">
+  <div class="header">
+    <h1>Mașini</h1>
+    <button mat-raised-button color="primary" (click)="openAddVehicleDialog()">
+      <mat-icon>add</mat-icon> Adaugă mașină
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Se încarcă mașinile...</p>
+  </div>
+
+  <div *ngIf="!loading && vehicles.length === 0" class="no-data">
+    <p>Nu există mașini înregistrate. Adăugați una nouă folosind butonul de mai sus.</p>
+  </div>
+
+  <div *ngIf="!loading && vehicles.length > 0" class="vehicles-grid">
+    <div *ngFor="let vehicle of vehicles" class="vehicle-card">
+      <div class="vehicle-header">
+        <span class="license-plate">
+          <!-- Format Romanian license plate with county code, numbers and letters -->
+          <span>{{ formatLicensePlate(vehicle.licensePlateNumber) }}</span>
+        </span>
+        <span class="license-type"
+          [ngClass]="{ 'tag-b': vehicle.licenseTypeName === 'B', 'tag-c': vehicle.licenseTypeName === 'C', 'tag-d': vehicle.licenseTypeName === 'D', 'tag-e': vehicle.licenseTypeName === 'E' }">
+          {{ vehicle.licenseTypeName }}
+        </span>
+      </div>
+
+      <div class="vehicle-body">
+        <h2>{{ vehicle.brand }} {{ vehicle.model }}</h2>
+        <div class="vehicle-details">
+          <div class="detail-item">
+            <span class="label">An:</span>
+            <span class="value">{{ vehicle.yearOfProduction }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Culoare:</span>
+            <span class="value">{{ vehicle.color }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Transmisie:</span>
+            <span class="value">{{ vehicle.transmissionType }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Combustibil:</span>
+            <span class="value">{{ getFuelTypeDisplay(vehicle.fuelType) }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Motor:</span>
+            <span class="value">{{ vehicle.engineSizeLiters }} L</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Propulsie:</span>
+            <span class="value">{{ vehicle.powertrainType }}</span>
+          </div>
+        </div>
+
+        <div class="documents">
+          <div class="document" [ngClass]="{'expired': isDateExpired(vehicle.itpExpiryDate)}">
+            <span class="doc-label">ITP:</span>
+            <span class="doc-date">{{ vehicle.itpExpiryDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="document" [ngClass]="{'expired': isDateExpired(vehicle.insuranceExpiryDate)}">
+            <span class="doc-label">Asigurare:</span>
+            <span class="doc-date">{{ vehicle.insuranceExpiryDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="document" [ngClass]="{'expired': isDateExpired(vehicle.rcaExpiryDate)}">
+            <span class="doc-label">RCA:</span>
+            <span class="doc-date">{{ vehicle.rcaExpiryDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="vehicle-actions">
+        <button mat-icon-button color="primary" (click)="openEditVehicleDialog(vehicle)" aria-label="Edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="confirmDelete(vehicle)" aria-label="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

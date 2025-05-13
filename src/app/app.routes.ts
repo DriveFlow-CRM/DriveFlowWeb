@@ -18,6 +18,14 @@ import { PaymentsComponent } from './features/dashboard/pages/super-admin-dashbo
 import { StatisticsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/statistics/statistics.component';
 import { SchoolDetailsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/school-details/school-details.component';
 
+// School Admin Dashboard Pages
+import { OverviewComponent as SchoolOverviewComponent } from './features/dashboard/pages/school-admin-dashboard/pages/overview/overview.component';
+import { CarsComponent } from './features/dashboard/pages/school-admin-dashboard/pages/cars/cars.component';
+import { InstructorsComponent as SchoolInstructorsComponent } from './features/dashboard/pages/school-admin-dashboard/pages/instructors/instructors.component';
+import { StatisticsComponent as SchoolStatisticsComponent } from './features/dashboard/pages/school-admin-dashboard/pages/statistics/statistics.component';
+import { FilesComponent } from './features/dashboard/pages/school-admin-dashboard/pages/files/files.component';
+import { PaymentsComponent as SchoolPaymentsComponent } from './features/dashboard/pages/school-admin-dashboard/pages/payments/payments.component';
+
 // School Profile Page
 import { SchoolProfileComponent } from './features/school/pages/school-profile/school-profile.component';
 
@@ -89,7 +97,16 @@ export const routes: Routes = [
   {
     path: 'dashboard/school-admin',
     component: SchoolAdminDashboardComponent,
-    canActivate: [authGuard, dashboardGuard]
+    canActivate: [authGuard, dashboardGuard],
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: SchoolOverviewComponent },
+      { path: 'cars', component: CarsComponent },
+      { path: 'instructors', component: SchoolInstructorsComponent },
+      { path: 'statistics', component: SchoolStatisticsComponent },
+      { path: 'files', component: FilesComponent },
+      { path: 'payments', component: SchoolPaymentsComponent },
+    ]
   },
   {
     path: 'dashboard/instructor',

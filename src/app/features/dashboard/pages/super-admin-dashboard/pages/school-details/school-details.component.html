@@ -60,6 +60,21 @@
                   </span>
                 </div>
                 <div class="info-item full-width">
+                  <span class="label">School Page URL:</span>
+                  <div class="school-page-url">
+                    <span class="value url-value">{{ getSchoolPageUrl() }}</span>
+                    <div class="url-actions">
+                      <button class="url-action-button" (click)="openSchoolPage()" title="Open page in new tab">
+                        <span class="material-icons">open_in_new</span>
+                        View Page
+                      </button>
+                      <button class="url-action-button" (click)="copySchoolPageUrl()" title="Copy link to clipboard">
+                        <span class="material-icons">content_copy</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="info-item full-width">
                   <span class="label">Address:</span>
                   <span class="value">{{ formatAddress(school) }}</span>
                 </div>
@@ -130,7 +145,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let request of requests">
+                  <tr *ngFor="let request of paginatedRequests">
                     <td>{{ request.requestId }}</td>
                     <td>{{ request.firstName }} {{ request.lastName }}</td>
                     <td>{{ request.phoneNr }}</td>
@@ -144,6 +159,33 @@
                   </tr>
                 </tbody>
               </table>
+
+              <!-- Pagination -->
+              <div class="pagination-container" *ngIf="requests.length > pageSize">
+                <div class="pagination">
+                  <button
+                    class="page-button"
+                    [class.disabled]="requestsCurrentPage === 1"
+                    (click)="changeRequestsPage(requestsCurrentPage - 1)"
+                    [disabled]="requestsCurrentPage === 1"
+                  >
+                    <span class="material-icons">chevron_left</span>
+                  </button>
+
+                  <span class="page-info">
+                    Page {{ requestsCurrentPage }} of {{ totalRequestsPages }}
+                  </span>
+
+                  <button
+                    class="page-button"
+                    [class.disabled]="requestsCurrentPage === totalRequestsPages"
+                    (click)="changeRequestsPage(requestsCurrentPage + 1)"
+                    [disabled]="requestsCurrentPage === totalRequestsPages"
+                  >
+                    <span class="material-icons">chevron_right</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -155,12 +197,29 @@
           <div class="list-card">
             <h3>School Instructors</h3>
 
+            <!-- Search Box -->
+            <div class="search-box">
+              <span class="material-icons search-icon">search</span>
+              <input
+                type="text"
+                placeholder="Search by name or phone..."
+                [(ngModel)]="instructorSearchTerm"
+                (input)="filterInstructors()"
+                class="search-input"
+              >
+            </div>
+
             <div *ngIf="instructors.length === 0" class="empty-list">
               <span class="material-icons">person</span>
               <p>No instructors found for this school.</p>
             </div>
 
-            <div *ngIf="instructors.length > 0" class="table-container">
+            <div *ngIf="filteredInstructors.length === 0 && instructors.length > 0" class="empty-list">
+              <span class="material-icons">search_off</span>
+              <p>No instructors match your search criteria.</p>
+            </div>
+
+            <div *ngIf="filteredInstructors.length > 0" class="table-container">
               <table class="data-table">
                 <thead>
                   <tr>
@@ -171,7 +230,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let instructor of instructors">
+                  <tr *ngFor="let instructor of paginatedInstructors">
                     <td>{{ instructor.userId }}</td>
                     <td>{{ instructor.firstName }} {{ instructor.lastName }}</td>
                     <td>{{ instructor.email }}</td>
@@ -179,6 +238,33 @@
                   </tr>
                 </tbody>
               </table>
+
+              <!-- Pagination -->
+              <div class="pagination-container" *ngIf="filteredInstructors.length > pageSize">
+                <div class="pagination">
+                  <button
+                    class="page-button"
+                    [class.disabled]="instructorsCurrentPage === 1"
+                    (click)="changeInstructorsPage(instructorsCurrentPage - 1)"
+                    [disabled]="instructorsCurrentPage === 1"
+                  >
+                    <span class="material-icons">chevron_left</span>
+                  </button>
+
+                  <span class="page-info">
+                    Page {{ instructorsCurrentPage }} of {{ totalInstructorsPages }}
+                  </span>
+
+                  <button
+                    class="page-button"
+                    [class.disabled]="instructorsCurrentPage === totalInstructorsPages"
+                    (click)="changeInstructorsPage(instructorsCurrentPage + 1)"
+                    [disabled]="instructorsCurrentPage === totalInstructorsPages"
+                  >
+                    <span class="material-icons">chevron_right</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -190,12 +276,29 @@
           <div class="list-card">
             <h3>School Students</h3>
 
+            <!-- Search Box -->
+            <div class="search-box">
+              <span class="material-icons search-icon">search</span>
+              <input
+                type="text"
+                placeholder="Search by name or phone..."
+                [(ngModel)]="studentSearchTerm"
+                (input)="filterStudents()"
+                class="search-input"
+              >
+            </div>
+
             <div *ngIf="students.length === 0" class="empty-list">
               <span class="material-icons">school</span>
               <p>No students found for this school.</p>
             </div>
 
-            <div *ngIf="students.length > 0" class="table-container">
+            <div *ngIf="filteredStudents.length === 0 && students.length > 0" class="empty-list">
+              <span class="material-icons">search_off</span>
+              <p>No students match your search criteria.</p>
+            </div>
+
+            <div *ngIf="filteredStudents.length > 0" class="table-container">
               <table class="data-table">
                 <thead>
                   <tr>
@@ -206,11 +309,75 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let student of students">
+                  <tr *ngFor="let student of paginatedStudents">
                     <td>{{ student.userId }}</td>
                     <td>{{ student.firstName }} {{ student.lastName }}</td>
                     <td>{{ student.email }}</td>
                     <td>{{ student.phone }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Pagination -->
+              <div class="pagination-container" *ngIf="filteredStudents.length > pageSize">
+                <div class="pagination">
+                  <button
+                    class="page-button"
+                    [class.disabled]="studentsCurrentPage === 1"
+                    (click)="changeStudentsPage(studentsCurrentPage - 1)"
+                    [disabled]="studentsCurrentPage === 1"
+                  >
+                    <span class="material-icons">chevron_left</span>
+                  </button>
+
+                  <span class="page-info">
+                    Page {{ studentsCurrentPage }} of {{ totalStudentsPages }}
+                  </span>
+
+                  <button
+                    class="page-button"
+                    [class.disabled]="studentsCurrentPage === totalStudentsPages"
+                    (click)="changeStudentsPage(studentsCurrentPage + 1)"
+                    [disabled]="studentsCurrentPage === totalStudentsPages"
+                  >
+                    <span class="material-icons">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Teaching Categories Tab -->
+      <mat-tab label="Teaching Categories">
+        <div class="tab-content">
+          <div class="list-card">
+            <h3>Teaching Categories</h3>
+
+            <div *ngIf="teachingCategories.length === 0" class="empty-list">
+              <span class="material-icons">menu_book</span>
+              <p>No teaching categories found for this school.</p>
+            </div>
+
+            <div *ngIf="teachingCategories.length > 0" class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>License Type</th>
+                    <th>Session Cost (RON)</th>
+                    <th>Session Duration (min)</th>
+                    <th>Scholarship Price (RON)</th>
+                    <th>Min. Driving Lessons</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let category of teachingCategories">
+                    <td>{{ category.licenseType }}</td>
+                    <td>{{ category.sessionCost }}</td>
+                    <td>{{ category.sessionDuration }}</td>
+                    <td>{{ category.scholarshipPrice }}</td>
+                    <td>{{ category.minDrivingLessonsReq }}</td>
                   </tr>
                 </tbody>
               </table>

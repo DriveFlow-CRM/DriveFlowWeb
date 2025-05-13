@@ -40,10 +40,6 @@
   font-size: 24px;
 }
 
-.menu-toggle.expanded {
-  color: #007bff; /* Blue color when expanded */
-}
-
 .logo {
   display: flex;
   align-items: center;
@@ -134,16 +130,74 @@
   background: rgba(255, 59, 48, 0.2);
 }
 
+/* Mobile close button and header */
+.mobile-nav-header {
+  display: none;
+  width: 100%;
+  padding: 15px;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1165;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.mobile-close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-close-button:hover {
+  background: #f8f9fa;
+  transform: scale(1.05);
+}
+
+.mobile-close-button .material-icons {
+  color: #ff3b30;
+  font-size: 24px;
+}
+
+/* Mobile overlay */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 85%; /* Match the width of the nav-links */
+  width: 15%; /* Take the rest of the screen width */
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1150;
+}
+
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .menu-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1100; /* Ensure it's above other elements */
-    font-size: 28px; /* Larger icon */
+    z-index: 1100;
+    font-size: 28px;
     margin-right: 10px;
-    background-color: rgba(255, 255, 255, 0.8); /* Slight background for visibility */
+    background-color: rgba(255, 255, 255, 0.8);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -151,40 +205,44 @@
     transition: all 0.3s ease;
   }
 
-  .menu-toggle.expanded {
-    color: #007bff; /* Make it blue when expanded */
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
   }
 
-  .navbar.expanded {
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.95);
+  .mobile-logo {
+    height: 36px;
   }
 
-  .navbar.expanded .navbar-container {
-    position: relative;
+  .mobile-overlay {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
   }
 
-  .logo-img {
-    height: 40px; /* Slightly smaller on mobile */
+  .mobile-overlay.active {
+    opacity: 1;
+    visibility: visible;
   }
 
   .nav-links {
-    position: absolute;
-    top: 70px;
+    position: fixed;
+    top: 0;
     left: 0;
-    width: 80%;
-    height: calc(100vh - 70px);
+    width: 85%;
+    height: 100vh;
     flex-direction: column;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    padding: 20px;
+    background: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 0 0 20px;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
-    gap: 20px;
+    gap: 5px;
     overflow-y: auto;
+    z-index: 1160;
   }
 
   .nav-links.active {
@@ -192,8 +250,10 @@
   }
 
   .nav-links a {
-    padding: 15px;
+    padding: 15px 20px;
     font-size: 18px;
+    width: 100%;
+    border-radius: 0;
   }
 
   .user-info {
@@ -203,21 +263,15 @@
   .button-text {
     display: none;
   }
-
-  .mobile-overlay {
-    position: fixed;
-    top: 70px;
-    left: 80%;
-    width: 20%;
-    height: calc(100vh - 70px);
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-  }
 }
 
 /* For larger screens */
 @media (min-width: 769px) {
   .mobile-overlay {
+    display: none;
+  }
+
+  .mobile-close-button {
     display: none;
   }
 }
