@@ -23,6 +23,7 @@ DriveFlow is a modern Customer Relationship Management (CRM) system specifically
 - **Package Manager**: npm 10.2.4
 - **Build Tools**: Angular CLI 17.3.0
 - **Styling Preprocessor**: PostCSS 8.4.31 with Autoprefixer 10.4.16
+- **State Management**: NgRx 17.0.1
 
 ## Installation & Setup
 
@@ -53,6 +54,21 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 ### Code Scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+### Coding Standards
+
+This project follows a comprehensive set of coding standards designed to ensure consistency and maintainability. Please refer to the [Coding Standards](src/CODING_STANDARDS.md) document for detailed guidelines on:
+
+- Project structure
+- Routing standards
+- Authentication implementation
+- Component organization
+- Styling approach (Tailwind CSS + Angular Material)
+- State management with NgRx
+- Error handling
+- Data models
+
+All contributors should review and follow these standards when working on the project.
 
 ## Building for Production
 
