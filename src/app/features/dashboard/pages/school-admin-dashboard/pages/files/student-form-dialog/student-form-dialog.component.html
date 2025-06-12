@@ -1,0 +1,254 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ data.isEditing ? 'Editează elev' : 'Adaugă elev nou' }}</h2>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+    <div class="dialog-content">
+      <!-- Edit form is simpler -->
+      <div *ngIf="data.isEditing" class="form-grid">
+        <!-- First Name -->
+        <mat-form-field appearance="outline">
+          <mat-label>Prenume</mat-label>
+          <input matInput formControlName="firstName">
+          <mat-error *ngIf="firstNameControl?.invalid && firstNameControl?.touched">
+            Prenumele este obligatoriu
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Last Name -->
+        <mat-form-field appearance="outline">
+          <mat-label>Nume</mat-label>
+          <input matInput formControlName="lastName">
+          <mat-error *ngIf="lastNameControl?.invalid && lastNameControl?.touched">
+            Numele este obligatoriu
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email">
+          <mat-error *ngIf="emailControl?.invalid && emailControl?.touched">
+            Email invalid
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Phone -->
+        <mat-form-field appearance="outline">
+          <mat-label>Telefon</mat-label>
+          <input matInput formControlName="phone">
+          <mat-error *ngIf="phoneControl?.invalid && phoneControl?.touched">
+            Număr de telefon invalid (10 cifre)
+          </mat-error>
+        </mat-form-field>
+
+        <!-- CNP -->
+        <mat-form-field appearance="outline">
+          <mat-label>CNP</mat-label>
+          <input matInput formControlName="cnp">
+          <mat-error *ngIf="cnpControl?.invalid && cnpControl?.touched">
+            CNP invalid (13 cifre)
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline">
+          <mat-label>Parolă nouă (opțional)</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordControl?.invalid && passwordControl?.touched">
+            Parola trebuie să conțină minim 8 caractere
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Add form is more complex with tabs -->
+      <div *ngIf="!data.isEditing">
+        <mat-tab-group>
+          <!-- Student Information Tab -->
+          <mat-tab label="Informații elev">
+            <div class="tab-content" formGroupName="student">
+              <div class="form-grid">
+                <!-- First Name -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Prenume</mat-label>
+                  <input matInput formControlName="firstName">
+                  <mat-error *ngIf="firstNameControl?.invalid && firstNameControl?.touched">
+                    Prenumele este obligatoriu
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- Last Name -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Nume</mat-label>
+                  <input matInput formControlName="lastName">
+                  <mat-error *ngIf="lastNameControl?.invalid && lastNameControl?.touched">
+                    Numele este obligatoriu
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- Email -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Email</mat-label>
+                  <input matInput type="email" formControlName="email">
+                  <mat-error *ngIf="emailControl?.invalid && emailControl?.touched">
+                    Email invalid
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- Phone -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Telefon</mat-label>
+                  <input matInput formControlName="phone">
+                  <mat-error *ngIf="phoneControl?.invalid && phoneControl?.touched">
+                    Număr de telefon invalid (10 cifre)
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- CNP -->
+                <mat-form-field appearance="outline">
+                  <mat-label>CNP</mat-label>
+                  <input matInput formControlName="cnp">
+                  <mat-error *ngIf="cnpControl?.invalid && cnpControl?.touched">
+                    CNP invalid (13 cifre)
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- Password -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Parolă</mat-label>
+                  <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                  <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                  </button>
+                  <mat-error *ngIf="passwordControl?.invalid && passwordControl?.touched">
+                    Parola trebuie să conțină minim 8 caractere
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+          <!-- File Information Tab -->
+          <mat-tab label="Dosar">
+            <div class="tab-content" formGroupName="file">
+              <div class="form-grid">
+                <!-- Start Date -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Data începere școlarizare</mat-label>
+                  <input matInput [matDatepicker]="startPicker" formControlName="scholarshipStartDate">
+                  <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #startPicker></mat-datepicker>
+                </mat-form-field>
+
+                <!-- Teaching Category -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Categoria de predare</mat-label>
+                  <mat-select formControlName="teachingCategoryId">
+                    <mat-option [value]="null">Niciunul</mat-option>
+                    <mat-option *ngFor="let category of data.teachingCategories" [value]="category.teachingCategoryId">
+                      {{ category.licenseType }} ({{ category.scholarshipPrice }} RON)
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <!-- Criminal Record Expiry Date -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Data expirare cazier</mat-label>
+                  <input matInput [matDatepicker]="criminalPicker" formControlName="criminalRecordExpiryDate">
+                  <mat-datepicker-toggle matSuffix [for]="criminalPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #criminalPicker></mat-datepicker>
+                </mat-form-field>
+
+                <!-- Vehicle -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Vehicul</mat-label>
+                  <mat-select formControlName="vehicleId">
+                    <mat-option [value]="null">Niciunul</mat-option>
+                    <mat-option *ngFor="let vehicle of data.vehicles" [value]="vehicle.vehicleId">
+                      {{ vehicle.licensePlateNumber }} ({{ vehicle.transmissionType === 'manual' ? 'Manuală' : 'Automată' }})
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <!-- Medical Record Expiry Date -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Data expirare fișă medicală</mat-label>
+                  <input matInput [matDatepicker]="medicalPicker" formControlName="medicalRecordExpiryDate">
+                  <mat-datepicker-toggle matSuffix [for]="medicalPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #medicalPicker></mat-datepicker>
+                </mat-form-field>
+
+                <!-- Instructor -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Instructor</mat-label>
+                  <mat-select formControlName="instructorId">
+                    <mat-option [value]="null">Niciunul</mat-option>
+                    <mat-option *ngFor="let instructor of data.instructors" [value]="instructor.userId">
+                      {{ instructor.firstName }} {{ instructor.lastName }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <!-- Status -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Status</mat-label>
+                  <mat-select formControlName="status">
+                    <mat-option *ngFor="let option of statusOptions" [value]="option">
+                      {{ option === 'Draft' ? 'Ciornă' :
+                         option === 'InProgress' ? 'În progres' :
+                         option === 'Approved' ? 'Aprobat' :
+                         option === 'Rejected' ? 'Respins' : 'Finalizat' }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+          <!-- Payment Information Tab -->
+          <mat-tab label="Plată">
+            <div class="tab-content" formGroupName="payment">
+              <div class="form-grid">
+                <!-- Sessions Paid -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Ședințe plătite</mat-label>
+                  <input matInput type="number" min="0" formControlName="sessionsPayed">
+                </mat-form-field>
+
+                <!-- Scholarship Base Payment -->
+                <div class="flex items-center h-[56px] pl-3">
+                  <mat-checkbox formControlName="scholarshipBasePayment">
+                    Plată de bază pentru școlarizare
+                  </mat-checkbox>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        mat-button
+        type="button"
+        class="cancel-btn"
+        (click)="onCancel()">
+        Anulează
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit">
+        {{ data.isEditing ? 'Salvează' : 'Adaugă' }}
+      </button>
+    </div>
+  </form>
+</div>

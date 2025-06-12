@@ -1,0 +1,123 @@
+<div class="appointment-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon class="header-icon">event</mat-icon>
+      Request Appointment
+    </h2>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-content">
+    <!-- Instructor Info Card -->
+    <mat-card class="instructor-card" *ngIf="data.instructor">
+      <div class="instructor-info">
+        <mat-icon class="instructor-icon">person</mat-icon>
+        <div class="instructor-details">
+          <div class="instructor-name">{{ data.instructor.firstName }} {{ data.instructor.lastName }}</div>
+          <div class="instructor-role">{{ data.instructor.role || 'Instructor' }}</div>
+        </div>
+      </div>
+    </mat-card>
+
+    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <!-- Date Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Appointment Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date"
+                 placeholder="Select date" [matDatepickerFilter]="dateFilter" [min]="getMinDate()">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="appointmentForm.get('date')?.touched && appointmentForm.get('date')?.errors">
+            {{ getFormFieldError('date') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Time Selection Grid -->
+        <div class="time-grid">
+          <mat-form-field appearance="outline" class="time-field">
+            <mat-label>Start Time</mat-label>
+            <mat-select formControlName="startHour">
+              <mat-option *ngFor="let time of timeSlots" [value]="time">
+                {{ time }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>access_time</mat-icon>
+            <mat-error *ngIf="appointmentForm.get('startHour')?.touched && appointmentForm.get('startHour')?.errors">
+              {{ getFormFieldError('startHour') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="time-field">
+            <mat-label>End Time</mat-label>
+            <mat-select formControlName="endHour">
+              <mat-option *ngFor="let time of timeSlots" [value]="time">
+                {{ time }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>access_time</mat-icon>
+            <mat-error *ngIf="appointmentForm.get('endHour')?.touched && appointmentForm.get('endHour')?.errors">
+              {{ getFormFieldError('endHour') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Appointment Type -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Appointment Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option *ngFor="let type of appointmentTypes" [value]="type.value">
+              <mat-icon>{{ getTypeIcon(type.value) }}</mat-icon>
+              {{ type.label }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>category</mat-icon>
+          <mat-error *ngIf="appointmentForm.get('type')?.touched && appointmentForm.get('type')?.errors">
+            {{ getFormFieldError('type') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Notes -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Additional Notes (Optional)</mat-label>
+          <textarea matInput formControlName="notes" rows="3"
+                    placeholder="Any specific requirements or notes for the instructor..."></textarea>
+          <mat-icon matSuffix>note</mat-icon>
+        </mat-form-field>
+      </div>
+    </form>
+
+    <!-- Request Summary -->
+    <mat-card class="request-summary" *ngIf="appointmentForm.valid">
+      <div class="summary-header">
+        <mat-icon>info</mat-icon>
+        <span>Request Summary</span>
+      </div>
+      <div class="summary-content">
+        <div class="summary-item">
+          <strong>Date:</strong> {{ appointmentForm.get('date')?.value | date:'fullDate' }}
+        </div>
+        <div class="summary-item">
+          <strong>Time:</strong> {{ appointmentForm.get('startHour')?.value }} - {{ appointmentForm.get('endHour')?.value }}
+        </div>
+        <div class="summary-item">
+          <strong>Type:</strong> {{ appointmentForm.get('type')?.value }}
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onCancel()" [disabled]="isLoading">
+      Cancel
+    </button>
+    <button mat-flat-button color="primary" (click)="onSubmit()"
+            [disabled]="isLoading || appointmentForm.invalid">
+      <mat-spinner *ngIf="isLoading" diameter="20" class="mr-2"></mat-spinner>
+      <mat-icon *ngIf="!isLoading">send</mat-icon>
+      {{ isLoading ? 'Sending Request...' : 'Send Request' }}
+    </button>
+  </div>
+</div>

@@ -7,7 +7,7 @@ import { DashboardGuardService } from './core/guards/dashboard-guard.service';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   title = 'DriveFlowWeb';

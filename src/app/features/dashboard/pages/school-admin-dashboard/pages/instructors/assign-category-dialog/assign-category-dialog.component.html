@@ -1,0 +1,43 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>Asignează categorie</h2>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="assignForm" (ngSubmit)="onSubmit()">
+    <div class="dialog-content">
+      <p class="instructor-name">Instructor: {{ data.instructor.firstName }} {{ data.instructor.lastName }}</p>
+
+      <!-- Teaching Category -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Categorie de predare</mat-label>
+        <mat-select formControlName="teachingCategoryId">
+          <mat-option *ngFor="let category of data.availableCategories" [value]="category.teachingCategoryId">
+            Categoria {{ category.licenseType }} - {{ category.sessionCost }} RON
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="isFieldInvalid('teachingCategoryId')">
+          {{ getErrorMessage('teachingCategoryId') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        mat-button
+        type="button"
+        class="cancel-btn"
+        (click)="onCancel()">
+        Anulează
+      </button>
+      <button
+        mat-flat-button
+        class="submit-btn"
+        type="submit">
+        Asignează
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,187 @@
+<div class="student-details-dialog">
+  <div mat-dialog-title class="dialog-header">
+    <div class="header-content">
+      <div class="student-avatar">
+        <mat-icon>person</mat-icon>
+      </div>
+      <div class="header-info">
+        <h2>{{ studentDetails?.firstName }} {{ studentDetails?.lastName }}</h2>
+        <p>{{ studentDetails?.email }}</p>
+      </div>
+    </div>
+    <button mat-icon-button (click)="onClose()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-content">
+    <mat-tab-group>
+      <!-- Personal Information Tab -->
+      <mat-tab label="Personal Info">
+        <div class="tab-content">
+          <mat-card class="info-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>person_outline</mat-icon>
+                Personal Information
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="info-grid">
+                <div class="info-item">
+                  <label>Full Name</label>
+                  <span>{{ studentDetails?.firstName }} {{ studentDetails?.lastName }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Email</label>
+                  <span>{{ studentDetails?.email || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Phone</label>
+                  <span>{{ studentDetails?.phoneNumber || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                  <label>License Type</label>
+                  <mat-chip [style.background-color]="getLicenseTypeColor(studentDetails?.type || '')"
+                           [style.color]="'white'">
+                    Category {{ studentDetails?.type }}
+                  </mat-chip>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="info-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>school</mat-icon>
+                Scholarship Information
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="info-grid">
+                <div class="info-item">
+                  <label>Status</label>
+                  <mat-chip [style.background-color]="getStatusColor(studentDetails?.status || '')"
+                           [style.color]="'white'">
+                    <mat-icon>{{ getStatusIcon(studentDetails?.status || '') }}</mat-icon>
+                    {{ studentDetails?.status }}
+                  </mat-chip>
+                </div>
+                <div class="info-item">
+                  <label>Start Date</label>
+                  <span>{{ formatDate(studentDetails?.scholarshipStartDate || '') }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Criminal Record Expiry</label>
+                  <span>{{ formatDate(studentDetails?.criminalRecordExpiryDate || '') }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Medical Record Expiry</label>
+                  <span>{{ formatDate(studentDetails?.medicalRecordExpiryDate || '') }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <!-- Vehicle Information Tab -->
+      <mat-tab label="Vehicle">
+        <div class="tab-content">
+          <mat-card class="info-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>directions_car</mat-icon>
+                Assigned Vehicle
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div *ngIf="!studentDetails?.licensePlateNumber" class="empty-vehicle">
+                <mat-icon>no_crash</mat-icon>
+                <p>No vehicle assigned yet</p>
+              </div>
+              <div *ngIf="studentDetails?.licensePlateNumber" class="info-grid">
+                <div class="info-item">
+                  <label>License Plate</label>
+                  <span class="license-plate">{{ studentDetails?.licensePlateNumber }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Transmission</label>
+                  <span>{{ studentDetails?.transmissionType || 'N/A' }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <!-- Appointments Tab -->
+      <mat-tab label="Appointments">
+        <div class="tab-content">
+          <mat-card class="info-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>event</mat-icon>
+                Appointment History
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div *ngIf="isLoadingAppointments" class="loading-appointments">
+                <mat-spinner diameter="30"></mat-spinner>
+                <p>Loading appointments...</p>
+              </div>
+
+              <div *ngIf="!isLoadingAppointments && studentAppointments.length === 0" class="empty-appointments">
+                <mat-icon>event_busy</mat-icon>
+                <p>No appointments scheduled yet</p>
+                <button mat-raised-button color="primary" (click)="scheduleAppointment()">
+                  <mat-icon>add</mat-icon>
+                  Schedule First Appointment
+                </button>
+              </div>
+
+              <div *ngIf="!isLoadingAppointments && studentAppointments.length > 0" class="appointments-list">
+                <div *ngFor="let appointment of studentAppointments" class="appointment-item">
+                  <div class="appointment-date">
+                    <mat-icon>event</mat-icon>
+                    <span>{{ formatDate(appointment.date) }}</span>
+                  </div>
+                  <div class="appointment-time">
+                    <mat-icon>access_time</mat-icon>
+                    <span>{{ formatTime(appointment.startHour) }} - {{ formatTime(appointment.endHour) }}</span>
+                  </div>
+                  <div class="appointment-status">
+                    <mat-chip [style.background-color]="getStatusColor(appointment.status)"
+                             [style.color]="'white'">
+                      {{ appointment.status }}
+                    </mat-chip>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onClose()">
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+    <button mat-button (click)="contactStudent()" class="action-button">
+      <mat-icon>phone</mat-icon>
+      Call
+    </button>
+    <button mat-button (click)="emailStudent()" class="action-button">
+      <mat-icon>email</mat-icon>
+      Email
+    </button>
+    <button mat-raised-button color="primary" (click)="scheduleAppointment()">
+      <mat-icon>event_available</mat-icon>
+      Schedule Appointment
+    </button>
+  </div>
+</div>

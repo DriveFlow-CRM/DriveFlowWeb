@@ -1,0 +1,112 @@
+<div class="file-details-container">
+  <div class="header-actions">
+    <button mat-raised-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Student List
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading student details...</p>
+  </div>
+
+  <div *ngIf="!isLoading && error" class="error-container">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="goBack()">Return to Student List</button>
+  </div>
+
+  <div *ngIf="!isLoading && !error && studentFile" class="student-details">
+    <div class="student-header">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ studentFile.firstName }} {{ studentFile.lastName }}</mat-card-title>
+          <mat-card-subtitle>Student Details</mat-card-subtitle>
+          <span class="status-chip" [style.background-color]="getStatusColor(studentFile.status)">
+            {{ studentFile.status }}
+          </span>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="profile-grid">
+            <div class="profile-section">
+              <h3>Contact Information</h3>
+              <div class="info-row">
+                <mat-icon>email</mat-icon>
+                <span>{{ studentFile.email }}</span>
+              </div>
+              <div class="info-row">
+                <mat-icon>phone</mat-icon>
+                <span>{{ studentFile.phoneNo }}</span>
+              </div>
+            </div>
+
+            <div class="profile-section">
+              <h3>Scholarship Details</h3>
+              <div class="info-row">
+                <mat-icon>calendar_today</mat-icon>
+                <span>Started: {{ studentFile.scholarshipStartDate | date }}</span>
+              </div>
+              <div class="info-row">
+                <mat-icon>payments</mat-icon>
+                <span>Payment status: {{ studentFile.scholarshipPayment ? 'Paid' : 'Unpaid' }}</span>
+              </div>
+              <div class="info-row">
+                <mat-icon>assignment_turned_in</mat-icon>
+                <span>Sessions paid: {{ studentFile.sessionsPayed }}</span>
+              </div>
+              <div class="info-row">
+                <mat-icon>directions_car</mat-icon>
+                <span>Min. driving lessons: {{ studentFile.minDrivingLessonsRequired }}</span>
+              </div>
+            </div>
+
+            <div class="profile-section">
+              <h3>Records</h3>
+              <div class="info-row">
+                <mat-icon>note</mat-icon>
+                <span>Medical record expires: {{ studentFile.medicalRecordExpiryDate | date }}</span>
+              </div>
+              <div class="info-row">
+                <mat-icon>gavel</mat-icon>
+                <span>Criminal record expires: {{ studentFile.criminalRecordExpiryDate | date }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="student-details-tabs">
+      <mat-card>
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="Progress">
+              <div class="tab-content">
+                <h3>Learning Progress</h3>
+                <div *ngIf="studentFile.lessonsMade && studentFile.lessonsMade.length > 0">
+                  <p>Completed {{ studentFile.lessonsMade.length }} lessons out of {{ studentFile.minDrivingLessonsRequired }} required.</p>
+                  <div class="lessons-list">
+                    <div *ngFor="let lesson of studentFile.lessonsMade; let i = index" class="lesson-item">
+                      <span class="lesson-number">{{ i + 1 }}</span>
+                      <span class="lesson-date">{{ lesson }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="!studentFile.lessonsMade || studentFile.lessonsMade.length === 0">
+                  <p>No lessons completed yet.</p>
+                </div>
+              </div>
+            </mat-tab>
+            <mat-tab label="Notes">
+              <div class="tab-content">
+                <h3>Instructor Notes</h3>
+                <p>Notes about this student will be shown here.</p>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -50,7 +50,7 @@ interface FuelTypeOption {
     VehicleFormDialogComponent
   ],
   templateUrl: './cars.component.html',
-  styleUrl: './cars.component.css'
+  styleUrls: ['./cars.component.css']
 })
 export class CarsComponent implements OnInit {
   vehicles: VehicleWithLicense[] = [];
@@ -90,6 +90,12 @@ export class CarsComponent implements OnInit {
     this.vehicleService.getVehicles(this.schoolId)
       .pipe(
         switchMap(vehicles => {
+          // Convert all transmission types to uppercase
+          vehicles = vehicles.map(vehicle => ({
+            ...vehicle,
+            transmissionType: this.normalizeTransmissionType(vehicle.transmissionType)
+          }));
+
           // Get all licenses at once
           return this.licenseService.getLicenses().pipe(
             map(licenses => {
@@ -143,12 +149,12 @@ export class CarsComponent implements OnInit {
   }
 
   openEditVehicleDialog(vehicle: Vehicle): void {
-    // Format dates for the form
+    // Format dates for the form, handling null values
     const formattedVehicle = {
       ...vehicle,
-      itpExpiryDate: new Date(vehicle.itpExpiryDate),
-      insuranceExpiryDate: new Date(vehicle.insuranceExpiryDate),
-      rcaExpiryDate: new Date(vehicle.rcaExpiryDate)
+      itpExpiryDate: vehicle.itpExpiryDate ? new Date(vehicle.itpExpiryDate) : null,
+      insuranceExpiryDate: vehicle.insuranceExpiryDate ? new Date(vehicle.insuranceExpiryDate) : null,
+      rcaExpiryDate: vehicle.rcaExpiryDate ? new Date(vehicle.rcaExpiryDate) : null
     };
 
     const dialogRef = this.dialog.open(VehicleFormDialogComponent, {
@@ -174,12 +180,14 @@ export class CarsComponent implements OnInit {
   }
 
   addVehicle(vehicleData: any): void {
-    // Format dates to ISO strings
+    // Format dates to ISO strings if they exist, otherwise null
     const formattedData = {
       ...vehicleData,
-      itpExpiryDate: new Date(vehicleData.itpExpiryDate).toISOString(),
-      insuranceExpiryDate: new Date(vehicleData.insuranceExpiryDate).toISOString(),
-      rcaExpiryDate: new Date(vehicleData.rcaExpiryDate).toISOString()
+      // Convert transmission type to uppercase
+      transmissionType: vehicleData.transmissionType ? vehicleData.transmissionType.toUpperCase() : '',
+      itpExpiryDate: vehicleData.itpExpiryDate ? new Date(vehicleData.itpExpiryDate).toISOString() : null,
+      insuranceExpiryDate: vehicleData.insuranceExpiryDate ? new Date(vehicleData.insuranceExpiryDate).toISOString() : null,
+      rcaExpiryDate: vehicleData.rcaExpiryDate ? new Date(vehicleData.rcaExpiryDate).toISOString() : null
     };
 
     this.vehicleService.addVehicle(this.schoolId, formattedData)
@@ -192,12 +200,14 @@ export class CarsComponent implements OnInit {
   }
 
   updateVehicle(vehicleId: number, vehicleData: any): void {
-    // Format dates to ISO strings
+    // Format dates to ISO strings if they exist, otherwise null
     const formattedData = {
       ...vehicleData,
-      itpExpiryDate: new Date(vehicleData.itpExpiryDate).toISOString(),
-      insuranceExpiryDate: new Date(vehicleData.insuranceExpiryDate).toISOString(),
-      rcaExpiryDate: new Date(vehicleData.rcaExpiryDate).toISOString()
+      // Convert transmission type to uppercase
+      transmissionType: vehicleData.transmissionType ? vehicleData.transmissionType.toUpperCase() : '',
+      itpExpiryDate: vehicleData.itpExpiryDate ? new Date(vehicleData.itpExpiryDate).toISOString() : null,
+      insuranceExpiryDate: vehicleData.insuranceExpiryDate ? new Date(vehicleData.insuranceExpiryDate).toISOString() : null,
+      rcaExpiryDate: vehicleData.rcaExpiryDate ? new Date(vehicleData.rcaExpiryDate).toISOString() : null
     };
 
     this.vehicleService.updateVehicle(vehicleId, formattedData)
@@ -213,7 +223,7 @@ export class CarsComponent implements OnInit {
     const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
       data: {
         name: `${vehicle.brand} ${vehicle.model} (${vehicle.licensePlateNumber})`,
-        type: 'Vehicle'
+        type: 'Autoturism'
       }
     });
 
@@ -233,10 +243,46 @@ export class CarsComponent implements OnInit {
   }
 
   // Check if a date is expired
-  isDateExpired(dateString: string): boolean {
+  isDateExpired(dateString: string | null): boolean {
+    if (!dateString) return false;
+
     const date = new Date(dateString);
     const today = new Date();
     return date < today;
+  }
+
+  // Check if a date is expiring within 30 days
+  isDateExpiring(dateString: string | null): boolean {
+    if (!dateString) return false;
+
+    const expiryDate = new Date(dateString);
+    const today = new Date();
+    const thirtyDaysFromNow = new Date(today);
+    thirtyDaysFromNow.setDate(today.getDate() + 30);
+
+    return !this.isDateExpired(dateString) && expiryDate <= thirtyDaysFromNow;
+  }
+
+  // Check if any vehicle has documents that will expire soon
+  hasExpiringDocuments(): boolean {
+    if (!this.vehicles.length) return false;
+
+    return this.vehicles.some(vehicle =>
+      this.isDateExpiring(vehicle.itpExpiryDate) ||
+      this.isDateExpiring(vehicle.insuranceExpiryDate) ||
+      this.isDateExpiring(vehicle.rcaExpiryDate)
+    );
+  }
+
+  // Check if any vehicle has expired documents
+  hasExpiredDocuments(): boolean {
+    if (!this.vehicles.length) return false;
+
+    return this.vehicles.some(vehicle =>
+      this.isDateExpired(vehicle.itpExpiryDate) ||
+      this.isDateExpired(vehicle.insuranceExpiryDate) ||
+      this.isDateExpired(vehicle.rcaExpiryDate)
+    );
   }
 
   // Method to get display value for fuel type
@@ -259,5 +305,11 @@ export class CarsComponent implements OnInit {
 
     // If it doesn't match the pattern, return as is
     return licensePlate;
+  }
+
+  // Normalize transmission type to uppercase for display
+  normalizeTransmissionType(transmissionType: string): string {
+    if (!transmissionType) return '';
+    return transmissionType.toUpperCase();
   }
 }

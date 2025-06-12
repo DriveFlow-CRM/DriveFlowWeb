@@ -1,15 +1,224 @@
-<div class="page-container">
-  <div class="page-header">
-    <h1>Dosare</h1>
-  </div>
+<div class="bg-white min-h-screen p-4 md:p-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <h1 class="text-2xl md:text-3xl font-bold text-dark">Dosare</h1>
 
-  <div class="content-card">
-    <div class="card-header">
-      <span class="material-icons">folder</span>
-      <h2>Gestionare dosare</h2>
+      <!-- Search and Add buttons -->
+      <div class="flex items-center gap-4 w-full sm:w-auto">
+        <div class="relative flex-grow">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="searchFiles()"
+            placeholder="Caută elev..."
+            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400">
+            <mat-icon>search</mat-icon>
+          </span>
+        </div>
+
+        <button
+          class="w-full sm:w-auto min-w-[160px] bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center shadow-md transition-all duration-300"
+          (click)="openAddStudentDialog()">
+          <mat-icon>person_add</mat-icon>
+          <span class="ml-1">Adaugă elev</span>
+        </button>
+      </div>
     </div>
-    <div class="card-content">
-      <p>Gestionați dosarele cursanților școlii dvs. de șoferi din această pagină.</p>
+
+    <!-- Loading spinner -->
+    <div *ngIf="filesLoading" class="flex flex-col items-center justify-center p-8 bg-light rounded-xl shadow">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p class="mt-4 text-gray">Se încarcă dosarele...</p>
+    </div>
+
+    <!-- No files message -->
+    <div *ngIf="!filesLoading && filteredFiles.length === 0" class="bg-light p-8 text-center rounded-xl shadow">
+      <p class="text-gray">Nu există dosare înregistrate. Adăugați un elev nou pentru a crea dosare.</p>
+    </div>
+
+    <!-- Files list -->
+    <div *ngIf="!filesLoading && filteredFiles.length > 0" class="space-y-6">
+      <!-- Student cards with files -->
+      <div *ngFor="let fileWithStudent of filteredFiles" class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Student header -->
+        <div class="bg-primary p-4 flex justify-between items-center">
+          <div class="flex items-center">
+            <div class="bg-white text-dark px-3 py-2 rounded-md border-2 border-primary-dark font-bold">
+              {{ fileWithStudent.studentData.firstName }} {{ fileWithStudent.studentData.lastName }}
+            </div>
+            <div class="ml-4">
+              <span class="text-white flex items-center">
+                <mat-icon class="text-sm mr-1">email</mat-icon>
+                {{ fileWithStudent.studentData.email }}
+              </span>
+            </div>
+          </div>
+
+          <div class="flex items-center">
+            <div class="mr-4 text-white text-sm">
+              <span class="flex items-center">
+                <mat-icon class="text-sm mr-1">phone</mat-icon>
+                {{ fileWithStudent.studentData.phoneNumber }}
+              </span>
+              <span class="flex items-center mt-1">
+                <mat-icon class="text-sm mr-1">badge</mat-icon>
+                {{ fileWithStudent.studentData.cnp }}
+              </span>
+            </div>
+
+            <button
+              mat-mini-fab
+              color="accent"
+              (click)="toggleExpand(fileWithStudent.studentData.studentId)"
+              matTooltip="{{ expandedStudentId === fileWithStudent.studentData.studentId ? 'Restrânge' : 'Extinde' }} dosare"
+              class="shadow-lg">
+              <mat-icon>{{ expandedStudentId === fileWithStudent.studentData.studentId ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Student actions -->
+        <div class="px-6 py-4 flex justify-between items-center border-b border-gray-200">
+          <div>
+            <p class="text-gray-500">Număr dosare: {{ fileWithStudent.files.length }}</p>
+          </div>
+          <div class="flex gap-2">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="openAddFileDialog(fileWithStudent.studentData)"
+              matTooltip="Adaugă dosar nou">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="openEditStudentDialog(fileWithStudent.studentData)"
+              matTooltip="Editează elev">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="confirmDeleteStudent(fileWithStudent.studentData)"
+              matTooltip="Șterge elev">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Files section (expandable) -->
+        <div *ngIf="expandedStudentId === fileWithStudent.studentData.studentId" class="px-6 py-4">
+          <!-- No files message -->
+          <div *ngIf="fileWithStudent.files.length === 0" class="text-center p-4">
+            <p class="text-gray-500">Acest elev nu are dosare create.</p>
+            <button
+              mat-flat-button
+              color="primary"
+              class="mt-2"
+              (click)="openAddFileDialog(fileWithStudent.studentData)">
+              <mat-icon>add</mat-icon> Adaugă dosar
+            </button>
+          </div>
+
+          <!-- Files list -->
+          <div *ngIf="fileWithStudent.files.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div *ngFor="let file of fileWithStudent.files" class="bg-light rounded-lg p-4 border border-gray-200">
+              <div class="flex justify-between items-start mb-3">
+                <div>
+                  <div class="flex items-center">
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold mr-2"
+                          [ngClass]="getStatusColor(file.status)">
+                      {{ getStatusText(file.status) }}
+                    </span>
+                    <span class="text-sm font-medium text-gray-600">ID: {{ file.fileId }}</span>
+                  </div>
+                  <h3 class="font-bold mt-1">Categoria {{ file.teachingCategory.licenseType }}</h3>
+                </div>
+                <div class="flex">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="openEditFileDialog(file)"
+                    matTooltip="Editează dosar">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="accent"
+                    (click)="openEditPaymentDialog(file)"
+                    matTooltip="Editează plată">
+                    <mat-icon>payments</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="confirmDeleteFile(file, fileWithStudent.studentData.firstName + ' ' + fileWithStudent.studentData.lastName)"
+                    matTooltip="Șterge dosar">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <!-- File details -->
+              <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                <div>
+                  <p class="text-gray-500">Data începere:</p>
+                  <p class="font-medium">{{ formatDate(file.scholarshipStartDate) }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500">Instructor:</p>
+                  <p class="font-medium">{{ file.instructor ? (file.instructor.firstName + ' ' + file.instructor.lastName) : 'Nealocat' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500">Exp. cazier:</p>
+                  <p class="font-medium">{{ formatDate(file.criminalRecordExpiryDate) }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500">Vehicul:</p>
+                  <p class="font-medium">{{ file.vehicle ? file.vehicle.licensePlateNumber : 'Nealocat' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500">Exp. fișă medicală:</p>
+                  <p class="font-medium">{{ formatDate(file.medicalRecordExpiryDate) }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500">Transmisie:</p>
+                  <p class="font-medium">{{ file.vehicle ? (file.vehicle.transmissionType === 'manual' ? 'Manuală' : 'Automată') : 'N/A' }}</p>
+                </div>
+              </div>
+
+              <!-- Payment details -->
+              <div class="mt-4 pt-3 border-t border-gray-200">
+                <div class="flex justify-between items-center mb-2">
+                  <h4 class="font-semibold">Detalii plată</h4>
+                  <span class="text-sm text-gray-500">ID: {{ file.payment.paymentId }}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                  <div>
+                    <p class="text-gray-500">Preț școlarizare:</p>
+                    <p class="font-medium">{{ formatCurrency(file.teachingCategory.scholarshipPrice) }}</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-500">Cost ședință:</p>
+                    <p class="font-medium">{{ formatCurrency(file.teachingCategory.sessionCost) }}</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-500">Plată de bază:</p>
+                    <p class="font-medium">{{ file.payment.scholarshipBasePayment ? 'Da' : 'Nu' }}</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-500">Ședințe plătite:</p>
+                    <p class="font-medium">{{ file.payment.sessionsPayed }} / {{ file.teachingCategory.minDrivingLessonsReq }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

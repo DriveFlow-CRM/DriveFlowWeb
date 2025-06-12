@@ -1,0 +1,79 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ data.isEditing ? 'Editează categorie' : 'Adaugă categorie nouă' }}</h2>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+    <div class="dialog-content">
+      <div class="form-grid">
+        <!-- License Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Tip licență</mat-label>
+          <mat-select formControlName="licenseId">
+            <mat-option *ngFor="let license of licenses" [value]="license.licenseId">
+              {{ license.type }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="isFieldInvalid('licenseId')">
+            {{ getErrorMessage('licenseId') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Session Cost -->
+        <mat-form-field appearance="outline">
+          <mat-label>Cost sesiune (RON)</mat-label>
+          <input matInput formControlName="sessionCost" type="number" min="0" step="1">
+          <mat-error *ngIf="isFieldInvalid('sessionCost')">
+            {{ getErrorMessage('sessionCost') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Session Duration -->
+        <mat-form-field appearance="outline">
+          <mat-label>Durată sesiune (minute)</mat-label>
+          <input matInput formControlName="sessionDuration" type="number" min="1" step="1">
+          <mat-error *ngIf="isFieldInvalid('sessionDuration')">
+            {{ getErrorMessage('sessionDuration') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Scholarship Price -->
+        <mat-form-field appearance="outline">
+          <mat-label>Preț școlarizare (RON)</mat-label>
+          <input matInput formControlName="scholarshipPrice" type="number" min="0" step="1">
+          <mat-error *ngIf="isFieldInvalid('scholarshipPrice')">
+            {{ getErrorMessage('scholarshipPrice') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Min Driving Lessons Required -->
+        <mat-form-field appearance="outline">
+          <mat-label>Minim ore de conducere</mat-label>
+          <input matInput formControlName="minDrivingLessonsReq" type="number" min="1" step="1">
+          <mat-error *ngIf="isFieldInvalid('minDrivingLessonsReq')">
+            {{ getErrorMessage('minDrivingLessonsReq') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        mat-button
+        type="button"
+        class="cancel-btn"
+        (click)="onCancel()">
+        Anulează
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit">
+        {{ data.isEditing ? 'Salvează' : 'Adaugă' }}
+      </button>
+    </div>
+  </form>
+</div>

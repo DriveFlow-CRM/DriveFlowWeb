@@ -1,117 +1,220 @@
-<div class="overview-container">
-  <h1 class="page-title">Dashboard Overview</h1>
+<!-- Super Admin Dashboard Overview -->
+<div class="overview-container min-h-screen bg-light p-6">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-dark mb-2">Dashboard Overview</h1>
+    <p class="text-gray-600">Welcome to your super admin dashboard</p>
+  </div>
 
-  <!-- License Management Card -->
-  <div class="management-card">
-    <div class="card-header">
-      <h2>Manage Licenses</h2>
-      <p class="card-description">
-        Manage driver's license categories that are available for driving schools.
-      </p>
-      <button (click)="toggleLicenseCard()" class="manage-btn">
-        {{ showLicenseCard ? 'Hide Licenses' : 'Manage Licenses' }}
-      </button>
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Schools -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-primary">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Schools</p>
+          <p class="text-2xl font-bold text-dark">
+            <span *ngIf="isLoadingStats" class="animate-pulse">...</span>
+            <span *ngIf="!isLoadingStats">{{ totalSchools }}</span>
+          </p>
+        </div>
+        <div class="p-3 bg-primary bg-opacity-10 rounded-full">
+          <i class="material-icons text-primary text-2xl">school</i>
+        </div>
+      </div>
     </div>
 
-    <!-- License Management Content (shows/hides on button click) -->
-    <div *ngIf="showLicenseCard" class="license-management">
-      <!-- Success Message -->
-      <div *ngIf="successMessage" class="alert success">
-        <span class="material-icons">check_circle</span>
-        <span>{{ successMessage }}</span>
+    <!-- Active Students -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Active Students</p>
+          <p class="text-2xl font-bold text-dark">
+            <span *ngIf="isLoadingStats" class="animate-pulse">...</span>
+            <span *ngIf="!isLoadingStats">{{ totalStudents.toLocaleString() }}</span>
+          </p>
+        </div>
+        <div class="p-3 bg-green-100 rounded-full">
+          <i class="material-icons text-green-600 text-2xl">people</i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Instructors -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Instructors</p>
+          <p class="text-2xl font-bold text-dark">
+            <span *ngIf="isLoadingStats" class="animate-pulse">...</span>
+            <span *ngIf="!isLoadingStats">{{ totalInstructors }}</span>
+          </p>
+        </div>
+        <div class="p-3 bg-blue-100 rounded-full">
+          <i class="material-icons text-blue-600 text-2xl">person</i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly Revenue -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Monthly Revenue</p>
+          <p class="text-2xl font-bold text-dark">€{{ monthlyRevenue.toLocaleString() }}</p>
+        </div>
+        <div class="p-3 bg-yellow-100 rounded-full">
+          <i class="material-icons text-yellow-600 text-2xl">euro_symbol</i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <h2 class="text-xl font-semibold text-dark mb-4">Quick Actions</h2>
+    <div class="flex flex-wrap gap-4">
+      <button
+        (click)="openCreateSchoolModal()"
+        class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+        <i class="material-icons">add</i>
+        Add New School
+      </button>
+    </div>
+  </div>
+
+  <!-- License Management -->
+  <div class="bg-white rounded-lg shadow-md">
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-dark">License Management</h2>
+        <button
+          (click)="toggleLicenseCard()"
+          class="text-primary hover:text-primary-dark transition-colors duration-200">
+          <i class="material-icons">{{ showLicenseCard ? 'expand_less' : 'expand_more' }}</i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Expandable License Content -->
+    <div *ngIf="showLicenseCard" class="p-6">
+      <!-- Success/Error Messages -->
+      <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+        {{ errorMessage }}
       </div>
 
-      <!-- Error Message -->
-      <div *ngIf="errorMessage" class="alert error">
-        <span class="material-icons">error</span>
-        <span>{{ errorMessage }}</span>
+      <!-- Add License Button -->
+      <div class="mb-6">
+        <button
+          (click)="openCreateForm()"
+          class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+          <i class="material-icons">add</i>
+          Add License Type
+        </button>
       </div>
 
-      <!-- License Table -->
-      <div class="license-table-container">
-        <div class="table-actions">
-          <h3>Available License Types</h3>
-          <button (click)="openCreateForm()" class="create-btn">
-            <span class="material-icons">add</span> Add License
-          </button>
-        </div>
+      <!-- License Form Modal -->
+      <div *ngIf="showLicenseForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+          <h3 class="text-lg font-semibold text-dark mb-4">
+            {{ isCreating ? 'Add New License Type' : 'Edit License Type' }}
+          </h3>
 
-        <!-- Loading Indicator -->
-        <div *ngIf="isLoading" class="loading-container">
-          <div class="spinner"></div>
-          <span>Loading licenses...</span>
-        </div>
+          <form [formGroup]="licenseForm" (ngSubmit)="submitLicenseForm()">
+            <div class="mb-4">
+              <label for="type" class="block text-sm font-medium text-gray-700 mb-2">License Type</label>
+              <input
+                type="text"
+                id="type"
+                formControlName="type"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Enter license type (max 10 characters)"
+                maxlength="10">
+              <div *ngIf="licenseForm.get('type')?.invalid && licenseForm.get('type')?.touched" class="text-red-500 text-sm mt-1">
+                <div *ngIf="licenseForm.get('type')?.errors?.['required']">License type is required</div>
+                <div *ngIf="licenseForm.get('type')?.errors?.['maxlength']">License type must be 10 characters or less</div>
+              </div>
+            </div>
 
-        <!-- Licenses Table -->
-        <table *ngIf="!isLoading && licenses.length > 0" class="licenses-table">
-          <thead>
+            <div class="flex justify-end gap-3">
+              <button
+                type="button"
+                (click)="cancelForm()"
+                class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200">
+                Cancel
+              </button>
+              <button
+                type="submit"
+                [disabled]="licenseForm.invalid"
+                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
+                {{ isCreating ? 'Create' : 'Update' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Licenses Table -->
+      <div *ngIf="isLoading" class="text-center py-8">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <p class="mt-2 text-gray-600">Loading licenses...</p>
+      </div>
+
+      <div *ngIf="!isLoading && licenses.length === 0" class="text-center py-8 text-gray-500">
+        No license types found. Add your first license type above.
+      </div>
+
+      <div *ngIf="!isLoading && licenses.length > 0" class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
             <tr>
-              <th>ID</th>
-              <th>License Type</th>
-              <th>Actions</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr *ngFor="let license of licenses">
-              <td>{{ license.licenseId }}</td>
-              <td>{{ license.type }}</td>
-              <td class="actions-cell">
-                <button (click)="openEditForm(license)" class="edit-btn" title="Edit License">
-                  <span class="material-icons">edit</span>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let license of licenses" class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ license.licenseId }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ license.type }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button
+                  (click)="openEditForm(license)"
+                  class="text-primary hover:text-primary-dark mr-3 transition-colors duration-200">
+                  <i class="material-icons text-sm">edit</i>
                 </button>
-                <button (click)="deleteLicense(license)" class="delete-btn" title="Delete License">
-                  <span class="material-icons">delete</span>
+                <button
+                  (click)="deleteLicense(license)"
+                  class="text-red-600 hover:text-red-800 transition-colors duration-200">
+                  <i class="material-icons text-sm">delete</i>
                 </button>
               </td>
             </tr>
           </tbody>
         </table>
-
-        <!-- No Licenses Message -->
-        <div *ngIf="!isLoading && licenses.length === 0" class="no-data">
-          <span class="material-icons">info</span>
-          <p>No license types found. Click "Add License" to create one.</p>
-        </div>
       </div>
+    </div>
+  </div>
 
-      <!-- License Form (Create/Edit) -->
-      <div *ngIf="showLicenseForm" class="license-form-overlay">
-        <div class="license-form-container">
-          <div class="form-header">
-            <h3>{{ isCreating ? 'Add New License' : 'Edit License' }}</h3>
-            <button (click)="cancelForm()" class="close-btn">
-              <span class="material-icons">close</span>
-            </button>
-          </div>
-
-          <form [formGroup]="licenseForm" (ngSubmit)="submitLicenseForm()">
-            <div class="form-group">
-              <label for="licenseType">License Type:</label>
-              <input
-                type="text"
-                id="licenseType"
-                formControlName="type"
-                placeholder="e.g. A, B, C, D..."
-                class="form-control"
-                maxlength="10"
-              >
-              <div *ngIf="licenseForm.get('type')?.invalid && licenseForm.get('type')?.touched" class="form-error">
-                License type is required and should be fewer than 10 characters.
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <button type="button" (click)="cancelForm()" class="cancel-form-btn">Cancel</button>
-              <button
-                type="submit"
-                [disabled]="licenseForm.invalid"
-                class="submit-form-btn"
-              >
-                {{ isCreating ? 'Create License' : 'Update License' }}
-              </button>
-            </div>
-          </form>
-        </div>
+  <!-- Create School Modal Placeholder -->
+  <div *ngIf="showCreateSchoolModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+      <h3 class="text-lg font-semibold text-dark mb-4">Add New School</h3>
+      <p class="text-gray-600 mb-4">This feature will redirect you to the schools page where you can create a new school.</p>
+      <div class="flex justify-end gap-3">
+        <button
+          (click)="closeCreateSchoolModal()"
+          class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200">
+          Cancel
+        </button>
+        <button
+          (click)="closeCreateSchoolModal()"
+          class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors duration-200">
+          Go to Schools
+        </button>
       </div>
     </div>
   </div>

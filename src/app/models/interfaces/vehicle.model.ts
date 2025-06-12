@@ -1,8 +1,8 @@
 // Vehicle Models
 
 export enum TransmissionType {
-  Manual = 'Manual',
-  Automatic = 'Automatic'
+  MANUAL = 'MANUAL',
+  AUTOMATIC = 'AUTOMATIC'
 }
 
 export enum FuelType {
@@ -31,9 +31,9 @@ export interface Vehicle {
   fuelType: string;
   engineSizeLiters: number;
   powertrainType: string;
-  itpExpiryDate: string;
-  insuranceExpiryDate: string;
-  rcaExpiryDate: string;
+  itpExpiryDate: string | null;
+  insuranceExpiryDate: string | null;
+  rcaExpiryDate: string | null;
   licenseId: number;
 }
 
@@ -52,9 +52,9 @@ export interface CreateVehicleRequest {
   fuelType: string;
   engineSizeLiters: number;
   powertrainType: string;
-  itpExpiryDate: string;
-  insuranceExpiryDate: string;
-  rcaExpiryDate: string;
+  itpExpiryDate: string | null;
+  insuranceExpiryDate: string | null;
+  rcaExpiryDate: string | null;
   licenseId: number;
 }
 
@@ -68,8 +68,8 @@ export interface UpdateVehicleRequest {
   fuelType: string;
   engineSizeLiters: number;
   powertrainType: string;
-  itpExpiryDate: string;
-  insuranceExpiryDate: string;
-  rcaExpiryDate: string;
+  itpExpiryDate: string | null;
+  insuranceExpiryDate: string | null;
+  rcaExpiryDate: string | null;
   licenseId: number;
 }

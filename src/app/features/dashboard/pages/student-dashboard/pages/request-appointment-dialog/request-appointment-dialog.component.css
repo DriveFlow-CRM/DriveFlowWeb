@@ -1,0 +1,214 @@
+.appointment-dialog {
+  max-width: 550px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin: -24px -24px 24px -24px;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.header-icon {
+  margin-right: 8px;
+  font-size: 24px;
+}
+
+.dialog-header button {
+  color: white;
+}
+
+.dialog-content {
+  padding: 0 24px 24px 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.instructor-card {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.instructor-info {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.instructor-icon {
+  font-size: 40px;
+  color: #667eea;
+  margin-right: 12px;
+}
+
+.instructor-details {
+  flex: 1;
+}
+
+.instructor-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.instructor-role {
+  font-size: 14px;
+  color: #666;
+}
+
+.form-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.time-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.time-field {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  margin-bottom: 8px;
+}
+
+.mat-mdc-form-field-suffix .mat-icon {
+  color: #667eea;
+}
+
+.request-summary {
+  margin-top: 24px;
+  border-radius: 8px;
+  background: #f8f9fa;
+  border-left: 4px solid #667eea;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 16px 8px 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.summary-header mat-icon {
+  margin-right: 8px;
+  color: #667eea;
+}
+
+.summary-content {
+  padding: 0 16px 16px 16px;
+}
+
+.summary-item {
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.summary-item strong {
+  color: #333;
+  margin-right: 8px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  margin: 24px -24px -24px -24px;
+  background: #f8f9fa;
+}
+
+.dialog-actions button {
+  min-width: 120px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.dialog-actions button[mat-button] {
+  color: #666;
+}
+
+.dialog-actions button[mat-flat-button] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.dialog-actions button:disabled {
+  opacity: 0.6;
+}
+
+.mr-2 {
+  margin-right: 8px;
+}
+
+/* Mat-option icons */
+.mat-mdc-option .mat-icon {
+  margin-right: 8px;
+  color: #667eea;
+}
+
+/* Success and Error snackbar styling */
+:host ::ng-deep .success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .appointment-dialog {
+    max-width: 95vw;
+    margin: 16px;
+  }
+
+  .dialog-header {
+    padding: 16px 20px;
+  }
+
+  .dialog-content {
+    padding: 0 20px 20px 20px;
+  }
+
+  .time-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dialog-actions {
+    padding: 12px 20px;
+    flex-direction: column;
+  }
+
+  .dialog-actions button {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}

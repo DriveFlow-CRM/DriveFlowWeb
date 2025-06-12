@@ -1,0 +1,79 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>Editează plată</h2>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+    <div class="dialog-content">
+      <div class="pricing-info">
+        <div class="pricing-card">
+          <div class="pricing-card-header">
+            <h3>Informații preț</h3>
+          </div>
+          <div class="pricing-card-content">
+            <div class="price-row">
+              <span>Preț școlarizare:</span>
+              <span class="price">{{ formatCurrency(data.scholarshipPrice) }}</span>
+            </div>
+            <div class="price-row">
+              <span>Preț per ședință:</span>
+              <span class="price">{{ formatCurrency(data.sessionCost) }}</span>
+            </div>
+            <div class="price-row">
+              <span>Număr minim ședințe:</span>
+              <span class="price">{{ data.minDrivingLessons }}</span>
+            </div>
+            <div class="price-row total">
+              <span>Total estimat:</span>
+              <span class="price total-price">{{ formatCurrency(totalCost) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <!-- Scholarship Base Payment -->
+        <div class="checkbox-field">
+          <mat-checkbox formControlName="scholarshipBasePayment">
+            Plată de bază pentru școlarizare
+          </mat-checkbox>
+          <div class="checkbox-helper-text">
+            Marchează această opțiune dacă elevul a plătit taxa de bază pentru școlarizare
+          </div>
+        </div>
+
+        <!-- Sessions Paid -->
+        <mat-form-field appearance="outline">
+          <mat-label>Ședințe plătite</mat-label>
+          <input matInput type="number" min="0" [max]="data.minDrivingLessons" formControlName="sessionsPayed">
+          <mat-hint>Maxim {{ data.minDrivingLessons }} ședințe necesare</mat-hint>
+          <mat-error *ngIf="paymentForm.get('sessionsPayed')?.hasError('min')">
+            Numărul de ședințe nu poate fi negativ
+          </mat-error>
+          <mat-error *ngIf="paymentForm.get('sessionsPayed')?.hasError('max')">
+            Numărul maxim de ședințe este {{ data.minDrivingLessons }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        mat-button
+        type="button"
+        class="cancel-btn"
+        (click)="onCancel()">
+        Anulează
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit">
+        Salvează
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,159 @@
+<div class="appointments-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Your Schedule</h1>
+      <p class="page-subtitle">View your availability and appointments for the week</p>
+    </div>
+  </div>
+
+  <!-- Week Navigation -->
+  <div class="week-navigation">
+    <div class="nav-controls">
+      <button mat-icon-button (click)="previousWeek()" class="nav-button">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <div class="week-info">
+        <h2 class="week-range">{{ getWeekRange() }}</h2>
+      </div>
+
+      <button mat-icon-button (click)="nextWeek()" class="nav-button">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="goToCurrentWeek()" class="today-button">
+      <mat-icon>today</mat-icon>
+      This Week
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading your schedule...</p>
+  </div>
+
+  <!-- Weekly Schedule Grid -->
+  <div *ngIf="!isLoading" class="schedule-container">
+    <!-- Days Header -->
+    <div class="days-header">
+      <div class="time-column-header">Time</div>
+      <div
+        *ngFor="let day of currentWeek"
+        class="day-header"
+        [class.today]="day.isToday"
+      >
+        <div class="day-name">{{ day.dayName }}</div>
+        <div class="day-number">{{ day.dayNumber }}</div>
+        <div class="day-stats">
+          <div class="appointment-count" *ngIf="day.appointments.length > 0">
+            {{ day.appointments.length }} appointment{{ day.appointments.length > 1 ? 's' : '' }}
+          </div>
+          <div class="availability-count" *ngIf="day.availability.length > 0">
+            {{ day.availability.length }} slot{{ day.availability.length > 1 ? 's' : '' }} available
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule Grid -->
+    <div class="schedule-grid">
+      <!-- Time Column -->
+      <div class="time-column">
+        <div
+          *ngFor="let timeSlot of timeSlots"
+          class="time-slot"
+        >
+          {{ timeSlot.display }}
+        </div>
+      </div>
+
+      <!-- Days Columns -->
+      <div
+        *ngFor="let day of currentWeek"
+        class="day-column"
+        [class.today]="day.isToday"
+      >
+        <div
+          *ngFor="let timeSlot of timeSlots"
+          class="time-cell"
+          [class.has-appointment]="hasAppointmentAtTime(day, timeSlot.hour)"
+          [class.has-availability]="hasAvailabilityAtTime(day, timeSlot.hour) && !hasAppointmentAtTime(day, timeSlot.hour)"
+        >
+          <!-- Availability Block (shown when no appointment) -->
+          <div
+            *ngIf="hasAvailabilityAtTime(day, timeSlot.hour) && !hasAppointmentAtTime(day, timeSlot.hour)"
+            class="availability-block"
+            (click)="onAvailabilityClick(getAvailabilityAtTime(day, timeSlot.hour)!)"
+          >
+            <div class="availability-content">
+              <div class="availability-label">Available</div>
+              <div class="availability-time">
+                {{ getAvailabilityAtTime(day, timeSlot.hour)?.startHour }} -
+                {{ getAvailabilityAtTime(day, timeSlot.hour)?.endHour }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Appointment Block (takes priority over availability) -->
+          <div
+            *ngIf="hasAppointmentAtTime(day, timeSlot.hour)"
+            class="appointment-block"
+            [ngClass]="getAppointmentTypeClass(getAppointmentAtTime(day, timeSlot.hour)?.type || '')"
+            (click)="onAppointmentClick(getAppointmentAtTime(day, timeSlot.hour)!)"
+          >
+            <div class="appointment-content">
+              <div class="student-name">
+                {{ getAppointmentAtTime(day, timeSlot.hour)?.firstName }}
+                {{ getAppointmentAtTime(day, timeSlot.hour)?.lastName }}
+              </div>
+              <div class="appointment-type">
+                {{ getAppointmentAtTime(day, timeSlot.hour)?.type }}
+              </div>
+              <div class="appointment-time">
+                {{ getAppointmentAtTime(day, timeSlot.hour)?.startHour }} -
+                {{ getAppointmentAtTime(day, timeSlot.hour)?.endHour }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && appointments.length === 0 && availability.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">event_available</mat-icon>
+    <h3>No schedule data</h3>
+    <p>You have no appointments or availability set for this week.</p>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend-container">
+    <h4>Schedule Legend</h4>
+    <div class="legend-items">
+      <div class="legend-item">
+        <div class="legend-color availability-block-legend"></div>
+        <span>Available Time Slots</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color appointment-theory"></div>
+        <span>Theory Lessons</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color appointment-practical"></div>
+        <span>Practical Lessons</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color appointment-exam"></div>
+        <span>Exams</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color appointment-default"></div>
+        <span>Other Appointments</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,7 +9,7 @@ import { DashboardNavbarComponent } from '../../../../shared/components/dashboar
   standalone: true,
   imports: [CommonModule, RouterModule, DashboardNavbarComponent],
   templateUrl: './super-admin-dashboard.component.html',
-  styleUrl: './super-admin-dashboard.component.css'
+  styleUrls: ['./super-admin-dashboard.component.css']
 })
 export class SuperAdminDashboardComponent implements OnInit {
   userName = '';

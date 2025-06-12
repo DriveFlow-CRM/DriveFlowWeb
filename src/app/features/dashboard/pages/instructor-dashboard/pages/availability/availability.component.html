@@ -1,0 +1,135 @@
+<div class="availability-page">
+  <div class="page-header">
+    <h1 class="page-title">Manage Your Availability</h1>
+    <p class="page-subtitle">Add time slots when you are available to teach. Students will be able to book lessons during these periods.</p>
+  </div>
+
+  <div class="availability-layout">
+    <!-- Left Column: Form -->
+    <div class="form-container">
+      <div class="card-header">
+        <h2 class="card-title">Add New Availability</h2>
+      </div>
+      <div class="card-content">
+        <form [formGroup]="availabilityForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <label class="form-label">Date</label>
+            <input
+              type="date"
+              formControlName="date"
+              class="form-input"
+              placeholder="Choose a date"
+            >
+            <div *ngIf="availabilityForm.get('date')?.hasError('required') && availabilityForm.get('date')?.touched" class="error-message">
+              Date is required
+            </div>
+          </div>
+
+          <div class="form-row time-inputs">
+            <div class="time-input-group">
+              <label class="form-label">Start Time</label>
+              <input
+                type="time"
+                formControlName="startHour"
+                class="form-input"
+                placeholder="HH:MM"
+              >
+              <div *ngIf="availabilityForm.get('startHour')?.hasError('required') && availabilityForm.get('startHour')?.touched" class="error-message">
+                Start time is required
+              </div>
+              <div *ngIf="availabilityForm.get('startHour')?.hasError('pattern') && availabilityForm.get('startHour')?.touched" class="error-message">
+                Use format: HH:MM
+              </div>
+            </div>
+
+            <div class="time-input-group">
+              <label class="form-label">End Time</label>
+              <input
+                type="time"
+                formControlName="endHour"
+                class="form-input"
+                placeholder="HH:MM"
+              >
+              <div *ngIf="availabilityForm.get('endHour')?.hasError('required') && availabilityForm.get('endHour')?.touched" class="error-message">
+                End time is required
+              </div>
+              <div *ngIf="availabilityForm.get('endHour')?.hasError('pattern') && availabilityForm.get('endHour')?.touched" class="error-message">
+                Use format: HH:MM
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="availabilityForm.hasError('invalidTimeRange')" class="time-range-error">
+            End time must be after start time
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="primary-button"
+              [disabled]="availabilityForm.invalid || isSubmitting"
+            >
+              <mat-spinner *ngIf="isSubmitting" diameter="20" style="margin-right: 8px;"></mat-spinner>
+              {{ isSubmitting ? 'Adding...' : 'Add Availability' }}
+            </button>
+            <button
+              type="button"
+              class="secondary-button"
+              (click)="availabilityForm.reset()"
+              [disabled]="isSubmitting"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Column: Table -->
+    <div class="table-container">
+      <div class="card-header">
+        <h2 class="card-title">Your Availability Schedule</h2>
+      </div>
+      <div class="card-content">
+        <div *ngIf="isLoading" class="loading-indicator">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Loading availability data...</p>
+        </div>
+
+        <div *ngIf="!isLoading && availabilityIntervals.length === 0" class="no-data">
+          <p>You haven't set any availability times yet. Add your first one using the form.</p>
+        </div>
+
+        <div *ngIf="!isLoading && availabilityIntervals.length > 0" class="table-wrapper">
+          <table class="availability-table">
+            <thead class="table-header">
+              <tr>
+                <th class="table-header-cell">Date</th>
+                <th class="table-header-cell">Start Time</th>
+                <th class="table-header-cell">End Time</th>
+                <th class="table-header-cell">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let interval of availabilityIntervals" class="table-row">
+                <td class="table-cell">{{ formatDisplayDate(interval.date) }}</td>
+                <td class="table-cell">{{ interval.startHour }}</td>
+                <td class="table-cell">{{ interval.endHour }}</td>
+                <td class="table-cell">
+                  <div class="action-buttons">
+                    <button class="action-button edit-button" (click)="editAvailability(interval)" title="Edit">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button class="action-button delete-button" (click)="deleteAvailability(interval.intervalId)" title="Delete">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

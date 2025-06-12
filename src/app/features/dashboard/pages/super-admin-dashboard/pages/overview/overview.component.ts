@@ -2,16 +2,30 @@ import { Component, OnInit, AfterViewInit, ChangeDetectorRef, OnDestroy } from '
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LicenseService, License } from '../../../../../../core/services/license.service';
-import { Subscription } from 'rxjs';
+import { AutoSchoolService } from '../../../../../../core/services/auto-school.service';
+import { StudentService } from '../../../../../../core/services/student.service';
+import { InstructorService } from '../../../../../../core/services/instructor.service';
+import { AutoSchool } from '../../../../../../models/interfaces/auto-school.model';
+import { Subscription, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-overview',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './overview.component.html',
-  styleUrl: './overview.component.css'
+  styleUrls: ['./overview.component.css']
 })
 export class OverviewComponent implements OnInit, AfterViewInit, OnDestroy {
+  // Statistics data
+  totalSchools = 0;
+  totalStudents = 0;
+  totalInstructors = 0;
+  monthlyRevenue = 0; // Set to 0 as requested
+
+  // Loading states
+  isLoadingStats = false;
+
+  // License management
   licenses: License[] = [];
   isLoading = false;
   showLicenseCard = false;
@@ -22,11 +36,17 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnDestroy {
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
+  // School creation modal
+  showCreateSchoolModal = false;
+
   private subscription = new Subscription();
 
   constructor(
     private cdr: ChangeDetectorRef,
     private licenseService: LicenseService,
+    private autoSchoolService: AutoSchoolService,
+    private studentService: StudentService,
+    private instructorService: InstructorService,
     private fb: FormBuilder
   ) {
     this.licenseForm = this.fb.group({
@@ -36,6 +56,7 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Overview component OnInit - checking if content renders');
+    this.loadStatistics();
     // Force refresh to ensure content renders
     setTimeout(() => {
       console.log('Manual ChangeDetection triggered');
@@ -61,6 +82,70 @@ export class OverviewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  loadStatistics(): void {
+    this.isLoadingStats = true;
+
+    // Get all schools first
+    this.subscription.add(
+      this.autoSchoolService.getAutoSchools().subscribe({
+        next: (schools: AutoSchool[]) => {
+          this.totalSchools = schools.length;
+
+          // Now get students and instructors for each school
+          if (schools.length > 0) {
+            this.loadStudentsAndInstructors(schools);
+          } else {
+            this.isLoadingStats = false;
+          }
+        },
+        error: (error) => {
+          console.error('Error loading schools:', error);
+          this.isLoadingStats = false;
+        }
+      })
+    );
+  }
+
+  loadStudentsAndInstructors(schools: AutoSchool[]): void {
+    const studentRequests = schools.map(school =>
+      this.studentService.getStudents(school.autoSchoolId)
+    );
+
+    const instructorRequests = schools.map(school =>
+      this.instructorService.getInstructors(school.autoSchoolId)
+    );
+
+    // Execute all requests in parallel
+    this.subscription.add(
+      forkJoin([
+        forkJoin(studentRequests),
+        forkJoin(instructorRequests)
+      ]).subscribe({
+        next: ([studentsArrays, instructorsArrays]) => {
+          // Count total students across all schools
+          this.totalStudents = studentsArrays.reduce((total, students) => total + students.length, 0);
+
+          // Count total instructors across all schools
+          this.totalInstructors = instructorsArrays.reduce((total, instructors) => total + instructors.length, 0);
+
+          this.isLoadingStats = false;
+        },
+        error: (error) => {
+          console.error('Error loading students and instructors:', error);
+          this.isLoadingStats = false;
+        }
+      })
+    );
+  }
+
+  openCreateSchoolModal(): void {
+    this.showCreateSchoolModal = true;
+  }
+
+  closeCreateSchoolModal(): void {
+    this.showCreateSchoolModal = false;
   }
 
   toggleLicenseCard(): void {

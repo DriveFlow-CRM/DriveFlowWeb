@@ -1,0 +1,131 @@
+<div class="schedule-appointment-dialog">
+  <div mat-dialog-title class="dialog-header">
+    <div class="header-content">
+      <mat-icon>event_available</mat-icon>
+      <div>
+        <h2>Schedule Appointment</h2>
+        <p>{{ data.student.firstName }} {{ data.student.lastName }}</p>
+      </div>
+    </div>
+    <button mat-icon-button (click)="onCancel()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-content">
+    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <!-- Date -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Date</mat-label>
+          <input matInput
+                 [matDatepicker]="picker"
+                 formControlName="date"
+                 [min]="minDate"
+                 readonly>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="appointmentForm.get('date')?.invalid && appointmentForm.get('date')?.touched">
+            {{ getFormFieldError('date') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Start Time -->
+        <mat-form-field appearance="outline">
+          <mat-label>Start Time</mat-label>
+          <mat-select formControlName="startTime">
+            <mat-option *ngFor="let time of timeSlots" [value]="time">
+              {{ time }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="appointmentForm.get('startTime')?.invalid && appointmentForm.get('startTime')?.touched">
+            {{ getFormFieldError('startTime') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Duration -->
+        <mat-form-field appearance="outline">
+          <mat-label>Duration</mat-label>
+          <mat-select formControlName="duration">
+            <mat-option *ngFor="let duration of durations" [value]="duration.value">
+              {{ duration.label }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="appointmentForm.get('duration')?.invalid && appointmentForm.get('duration')?.touched">
+            {{ getFormFieldError('duration') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- End Time Display -->
+        <div class="end-time-display">
+          <label>End Time</label>
+          <div class="end-time-value">
+            {{ getEndTime() || 'Select start time and duration' }}
+          </div>
+        </div>
+
+        <!-- Appointment Type -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Appointment Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option *ngFor="let type of appointmentTypes" [value]="type.value">
+              {{ type.label }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="appointmentForm.get('type')?.invalid && appointmentForm.get('type')?.touched">
+            {{ getFormFieldError('type') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Notes -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Notes (Optional)</mat-label>
+          <textarea matInput
+                    formControlName="notes"
+                    rows="3"
+                    placeholder="Add any additional notes or instructions..."></textarea>
+        </mat-form-field>
+      </div>
+
+      <!-- Student Info Summary -->
+      <div class="student-summary">
+        <h3>Student Information</h3>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <mat-icon>person</mat-icon>
+            <span>{{ data.student.firstName }} {{ data.student.lastName }}</span>
+          </div>
+          <div class="summary-item">
+            <mat-icon>email</mat-icon>
+            <span>{{ data.student.email }}</span>
+          </div>
+          <div class="summary-item">
+            <mat-icon>phone</mat-icon>
+            <span>{{ data.student.phoneNumber || 'N/A' }}</span>
+          </div>
+          <div class="summary-item">
+            <mat-icon>directions_car</mat-icon>
+            <span>{{ data.student.licensePlateNumber || 'No vehicle assigned' }}</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">
+      <mat-icon>close</mat-icon>
+      Cancel
+    </button>
+    <button mat-raised-button
+            color="primary"
+            type="submit"
+            (click)="onSubmit()"
+            [disabled]="appointmentForm.invalid || isLoading">
+      <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+      <mat-icon *ngIf="!isLoading">event_available</mat-icon>
+      <span *ngIf="!isLoading">Schedule Appointment</span>
+      <span *ngIf="isLoading">Scheduling...</span>
+    </button>
+  </div>
+</div>

@@ -1,85 +1,201 @@
-<div class="cars-container">
-  <div class="header">
-    <h1>Mașini</h1>
-    <button mat-raised-button color="primary" (click)="openAddVehicleDialog()">
-      <mat-icon>add</mat-icon> Adaugă mașină
-    </button>
-  </div>
+<div class="bg-white min-h-screen p-4 md:p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header section with responsive layout -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <h1 class="text-2xl md:text-3xl font-bold text-dark">Autoturisme</h1>
+      <button
+        class="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center shadow-md transition-all duration-300"
+        (click)="openAddVehicleDialog()">
+        <mat-icon>add</mat-icon>
+        <span class="ml-1">Adaugă autoturism</span>
+      </button>
+    </div>
 
-  <div *ngIf="loading" class="loading-container">
-    <mat-spinner diameter="40"></mat-spinner>
-    <p>Se încarcă mașinile...</p>
-  </div>
-
-  <div *ngIf="!loading && vehicles.length === 0" class="no-data">
-    <p>Nu există mașini înregistrate. Adăugați una nouă folosind butonul de mai sus.</p>
-  </div>
-
-  <div *ngIf="!loading && vehicles.length > 0" class="vehicles-grid">
-    <div *ngFor="let vehicle of vehicles" class="vehicle-card">
-      <div class="vehicle-header">
-        <span class="license-plate">
-          <!-- Format Romanian license plate with county code, numbers and letters -->
-          <span>{{ formatLicensePlate(vehicle.licensePlateNumber) }}</span>
-        </span>
-        <span class="license-type"
-          [ngClass]="{ 'tag-b': vehicle.licenseTypeName === 'B', 'tag-c': vehicle.licenseTypeName === 'C', 'tag-d': vehicle.licenseTypeName === 'D', 'tag-e': vehicle.licenseTypeName === 'E' }">
-          {{ vehicle.licenseTypeName }}
-        </span>
+    <!-- Expiration Warning Alert -->
+    <div *ngIf="hasExpiringDocuments()" class="mb-6 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-md shadow">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <mat-icon class="text-amber-500">warning</mat-icon>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-amber-800 font-medium">Atenție!</h3>
+          <p class="text-amber-700 text-sm">
+            Există documente care expiră în mai puțin de 30 de zile. Verificați autoturismele pentru a preveni întreruperi.
+          </p>
+        </div>
       </div>
+    </div>
 
-      <div class="vehicle-body">
-        <h2>{{ vehicle.brand }} {{ vehicle.model }}</h2>
-        <div class="vehicle-details">
-          <div class="detail-item">
-            <span class="label">An:</span>
-            <span class="value">{{ vehicle.yearOfProduction }}</span>
+    <!-- Expired Documents Warning Alert -->
+    <div *ngIf="hasExpiredDocuments()" class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-md shadow">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <mat-icon class="text-red-500">error</mat-icon>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-red-800 font-medium">Important!</h3>
+          <p class="text-red-700 text-sm">
+            Există documente expirate! Actualizați documentele pentru a evita sancțiuni.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="flex flex-col items-center justify-center p-8 bg-light rounded-xl shadow">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p class="mt-4 text-gray">Se încarcă autoturismele...</p>
+    </div>
+
+    <div *ngIf="!loading && vehicles.length === 0" class="bg-light p-8 text-center rounded-xl shadow">
+      <p class="text-gray">Nu există autoturisme înregistrate. Adăugați unul nou folosind butonul de mai sus.</p>
+    </div>
+
+    <div *ngIf="!loading && vehicles.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let vehicle of vehicles" class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+        <!-- Vehicle header with number plate and license type -->
+        <div class="bg-primary p-4 flex justify-between items-center">
+          <div class="bg-white text-dark px-3 py-2 rounded-md border-2 border-primary-dark font-bold">
+            {{ formatLicensePlate(vehicle.licensePlateNumber) }}
           </div>
-          <div class="detail-item">
-            <span class="label">Culoare:</span>
-            <span class="value">{{ vehicle.color }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="label">Transmisie:</span>
-            <span class="value">{{ vehicle.transmissionType }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="label">Combustibil:</span>
-            <span class="value">{{ getFuelTypeDisplay(vehicle.fuelType) }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="label">Motor:</span>
-            <span class="value">{{ vehicle.engineSizeLiters }} L</span>
-          </div>
-          <div class="detail-item">
-            <span class="label">Propulsie:</span>
-            <span class="value">{{ vehicle.powertrainType }}</span>
+          <div class="px-3 py-1 text-white text-sm font-semibold rounded bg-primary-dark">
+            {{ vehicle.licenseTypeName }}
           </div>
         </div>
 
-        <div class="documents">
-          <div class="document" [ngClass]="{'expired': isDateExpired(vehicle.itpExpiryDate)}">
-            <span class="doc-label">ITP:</span>
-            <span class="doc-date">{{ vehicle.itpExpiryDate | date:'dd/MM/yyyy' }}</span>
+        <!-- Vehicle details -->
+        <div class="p-5">
+          <h2 class="text-xl font-bold text-dark mb-4">{{ vehicle.brand }} {{ vehicle.model }}</h2>
+
+          <!-- Mobile view - Accordion style -->
+          <div class="block md:hidden">
+            <details class="mb-3 group">
+              <summary class="list-none flex justify-between cursor-pointer rounded-lg bg-gray-50 p-3 mb-2">
+                <span class="font-medium">Detalii autoturism</span>
+                <mat-icon class="transform group-open:rotate-180 transition-transform duration-300">expand_more</mat-icon>
+              </summary>
+              <div class="p-3 bg-gray-50 rounded-lg mt-1">
+                <div class="grid grid-cols-1 gap-2">
+                  <div class="flex justify-between">
+                    <span class="font-medium text-gray">An:</span>
+                    <span>{{ vehicle.yearOfProduction }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="font-medium text-gray">Culoare:</span>
+                    <span>{{ vehicle.color }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="font-medium text-gray">Transmisie:</span>
+                    <span>{{ normalizeTransmissionType(vehicle.transmissionType) }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="font-medium text-gray">Combustibil:</span>
+                    <span>{{ getFuelTypeDisplay(vehicle.fuelType) }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="font-medium text-gray">Motor:</span>
+                    <span>{{ vehicle.engineSizeLiters }} L</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="font-medium text-gray">Propulsie:</span>
+                    <span>{{ vehicle.powertrainType }}</span>
+                  </div>
+                </div>
+              </div>
+            </details>
           </div>
-          <div class="document" [ngClass]="{'expired': isDateExpired(vehicle.insuranceExpiryDate)}">
-            <span class="doc-label">Asigurare:</span>
-            <span class="doc-date">{{ vehicle.insuranceExpiryDate | date:'dd/MM/yyyy' }}</span>
+
+          <!-- Desktop view - Grid layout -->
+          <div class="hidden md:grid grid-cols-2 gap-3 mb-4">
+            <div class="flex flex-col">
+              <span class="text-sm text-gray">An:</span>
+              <span class="font-medium">{{ vehicle.yearOfProduction }}</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm text-gray">Culoare:</span>
+              <span class="font-medium">{{ vehicle.color }}</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm text-gray">Transmisie:</span>
+              <span class="font-medium">{{ normalizeTransmissionType(vehicle.transmissionType) }}</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm text-gray">Combustibil:</span>
+              <span class="font-medium">{{ getFuelTypeDisplay(vehicle.fuelType) }}</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm text-gray">Motor:</span>
+              <span class="font-medium">{{ vehicle.engineSizeLiters }} L</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm text-gray">Propulsie:</span>
+              <span class="font-medium">{{ vehicle.powertrainType }}</span>
+            </div>
           </div>
-          <div class="document" [ngClass]="{'expired': isDateExpired(vehicle.rcaExpiryDate)}">
-            <span class="doc-label">RCA:</span>
-            <span class="doc-date">{{ vehicle.rcaExpiryDate | date:'dd/MM/yyyy' }}</span>
+
+          <!-- Document expiry dates -->
+          <div class="mt-4 pt-4 border-t border-gray-100">
+            <!-- ITP Document -->
+            <div class="flex justify-between items-center py-2">
+              <span class="text-sm font-medium">ITP:</span>
+              <div class="flex items-center">
+                <span [ngClass]="{
+                  'text-red-600 font-bold': isDateExpired(vehicle.itpExpiryDate),
+                  'text-amber-600 font-bold': isDateExpiring(vehicle.itpExpiryDate) && !isDateExpired(vehicle.itpExpiryDate)
+                }">
+                  {{ vehicle.itpExpiryDate | date:'dd/MM/yyyy' }}
+                </span>
+                <mat-icon *ngIf="isDateExpiring(vehicle.itpExpiryDate) && !isDateExpired(vehicle.itpExpiryDate)"
+                        class="text-amber-500 text-sm ml-1">warning</mat-icon>
+                <mat-icon *ngIf="isDateExpired(vehicle.itpExpiryDate)"
+                        class="text-red-500 text-sm ml-1">error</mat-icon>
+              </div>
+            </div>
+
+            <!-- Insurance Document -->
+            <div class="flex justify-between items-center py-2">
+              <span class="text-sm font-medium">Asigurare:</span>
+              <div class="flex items-center">
+                <span [ngClass]="{
+                  'text-red-600 font-bold': isDateExpired(vehicle.insuranceExpiryDate),
+                  'text-amber-600 font-bold': isDateExpiring(vehicle.insuranceExpiryDate) && !isDateExpired(vehicle.insuranceExpiryDate)
+                }">
+                  {{ vehicle.insuranceExpiryDate | date:'dd/MM/yyyy' }}
+                </span>
+                <mat-icon *ngIf="isDateExpiring(vehicle.insuranceExpiryDate) && !isDateExpired(vehicle.insuranceExpiryDate)"
+                        class="text-amber-500 text-sm ml-1">warning</mat-icon>
+                <mat-icon *ngIf="isDateExpired(vehicle.insuranceExpiryDate)"
+                        class="text-red-500 text-sm ml-1">error</mat-icon>
+              </div>
+            </div>
+
+            <!-- RCA Document -->
+            <div class="flex justify-between items-center py-2">
+              <span class="text-sm font-medium">RCA:</span>
+              <div class="flex items-center">
+                <span [ngClass]="{
+                  'text-red-600 font-bold': isDateExpired(vehicle.rcaExpiryDate),
+                  'text-amber-600 font-bold': isDateExpiring(vehicle.rcaExpiryDate) && !isDateExpired(vehicle.rcaExpiryDate)
+                }">
+                  {{ vehicle.rcaExpiryDate | date:'dd/MM/yyyy' }}
+                </span>
+                <mat-icon *ngIf="isDateExpiring(vehicle.rcaExpiryDate) && !isDateExpired(vehicle.rcaExpiryDate)"
+                        class="text-amber-500 text-sm ml-1">warning</mat-icon>
+                <mat-icon *ngIf="isDateExpired(vehicle.rcaExpiryDate)"
+                        class="text-red-500 text-sm ml-1">error</mat-icon>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="vehicle-actions">
-        <button mat-icon-button color="primary" (click)="openEditVehicleDialog(vehicle)" aria-label="Edit">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="confirmDelete(vehicle)" aria-label="Delete">
-          <mat-icon>delete</mat-icon>
-        </button>
+        <!-- Actions -->
+        <div class="flex justify-end p-4 bg-gray-50">
+          <button mat-icon-button class="text-primary hover:text-primary-dark mr-2" (click)="openEditVehicleDialog(vehicle)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button class="text-red-500 hover:text-red-700" (click)="confirmDelete(vehicle)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
   </div>

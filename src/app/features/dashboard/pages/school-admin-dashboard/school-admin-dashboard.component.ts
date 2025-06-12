@@ -9,7 +9,7 @@ import { DashboardNavbarComponent } from '../../../../shared/components/dashboar
   standalone: true,
   imports: [CommonModule, RouterModule, DashboardNavbarComponent],
   templateUrl: './school-admin-dashboard.component.html',
-  styleUrl: './school-admin-dashboard.component.css'
+  styleUrls: ['./school-admin-dashboard.component.css']
 })
 export class SchoolAdminDashboardComponent implements OnInit {
   userName = '';

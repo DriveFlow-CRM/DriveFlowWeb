@@ -1,0 +1,288 @@
+<!-- Student File Details - Redesigned with Tailwind -->
+<div class="min-h-screen bg-light p-4 md:p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <button
+            [routerLink]="['/dashboard/student']"
+            class="mr-4 p-2 text-gray-600 hover:text-primary transition-colors duration-200 rounded-lg hover:bg-gray-100">
+            <i class="material-icons">arrow_back</i>
+          </button>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-dark">Detalii Dosar</h1>
+            <p class="text-gray-600 mt-1">Vizualizează progresul și gestionează programările</p>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <button
+          (click)="createAppointment()"
+          class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+          <i class="material-icons">event_available</i>
+          <span class="hidden md:inline">Creează Programare</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-20">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <p class="mt-4 text-gray-600">Se încarcă detaliile dosarului...</p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div *ngIf="!loading && fileDetails" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column - File Status & Quick Actions -->
+      <div class="lg:col-span-1 space-y-6">
+        <!-- File Status Card -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="flex items-center mb-4">
+            <i class="material-icons text-primary mr-2">folder</i>
+            <h2 class="text-lg font-semibold text-dark">Starea Dosarului</h2>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-gray-50 rounded-lg p-4">
+              <div class="text-sm text-gray-600 mb-1">Numărul dosarului</div>
+              <div class="text-xl font-bold text-dark">#{{ fileDetails.fileId }}</div>
+            </div>
+
+            <div class="flex items-center justify-center p-4 rounded-lg" [ngClass]="getStatusClass(fileDetails.status)">
+              <i class="material-icons mr-2">{{ getStatusIcon(fileDetails.status) }}</i>
+              <span class="font-medium">{{ getStatusText(fileDetails.status) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions Card -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="flex items-center mb-4">
+            <i class="material-icons text-primary mr-2">flash_on</i>
+            <h2 class="text-lg font-semibold text-dark">Acțiuni Rapide</h2>
+          </div>
+
+          <div class="space-y-3">
+            <button
+              (click)="downloadInvoice()"
+              [disabled]="downloadingInvoice"
+              class="w-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50 text-dark px-4 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
+              <i class="material-icons">receipt</i>
+              {{ downloadingInvoice ? 'Se descarcă...' : 'Descarcă Factura' }}
+            </button>
+
+            <button
+              (click)="createAppointment()"
+              class="w-full bg-primary hover:bg-primary-dark text-white px-4 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
+              <i class="material-icons">event_available</i>
+              Creează Programare
+            </button>
+          </div>
+        </div>
+
+        <!-- Instructor Card -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="flex items-center mb-4">
+            <i class="material-icons text-primary mr-2">person</i>
+            <h2 class="text-lg font-semibold text-dark">Instructorul Tău</h2>
+          </div>
+
+          <div class="bg-primary bg-opacity-10 rounded-lg p-4">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-primary bg-opacity-20 rounded-full flex items-center justify-center">
+                <i class="material-icons text-primary text-2xl">account_circle</i>
+              </div>
+              <div class="ml-4 flex-1">
+                <h3 class="font-semibold text-dark">
+                  {{ fileDetails.instructor.firstName }} {{ fileDetails.instructor.lastName }}
+                </h3>
+                <p class="text-sm text-gray-600">{{ fileDetails.instructor.role || 'Instructor' }}</p>
+
+                <div class="mt-2 space-y-1">
+                  <div *ngIf="fileDetails.instructor.email" class="flex items-center text-sm text-gray-600">
+                    <i class="material-icons text-xs mr-1">email</i>
+                    <span>{{ fileDetails.instructor.email }}</span>
+                  </div>
+                  <div *ngIf="fileDetails.instructor.phone" class="flex items-center text-sm text-gray-600">
+                    <i class="material-icons text-xs mr-1">phone</i>
+                    <span>{{ fileDetails.instructor.phone }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Buttons -->
+            <div class="mt-4 flex gap-2">
+              <button
+                *ngIf="fileDetails.instructor.phone"
+                (click)="contactInstructor()"
+                class="flex-1 bg-white hover:bg-gray-50 text-primary px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-1">
+                <i class="material-icons text-sm">call</i>
+                Sună
+              </button>
+              <button
+                *ngIf="fileDetails.instructor.email"
+                (click)="emailInstructor()"
+                class="flex-1 bg-white hover:bg-gray-50 text-primary px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-1">
+                <i class="material-icons text-sm">email</i>
+                Email
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Detailed Information -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-md">
+          <!-- Tab Navigation -->
+          <div class="border-b border-gray-200">
+            <nav class="flex space-x-8 px-6">
+              <button
+                class="py-4 px-1 border-b-2 border-primary text-primary font-medium text-sm"
+                type="button">
+                Prezentare Generală
+              </button>
+            </nav>
+          </div>
+
+          <!-- Tab Content -->
+          <div class="p-6">
+            <!-- Important Dates Section -->
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold text-dark mb-4 flex items-center">
+                <i class="material-icons text-primary mr-2">event</i>
+                Date Importante
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <div class="text-sm text-gray-600 mb-1">Data începerii</div>
+                  <div class="font-semibold text-dark">{{ formatDate(fileDetails.scholarshipStartDate) }}</div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <div class="text-sm text-gray-600 mb-1">Expirare cazier</div>
+                  <div class="font-semibold text-dark">{{ formatDate(fileDetails.criminalRecordExpiryDate) }}</div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <div class="text-sm text-gray-600 mb-1">Expirare fișă medicală</div>
+                  <div class="font-semibold text-dark">{{ formatDate(fileDetails.medicalRecordExpiryDate) }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Information Section -->
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold text-dark mb-4 flex items-center">
+                <i class="material-icons text-primary mr-2">payments</i>
+                Informații Plată
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <div class="text-sm text-gray-600 mb-2">Plată de bază</div>
+                  <div class="flex items-center">
+                    <i class="material-icons text-sm mr-2"
+                       [class.text-green-600]="fileDetails.payment.scholarshipPayment"
+                       [class.text-red-600]="!fileDetails.payment.scholarshipPayment">
+                      {{ fileDetails.payment.scholarshipPayment ? 'check_circle' : 'cancel' }}
+                    </i>
+                    <span class="font-semibold"
+                          [class.text-green-600]="fileDetails.payment.scholarshipPayment"
+                          [class.text-red-600]="!fileDetails.payment.scholarshipPayment">
+                      {{ fileDetails.payment.scholarshipPayment ? 'Plătit' : 'În așteptare' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <div class="text-sm text-gray-600 mb-1">Ședințe plătite</div>
+                  <div class="font-semibold text-dark">{{ fileDetails.payment.sessionsPayed }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vehicle Information Section -->
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold text-dark mb-4 flex items-center">
+                <i class="material-icons text-primary mr-2">directions_car</i>
+                Vehiculul de Antrenament
+              </h3>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <div class="text-sm text-gray-600 mb-1">Numărul de înmatriculare</div>
+                    <div class="font-semibold text-dark">{{ fileDetails.vehicle?.licensePlateNumber || 'Nu este specificat' }}</div>
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-600 mb-1">Tipul transmisiei</div>
+                    <div class="font-semibold text-dark">{{ getTransmissionType(fileDetails.vehicle?.transmissionType || '') }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Appointments Section -->
+            <div>
+              <h3 class="text-lg font-semibold text-dark mb-4 flex items-center">
+                <i class="material-icons text-primary mr-2">calendar_today</i>
+                Programările Tale
+              </h3>
+
+              <!-- Upcoming Appointments -->
+              <div class="mb-6">
+                <h4 class="text-md font-medium text-dark mb-3">Programări Viitoare</h4>
+                <div *ngIf="getUpcomingAppointments().length === 0" class="text-center py-8 text-gray-500">
+                  <i class="material-icons text-4xl text-gray-300 mb-2">event_busy</i>
+                  <p>Nu ai programări viitoare</p>
+                  <button
+                    (click)="createAppointment()"
+                    class="mt-3 text-primary hover:text-primary-dark font-medium">
+                    Creează prima ta programare
+                  </button>
+                </div>
+                <div class="space-y-3" *ngIf="getUpcomingAppointments().length > 0">
+                  <div *ngFor="let appointment of getUpcomingAppointments()"
+                       class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <div class="font-semibold text-dark">{{ formatDate(appointment.date) }}</div>
+                        <div class="text-sm text-gray-600">{{ formatTime(appointment.startHour) }} - {{ formatTime(appointment.endHour) }}</div>
+                      </div>
+                      <div class="text-right">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {{ appointment.status }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Past Appointments -->
+              <div *ngIf="getPastAppointments().length > 0">
+                <h4 class="text-md font-medium text-dark mb-3">Programări Anterioare</h4>
+                <div class="space-y-3 max-h-64 overflow-y-auto">
+                  <div *ngFor="let appointment of getPastAppointments()"
+                       class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <div class="font-semibold text-dark">{{ formatDate(appointment.date) }}</div>
+                        <div class="text-sm text-gray-600">{{ formatTime(appointment.startHour) }} - {{ formatTime(appointment.endHour) }}</div>
+                      </div>
+                      <div class="text-right">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                          {{ appointment.status }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

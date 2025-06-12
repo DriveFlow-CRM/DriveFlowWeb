@@ -9,7 +9,7 @@ import { Subscription, filter } from 'rxjs';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './public-navbar.component.html',
-  styleUrl: './public-navbar.component.css'
+  styleUrls: ['./public-navbar.component.css']
 })
 export class PublicNavbarComponent implements OnInit, OnDestroy {
   isMenuOpen = false;

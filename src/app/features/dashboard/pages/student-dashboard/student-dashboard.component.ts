@@ -1,17 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { DashboardNavbarComponent } from '../../../../shared/components/dashboard-navbar/dashboard-navbar.component';
+import { FileListComponent } from './pages/file-list/file-list.component';
+import { FileDetailsComponent } from './pages/file-details/file-details.component';
 
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, DashboardNavbarComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    RouterOutlet,
+    DashboardNavbarComponent,
+    FileListComponent,
+    FileDetailsComponent
+  ],
   templateUrl: './student-dashboard.component.html',
-  styleUrl: './student-dashboard.component.css'
+  styleUrls: ['./student-dashboard.component.css']
 })
-export class StudentDashboardComponent implements OnInit {
+export class StudentDashboardComponent {
   userName = '';
   userRole = '';
   userEmail = '';

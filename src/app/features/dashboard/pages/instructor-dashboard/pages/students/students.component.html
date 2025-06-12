@@ -1,0 +1,267 @@
+<div class="students-page">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">My Students</h1>
+      <p class="page-subtitle">Manage and track your assigned students</p>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="exportStudentList()">
+        <mat-icon>download</mat-icon>
+        Export List
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section">
+    <div class="filters-row">
+      <!-- Search -->
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search students</mat-label>
+        <input matInput
+               [(ngModel)]="searchTerm"
+               (input)="applyFilters()"
+               placeholder="Name or email">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <!-- Status Filter -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Status</mat-label>
+        <mat-select [(value)]="selectedStatus" (selectionChange)="applyFilters()">
+          <mat-option *ngFor="let option of statusOptions" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- License Type Filter -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>License Type</mat-label>
+        <mat-select [(value)]="selectedLicenseType" (selectionChange)="applyFilters()">
+          <mat-option *ngFor="let option of licenseTypeOptions" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- View Mode Toggle -->
+      <div class="view-toggle">
+        <button mat-icon-button
+                [class.active]="viewMode === 'cards'"
+                (click)="viewMode = 'cards'"
+                matTooltip="Card View">
+          <mat-icon>view_module</mat-icon>
+        </button>
+        <button mat-icon-button
+                [class.active]="viewMode === 'table'"
+                (click)="viewMode = 'table'"
+                matTooltip="Table View">
+          <mat-icon>view_list</mat-icon>
+        </button>
+      </div>
+
+      <!-- Clear Filters -->
+      <button mat-stroked-button (click)="clearFilters()" class="clear-filters-btn">
+        <mat-icon>clear</mat-icon>
+        Clear Filters
+      </button>
+    </div>
+
+    <!-- Results Summary -->
+    <div class="results-summary">
+      <span class="results-count">{{ totalItems }} students found</span>
+      <span class="results-info" *ngIf="searchTerm || selectedStatus !== 'all' || selectedLicenseType !== 'all'">
+        (filtered from {{ assignedStudents.length }} total)
+      </span>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading students...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && assignedStudents.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">people_outline</mat-icon>
+    <h2>No Students Assigned</h2>
+    <p>You don't have any students assigned yet. Students will appear here once they are assigned to you by the school administrator.</p>
+  </div>
+
+  <!-- No Results State -->
+  <div *ngIf="!isLoading && assignedStudents.length > 0 && filteredStudents.length === 0" class="no-results-state">
+    <mat-icon class="empty-icon">search_off</mat-icon>
+    <h2>No Results Found</h2>
+    <p>No students match your current filters. Try adjusting your search criteria.</p>
+    <button mat-raised-button color="primary" (click)="clearFilters()">
+      Clear All Filters
+    </button>
+  </div>
+
+  <!-- Students Content -->
+  <div *ngIf="!isLoading && filteredStudents.length > 0" class="students-content">
+
+    <!-- Card View -->
+    <div *ngIf="viewMode === 'cards'" class="students-grid">
+      <div *ngFor="let student of getCurrentPageStudents()" class="student-card">
+        <div class="card-header">
+          <div class="student-avatar">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="student-info">
+            <h3 class="student-name">{{ student.firstName }} {{ student.lastName }}</h3>
+            <p class="student-email">{{ student.email }}</p>
+          </div>
+          <div class="student-status">
+            <mat-chip [style.background-color]="getStatusColor(student.status)"
+                     [style.color]="'white'">
+              <mat-icon>{{ getStatusIcon(student.status) }}</mat-icon>
+              {{ student.status }}
+            </mat-chip>
+          </div>
+        </div>
+
+        <div class="card-content">
+          <div class="student-details">
+            <div class="detail-item">
+              <mat-icon>phone</mat-icon>
+              <span>{{ student.phoneNumber }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon>directions_car</mat-icon>
+              <span>{{ student.licensePlateNumber || 'No vehicle assigned' }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon>settings</mat-icon>
+              <span>{{ student.transmissionType || 'Not specified' }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon>event</mat-icon>
+              <span>Started: {{ student.scholarshipStartDate | date:'shortDate' }}</span>
+            </div>
+          </div>
+
+          <div class="license-badge">
+            <span class="license-type"
+                  [style.background-color]="getLicenseTypeColor(student.type)">
+              Category {{ student.type }}
+            </span>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button mat-button (click)="viewStudentDetails(student)">
+            <mat-icon>visibility</mat-icon>
+            View Details
+          </button>
+          <button mat-button (click)="scheduleLesson(student)">
+            <mat-icon>event_available</mat-icon>
+            Schedule
+          </button>
+          <button mat-icon-button (click)="contactStudent(student)" matTooltip="Contact Student">
+            <mat-icon>email</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table View -->
+    <div *ngIf="viewMode === 'table'" class="table-container">
+      <table mat-table [dataSource]="getCurrentPageStudents()" class="students-table">
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Student</th>
+          <td mat-cell *matCellDef="let student">
+            <div class="table-student-info">
+              <div class="table-avatar">
+                <mat-icon>person</mat-icon>
+              </div>
+              <div>
+                <div class="table-student-name">{{ student.firstName }} {{ student.lastName }}</div>
+                <div class="table-student-email">{{ student.email }}</div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Contact Column -->
+        <ng-container matColumnDef="contact">
+          <th mat-header-cell *matHeaderCellDef>Contact</th>
+          <td mat-cell *matCellDef="let student">
+            <div class="contact-info">
+              <div>{{ student.phoneNumber }}</div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- License Type Column -->
+        <ng-container matColumnDef="licenseType">
+          <th mat-header-cell *matHeaderCellDef>License</th>
+          <td mat-cell *matCellDef="let student">
+            <span class="table-license-badge"
+                  [style.background-color]="getLicenseTypeColor(student.type)">
+              {{ student.type }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Vehicle Column -->
+        <ng-container matColumnDef="vehicle">
+          <th mat-header-cell *matHeaderCellDef>Vehicle</th>
+          <td mat-cell *matCellDef="let student">
+            <div class="vehicle-info">
+              <div>{{ student.licensePlateNumber || 'Not assigned' }}</div>
+              <div class="vehicle-transmission">{{ student.transmissionType }}</div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let student">
+            <mat-chip [style.background-color]="getStatusColor(student.status)"
+                     [style.color]="'white'">
+              {{ student.status }}
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let student">
+            <div class="table-actions">
+              <button mat-icon-button (click)="viewStudentDetails(student)" matTooltip="View Details">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button (click)="scheduleLesson(student)" matTooltip="Schedule Lesson">
+                <mat-icon>event_available</mat-icon>
+              </button>
+              <button mat-icon-button (click)="contactStudent(student)" matTooltip="Contact">
+                <mat-icon>email</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['name', 'contact', 'licenseType', 'vehicle', 'status', 'actions']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['name', 'contact', 'licenseType', 'vehicle', 'status', 'actions'];"></tr>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <mat-paginator
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageIndex]="pageIndex"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>

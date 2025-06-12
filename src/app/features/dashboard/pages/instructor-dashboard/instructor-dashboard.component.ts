@@ -9,13 +9,13 @@ import { DashboardNavbarComponent } from '../../../../shared/components/dashboar
   standalone: true,
   imports: [CommonModule, RouterModule, DashboardNavbarComponent],
   templateUrl: './instructor-dashboard.component.html',
-  styleUrl: './instructor-dashboard.component.css'
+  styleUrls: ['./instructor-dashboard.component.css']
 })
 export class InstructorDashboardComponent implements OnInit {
   userName = '';
   userRole = '';
   userEmail = '';
-  schoolId = 0;
+  instructorId = '';
 
   constructor(private authService: AuthService) {}
 
@@ -25,8 +25,8 @@ export class InstructorDashboardComponent implements OnInit {
       this.userName = `${userData.firstName} ${userData.lastName}`;
       this.userRole = userData.userType;
       this.userEmail = userData.userEmail;
-      // Set a default schoolId until we implement the actual logic
-      this.schoolId = 1;
+      // Use userId as instructorId
+      this.instructorId = userData.userId;
     }
   }
 }

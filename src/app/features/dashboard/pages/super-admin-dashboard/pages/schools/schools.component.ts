@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatStepperModule, MatDialogModule, RouterModule],
   templateUrl: './schools.component.html',
-  styleUrl: './schools.component.css',
+  styleUrls: ['./schools.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class SchoolsComponent implements OnInit, OnDestroy {

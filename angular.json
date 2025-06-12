@@ -16,6 +16,13 @@
             "customWebpackConfig": {
               "path": "./webpack.config.js"
             },
+            "allowedCommonJsDependencies": [
+              "@fullcalendar/core",
+              "@fullcalendar/daygrid",
+              "@fullcalendar/interaction",
+              "@fullcalendar/list",
+              "@fullcalendar/timegrid"
+            ],
             "outputPath": "dist/drive-flow-web",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -65,10 +72,10 @@
           "builder": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "DriveFlowWeb:build:production"
+              "browserTarget": "DriveFlowWeb:build:production"
             },
             "development": {
-              "buildTarget": "DriveFlowWeb:build:development"
+              "browserTarget": "DriveFlowWeb:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "DriveFlowWeb:build"
+            "browserTarget": "DriveFlowWeb:build"
           }
         },
         "test": {

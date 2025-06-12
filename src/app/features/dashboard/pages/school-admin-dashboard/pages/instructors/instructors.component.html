@@ -1,15 +1,199 @@
-<div class="page-container">
-  <div class="page-header">
-    <h1>Instructori</h1>
-  </div>
+<div class="bg-white min-h-screen p-4 md:p-6">
+  <div class="max-w-7xl mx-auto">
+    <mat-tab-group class="mb-6">
+      <!-- Instructors Tab -->
+      <mat-tab label="Instructori">
+        <div class="py-6">
+          <!-- Header with title and add button -->
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-dark">Instructori</h1>
+            <button
+              class="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center shadow-md transition-all duration-300"
+              (click)="openAddInstructorDialog()">
+              <mat-icon>add</mat-icon>
+              <span class="ml-1">Adaugă instructor</span>
+            </button>
+          </div>
 
-  <div class="content-card">
-    <div class="card-header">
-      <span class="material-icons">person</span>
-      <h2>Gestionare instructori</h2>
-    </div>
-    <div class="card-content">
-      <p>Gestionați instructorii școlii dvs. de șoferi din această pagină.</p>
-    </div>
+          <!-- Loading spinner -->
+          <div *ngIf="instructorsLoading" class="flex flex-col items-center justify-center p-8 bg-light rounded-xl shadow">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p class="mt-4 text-gray">Se încarcă instructorii...</p>
+          </div>
+
+          <!-- No instructors message -->
+          <div *ngIf="!instructorsLoading && instructors.length === 0" class="bg-light p-8 text-center rounded-xl shadow">
+            <p class="text-gray">Nu există instructori înregistrați. Adăugați unul nou folosind butonul de mai sus.</p>
+          </div>
+
+          <!-- Instructors list -->
+          <div *ngIf="!instructorsLoading && instructors.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div *ngFor="let instructor of instructors"
+                class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+                [class.border-2]="selectedInstructor?.userId === instructor.userId"
+                [class.border-primary]="selectedInstructor?.userId === instructor.userId">
+
+              <!-- Instructor card header -->
+              <div class="bg-primary p-4 flex justify-between items-center">
+                <div class="bg-white text-dark px-3 py-2 rounded-md border-2 border-primary-dark font-bold">
+                  {{ instructor.firstName }} {{ instructor.lastName }}
+                </div>
+              </div>
+
+              <!-- Instructor details -->
+              <div class="p-5">
+                <div class="mb-4">
+                  <div class="flex items-center mb-2">
+                    <mat-icon class="text-gray text-sm mr-2">email</mat-icon>
+                    <span>{{ instructor.email }}</span>
+                  </div>
+                  <div class="flex items-center">
+                    <mat-icon class="text-gray text-sm mr-2">phone</mat-icon>
+                    <span>{{ instructor.phone }}</span>
+                  </div>
+                </div>
+
+                <!-- Actions for the instructor -->
+                <div class="flex justify-between mt-4 pt-4 border-t border-gray-100">
+                  <button mat-button color="primary" (click)="loadInstructorCategories(instructor)">
+                    <mat-icon>category</mat-icon> Categorii
+                  </button>
+                  <div>
+                    <button mat-icon-button color="primary" (click)="openAssignCategoryDialog(instructor)"
+                            matTooltip="Asignează categorie">
+                      <mat-icon>add_circle</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" (click)="openEditInstructorDialog(instructor)"
+                            matTooltip="Editează">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="confirmDeleteInstructor(instructor)"
+                            matTooltip="Șterge">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Instructor's teaching categories section -->
+          <div *ngIf="selectedInstructor" class="mt-8">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+              <h2 class="text-xl font-bold mb-4">
+                Categoriile instructorului: {{ selectedInstructor.firstName }} {{ selectedInstructor.lastName }}
+              </h2>
+
+              <!-- Loading spinner for categories -->
+              <div *ngIf="instructorCategoriesLoading" class="flex flex-col items-center justify-center p-4">
+                <mat-spinner diameter="30"></mat-spinner>
+                <p class="mt-2 text-gray">Se încarcă categoriile...</p>
+              </div>
+
+              <!-- No categories message -->
+              <div *ngIf="!instructorCategoriesLoading && instructorCategories.length === 0" class="p-4 text-center">
+                <p class="text-gray">Acest instructor nu are categorii asignate.</p>
+                <button
+                  class="mt-4 bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center shadow-md transition-all duration-300 mx-auto"
+                  (click)="openAssignCategoryDialog(selectedInstructor)">
+                  <mat-icon>add</mat-icon>
+                  <span class="ml-1">Asignează categorie</span>
+                </button>
+              </div>
+
+              <!-- Categories list -->
+              <div *ngIf="!instructorCategoriesLoading && instructorCategories.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div *ngFor="let category of instructorCategories" class="bg-light rounded-lg p-4 border border-gray-100">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="font-bold">Categoria {{ category.licenseType }}</h3>
+                      <p class="text-sm">{{ formatCurrency(category.sessionCost) }} / {{ formatDuration(category.sessionDuration) }}</p>
+                      <p class="text-sm">Școlarizare: {{ formatCurrency(category.scholarshipPrice) }}</p>
+                      <p class="text-sm">Min. ore: {{ category.minDrivingLessonsReq }}</p>
+                    </div>
+                    <button mat-icon-button color="warn" (click)="confirmRemoveCategory(category)"
+                            matTooltip="Șterge asignare">
+                      <mat-icon>remove_circle</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Teaching Categories Tab -->
+      <mat-tab label="Categorii de predare">
+        <div class="py-6">
+          <!-- Header with title and add button -->
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-dark">Categorii de predare</h1>
+            <button
+              class="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center shadow-md transition-all duration-300"
+              (click)="openAddCategoryDialog()">
+              <mat-icon>add</mat-icon>
+              <span class="ml-1">Adaugă categorie</span>
+            </button>
+          </div>
+
+          <!-- Loading spinner -->
+          <div *ngIf="categoriesLoading" class="flex flex-col items-center justify-center p-8 bg-light rounded-xl shadow">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p class="mt-4 text-gray">Se încarcă categoriile...</p>
+          </div>
+
+          <!-- No categories message -->
+          <div *ngIf="!categoriesLoading && teachingCategories.length === 0" class="bg-light p-8 text-center rounded-xl shadow">
+            <p class="text-gray">Nu există categorii de predare înregistrate. Adăugați una nouă folosind butonul de mai sus.</p>
+          </div>
+
+          <!-- Categories list -->
+          <div *ngIf="!categoriesLoading && teachingCategories.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div *ngFor="let category of teachingCategories" class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+              <!-- Category card header -->
+              <div class="bg-primary p-4 flex justify-between items-center">
+                <div class="bg-white text-dark px-3 py-2 rounded-md border-2 border-primary-dark font-bold">
+                  Categoria {{ category.licenseType }}
+                </div>
+                <div class="px-3 py-1 text-white text-sm font-semibold rounded bg-primary-dark">
+                  {{ formatCurrency(category.sessionCost) }}
+                </div>
+              </div>
+
+              <!-- Category details -->
+              <div class="p-5">
+                <div class="space-y-2">
+                  <div class="flex items-center">
+                    <span class="text-sm text-gray w-28">Durata:</span>
+                    <span class="font-medium">{{ formatDuration(category.sessionDuration) }}</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-sm text-gray w-28">Școlarizare:</span>
+                    <span class="font-medium">{{ formatCurrency(category.scholarshipPrice) }}</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-sm text-gray w-28">Min. ore:</span>
+                    <span class="font-medium">{{ category.minDrivingLessonsReq }}</span>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex justify-end mt-4 pt-4 border-t border-gray-100">
+                  <button mat-icon-button color="primary" (click)="openEditCategoryDialog(category)"
+                          matTooltip="Editează">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="confirmDeleteCategory(category)"
+                          matTooltip="Șterge">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </div>

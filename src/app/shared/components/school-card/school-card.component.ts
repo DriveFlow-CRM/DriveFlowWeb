@@ -8,7 +8,7 @@ import { School, SchoolListing } from '../../../core/models/school.model';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './school-card.component.html',
-  styleUrl: './school-card.component.css'
+  styleUrls: ['./school-card.component.css']
 })
 export class SchoolCardComponent {
   @Input() school!: School | SchoolListing;

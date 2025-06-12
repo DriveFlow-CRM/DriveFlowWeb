@@ -1,0 +1,346 @@
+.appointment-dialog {
+  max-width: 600px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin: -24px -24px 24px -24px;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.header-icon {
+  margin-right: 8px;
+  font-size: 24px;
+}
+
+.dialog-header button {
+  color: white;
+}
+
+.dialog-content {
+  padding: 0 24px 24px 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.instructor-card {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.instructor-info {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.instructor-icon {
+  font-size: 40px;
+  color: #667eea;
+  margin-right: 12px;
+}
+
+.instructor-details {
+  flex: 1;
+}
+
+.instructor-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.instructor-role {
+  font-size: 14px;
+  color: #666;
+}
+
+.no-slots-message {
+  text-align: center;
+  padding: 40px 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #e5e7eb;
+}
+
+.no-slots-message mat-icon {
+  font-size: 64px;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+
+.no-slots-message h3 {
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.no-slots-message p {
+  color: #6b7280;
+  margin: 0;
+}
+
+.form-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  margin-bottom: 8px;
+}
+
+.mat-mdc-form-field-suffix .mat-icon {
+  color: #667eea;
+}
+
+.no-times-message {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: #fef3c7;
+  border-radius: 8px;
+  color: #d97706;
+  font-weight: 500;
+}
+
+.no-times-message mat-icon {
+  margin-right: 8px;
+}
+
+.slots-summary {
+  margin-top: 24px;
+  border-radius: 8px;
+  background: #f0f9ff;
+  border-left: 4px solid #0ea5e9;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 16px 8px 16px;
+  font-weight: 600;
+  color: #0c4a6e;
+}
+
+.summary-header mat-icon {
+  margin-right: 8px;
+  color: #0ea5e9;
+}
+
+.summary-content {
+  padding: 0 16px 16px 16px;
+}
+
+.slots-count {
+  margin-bottom: 12px;
+  color: #0c4a6e;
+}
+
+.dates-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dates-chips mat-chip-option {
+  background: #e0f2fe;
+  color: #0c4a6e;
+  border: 1px solid #0ea5e9;
+  cursor: pointer;
+}
+
+.dates-chips mat-chip-option:hover {
+  background: #0ea5e9;
+  color: white;
+}
+
+.dates-chips mat-chip-option[disabled] {
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: default;
+}
+
+.request-summary {
+  margin-top: 24px;
+  border-radius: 8px;
+  background: #f0fdf4;
+  border-left: 4px solid #22c55e;
+}
+
+.request-summary .summary-header {
+  color: #14532d;
+}
+
+.request-summary .summary-header mat-icon {
+  color: #22c55e;
+}
+
+.summary-item {
+  margin-bottom: 8px;
+  color: #166534;
+}
+
+.summary-item strong {
+  color: #14532d;
+  margin-right: 8px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  margin: 24px -24px -24px -24px;
+  background: #f8f9fa;
+}
+
+.dialog-actions button {
+  min-width: 120px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.dialog-actions button[mat-button] {
+  color: #666;
+}
+
+.dialog-actions button[mat-flat-button] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.dialog-actions button:disabled {
+  opacity: 0.6;
+}
+
+.mr-2 {
+  margin-right: 8px;
+}
+
+/* Success and Error snackbar styling */
+:host ::ng-deep .success-snackbar {
+  background-color: #10b981;
+  color: white;
+}
+
+:host ::ng-deep .error-snackbar {
+  background-color: #ef4444;
+  color: white;
+}
+
+/* Custom scrollbar for the modal content */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #e2e8f0;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background-color: #f1f5f9;
+  border-radius: 0.25rem;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #94a3b8;
+  border-radius: 0.25rem;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background-color: #64748b;
+}
+
+/* Animation for loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Button hover effects */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Focus styles for accessibility */
+button:focus {
+  outline: 2px solid #44D9E6;
+  outline-offset: 2px;
+}
+
+/* Custom styles for date and time buttons */
+.date-button:hover,
+.time-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Error message styles */
+.error-snackbar {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+.success-snackbar {
+  background-color: #10b981 !important;
+  color: white !important;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .appointment-dialog {
+    max-width: 95vw;
+    margin: 16px;
+  }
+
+  .dialog-header {
+    padding: 16px 20px;
+  }
+
+  .dialog-content {
+    padding: 0 20px 20px 20px;
+  }
+
+  .dialog-actions {
+    padding: 12px 20px;
+    flex-direction: column;
+  }
+
+  .dialog-actions button {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .dates-chips {
+    justify-content: center;
+  }
+}

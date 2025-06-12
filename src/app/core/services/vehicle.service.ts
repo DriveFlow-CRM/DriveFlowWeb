@@ -8,7 +8,8 @@ import {
   Vehicle,
   TransmissionType,
   FuelType,
-  PowertrainType
+  PowertrainType,
+  CreateVehicleRequest
 } from '../../models/interfaces/vehicle.model';
 
 @Injectable({
@@ -34,8 +35,25 @@ export class VehicleService {
   }
 
   // Add a new vehicle
-  addVehicle(schoolId: number, vehicle: Omit<Vehicle, 'vehicleId'>): Observable<Vehicle> {
-    return this.http.post<Vehicle>(`${this.apiUrl}Vehicle/add/${schoolId}`, vehicle)
+  addVehicle(schoolId: number, vehicleData: Partial<CreateVehicleRequest>): Observable<Vehicle> {
+    // Format the data according to API requirements
+    const requestBody: CreateVehicleRequest = {
+      licensePlateNumber: vehicleData.licensePlateNumber || '',
+      transmissionType: vehicleData.transmissionType || '',
+      color: vehicleData.color || '',
+      brand: vehicleData.brand || '',
+      model: vehicleData.model || '',
+      yearOfProduction: vehicleData.yearOfProduction || 0,
+      fuelType: vehicleData.fuelType || '',
+      engineSizeLiters: vehicleData.engineSizeLiters || 0,
+      powertrainType: vehicleData.powertrainType || '',
+      itpExpiryDate: vehicleData.itpExpiryDate || null,
+      insuranceExpiryDate: vehicleData.insuranceExpiryDate || null,
+      rcaExpiryDate: vehicleData.rcaExpiryDate || null,
+      licenseId: vehicleData.licenseId || 0
+    };
+
+    return this.http.post<Vehicle>(`${this.apiUrl}Vehicle/create/${schoolId}`, requestBody)
       .pipe(
         catchError(error => this.errorHandler.handleHttpError(error))
       );

@@ -1,0 +1,182 @@
+<div class="overview-page">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <h1 class="page-title">Welcome back, {{ userName }}!</h1>
+    <p class="page-subtitle">Here's what's happening with your driving lessons today</p>
+  </div>
+
+  <!-- Quick Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-icons">event_available</span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.todayAppointments }}</h3>
+        <p class="stat-label">Today's Appointments</p>
+        <div class="stat-change">+2 from yesterday</div>
+      </div>
+      <button class="stat-action" (click)="navigateToAppointments()">
+        <span class="material-icons">arrow_forward</span>
+      </button>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-icons">people</span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.totalStudents }}</h3>
+        <p class="stat-label">Active Students</p>
+        <div class="stat-change">+1 this week</div>
+      </div>
+      <button class="stat-action" (click)="navigateToStudents()">
+        <span class="material-icons">arrow_forward</span>
+      </button>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-icons">schedule</span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.upcomingLessons }}</h3>
+        <p class="stat-label">This Week</p>
+        <div class="stat-change">3 pending</div>
+      </div>
+      <button class="stat-action" (click)="navigateToAppointments()">
+        <span class="material-icons">arrow_forward</span>
+      </button>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-icons">check_circle</span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.completedLessons }}</h3>
+        <p class="stat-label">Completed This Month</p>
+        <div class="stat-change">85% success rate</div>
+      </div>
+      <button class="stat-action">
+        <span class="material-icons">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="main-content-grid">
+    <!-- Today's Schedule -->
+    <div class="content-card schedule-card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span class="material-icons">today</span>
+          Today's Schedule
+        </h2>
+        <button class="card-action-btn" (click)="navigateToAppointments()">
+          View All
+        </button>
+      </div>
+
+      <div class="card-content">
+        <div *ngIf="isLoading" class="loading-state">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Loading appointments...</p>
+        </div>
+
+        <div *ngIf="!isLoading && todayAppointments.length === 0" class="empty-state">
+          <span class="material-icons">event_available</span>
+          <h3>No appointments today</h3>
+          <p>You have a free day! Consider setting your availability for future bookings.</p>
+          <button mat-raised-button color="primary" (click)="navigateToAvailability()">
+            Set Availability
+          </button>
+        </div>
+
+        <div *ngIf="!isLoading && todayAppointments.length > 0" class="appointments-list">
+          <div *ngFor="let appointment of todayAppointments" class="appointment-item">
+            <div class="appointment-time">
+              <span class="time">{{ appointment.startHour }} - {{ appointment.endHour }}</span>
+            </div>
+            <div class="appointment-details">
+              <h4 class="student-name">{{ appointment.firstName }} {{ appointment.lastName }}</h4>
+              <p class="lesson-type">{{ appointment.type }} Lesson</p>
+            </div>
+            <div class="appointment-actions">
+              <button mat-icon-button>
+                <span class="material-icons">phone</span>
+              </button>
+              <button mat-icon-button>
+                <span class="material-icons">message</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="content-card actions-card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span class="material-icons">flash_on</span>
+          Quick Actions
+        </h2>
+      </div>
+
+      <div class="card-content">
+        <div class="quick-actions-grid">
+          <button class="quick-action-btn" (click)="navigateToAvailability()">
+            <span class="material-icons">event_available</span>
+            <span class="action-label">Set Availability</span>
+          </button>
+
+          <button class="quick-action-btn" (click)="navigateToStudents()">
+            <span class="material-icons">person_add</span>
+            <span class="action-label">View Students</span>
+          </button>
+
+          <button class="quick-action-btn" (click)="navigateToAppointments()">
+            <span class="material-icons">calendar_today</span>
+            <span class="action-label">Schedule</span>
+          </button>
+
+          <button class="quick-action-btn">
+            <span class="material-icons">assessment</span>
+            <span class="action-label">Reports</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="content-card activity-card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span class="material-icons">history</span>
+          Recent Activity
+        </h2>
+      </div>
+
+      <div class="card-content">
+        <div *ngIf="recentActivities.length === 0" class="empty-state">
+          <span class="material-icons">inbox</span>
+          <p>No recent activity</p>
+        </div>
+
+        <div *ngIf="recentActivities.length > 0" class="activity-list">
+          <div *ngFor="let activity of recentActivities" class="activity-item">
+            <div class="activity-icon">
+              <span class="material-icons">{{ activity.icon }}</span>
+            </div>
+            <div class="activity-content">
+              <h4 class="activity-title">{{ activity.title }}</h4>
+              <p class="activity-description">{{ activity.description }}</p>
+              <span class="activity-time">{{ activity.time }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

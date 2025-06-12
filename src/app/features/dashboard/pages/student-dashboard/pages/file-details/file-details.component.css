@@ -1,0 +1,530 @@
+.bg-light {
+  background-color: #F8FAFC;
+}
+
+.text-dark {
+  color: #1D1D1B;
+}
+
+.text-gray {
+  color: #666666;
+}
+
+.bg-primary {
+  background-color: #44D9E6;
+}
+
+.border-primary-dark {
+  border-color: #2A878F;
+}
+
+.file-details {
+  margin-bottom: 30px;
+}
+
+/* Tab styles */
+::ng-deep .mat-mdc-tab-header {
+  margin-bottom: 1rem;
+}
+
+::ng-deep .mat-mdc-tab.mat-mdc-tab-label-active {
+  background-color: rgba(68, 217, 230, 0.1);
+}
+
+::ng-deep .mat-mdc-tab-group.mat-primary .mat-mdc-ink-bar {
+  background-color: #44D9E6 !important;
+}
+
+/* Section styles */
+.info-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: #1D1D1B;
+}
+
+.section-title .mat-icon {
+  margin-right: 0.5rem;
+  color: #44D9E6;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed #e0e0e0;
+}
+
+.info-label {
+  width: 40%;
+  font-weight: 500;
+  color: #666666;
+}
+
+.info-value {
+  width: 60%;
+  color: #1D1D1B;
+}
+
+/* Card styles */
+::ng-deep .mat-mdc-card {
+  border-radius: 0 0 0.75rem 0.75rem !important;
+  overflow: hidden;
+}
+
+.appointment-card {
+  border-left: 4px solid #44D9E6;
+}
+
+/* Button styles */
+.download-btn {
+  background-color: white !important;
+  color: #2A878F !important;
+}
+
+.download-btn:hover {
+  background-color: #f0f0f0 !important;
+}
+
+::ng-deep .mat-mdc-icon-button.mat-primary {
+  color: #44D9E6 !important;
+}
+
+/* Status badge colors */
+.bg-blue-200 {
+  background-color: #bfdbfe;
+}
+
+.text-blue-800 {
+  color: #1e40af;
+}
+
+.bg-green-200 {
+  background-color: #bbf7d0;
+}
+
+.text-green-800 {
+  color: #166534;
+}
+
+.bg-red-200 {
+  background-color: #fecaca;
+}
+
+.text-red-800 {
+  color: #b91c1c;
+}
+
+.bg-gray-200 {
+  background-color: #e2e8f0;
+}
+
+.text-gray-800 {
+  color: #1f2937;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .info-row {
+    flex-direction: column;
+  }
+
+  .info-label, .info-value {
+    width: 100%;
+  }
+
+  .info-value {
+    margin-top: 0.25rem;
+  }
+}
+
+/* Main Container */
+.student-file-details {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Header Section */
+.header-section {
+  border: 1px solid #e5e7eb;
+}
+
+/* Status Card */
+.status-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.file-id-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  width: fit-content;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.status-icon {
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+/* Progress Section */
+.progress-section {
+  margin-top: 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.3s ease;
+}
+
+/* Quick Actions Card */
+.quick-actions-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-btn {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.action-btn mat-icon {
+  margin-right: 8px;
+}
+
+/* Details Card */
+.details-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+/* Tab Content */
+.tab-content {
+  min-height: 400px;
+}
+
+/* Section Titles */
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16px;
+}
+
+.section-title mat-icon {
+  margin-right: 8px;
+  color: #667eea;
+}
+
+/* Info Sections */
+.info-section {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.info-value {
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-indicator {
+  font-size: 16px !important;
+}
+
+/* Instructor Section */
+.instructor-section {
+  margin-top: 24px;
+}
+
+.instructor-card {
+  border: 1px solid #dbeafe;
+}
+
+.instructor-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e40af;
+  margin-bottom: 4px;
+}
+
+.instructor-role {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.instructor-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #374151;
+}
+
+.contact-icon {
+  font-size: 16px !important;
+  margin-right: 8px;
+  color: #667eea;
+}
+
+/* Vehicle Section */
+.vehicle-section {
+  margin-top: 24px;
+}
+
+.vehicle-info {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Appointments Section */
+.appointments-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 16px;
+}
+
+.appointments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.appointment-card {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.appointment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.appointment-card.upcoming {
+  border-left: 4px solid #3b82f6;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+}
+
+.appointment-card.past {
+  border-left: 4px solid #6b7280;
+  background: #f9fafb;
+}
+
+.appointment-content {
+  padding: 16px;
+}
+
+.appointment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.appointment-date {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: #374151;
+}
+
+.appointment-date mat-icon {
+  margin-right: 6px;
+  color: #667eea;
+}
+
+.appointment-time {
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.appointment-time mat-icon {
+  margin-right: 6px;
+  color: #667eea;
+  font-size: 16px;
+}
+
+.appointment-status {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* No Appointments */
+.no-appointments {
+  border: 2px dashed #e5e7eb;
+}
+
+/* Status Classes */
+.bg-yellow-200 {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.bg-blue-200 {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.bg-green-200 {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.bg-red-200 {
+  background-color: #fecaca;
+  color: #dc2626;
+}
+
+.bg-gray-200 {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+/* Success and Error snackbar styling */
+:host ::ng-deep .success-snackbar {
+  background-color: #10b981 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .error-snackbar {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .grid.lg\\:grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .appointments-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-section {
+    padding: 16px;
+  }
+
+  .flex.gap-2 button span.hidden {
+    display: none !important;
+  }
+
+  .appointment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .tab-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .student-file-details {
+    padding: 16px;
+  }
+
+  .flex.gap-2 {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .flex.gap-2 button {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -50,3 +50,119 @@
   color: #555;
   line-height: 1.5;
 }
+
+/* Custom styles for the Files component */
+
+/* Background colors */
+.bg-light {
+  background-color: #F8FAFC;
+}
+
+/* Text colors */
+.text-dark {
+  color: #1D1D1B;
+}
+
+.text-gray {
+  color: #666666;
+}
+
+/* Primary/accent colors */
+.bg-primary {
+  background-color: #44D9E6;
+}
+
+.bg-primary-dark {
+  background-color: #2A878F;
+}
+
+/* Custom button hover styles */
+button.bg-primary:hover {
+  background-color: #2A878F;
+}
+
+/* Shadow effects */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Card hover effects */
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 20px -3px rgba(0, 0, 0, 0.1), 0 8px 10px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Transitions */
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+/* Status badge colors */
+.badge-draft {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+.badge-inprogress {
+  background-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.badge-approved {
+  background-color: #bbf7d0;
+  color: #166534;
+}
+
+.badge-rejected {
+  background-color: #fecaca;
+  color: #b91c1c;
+}
+
+.badge-completed {
+  background-color: #e9d5ff;
+  color: #6b21a8;
+}
+
+/* Material icon size adjustment */
+.mat-icon {
+  vertical-align: middle;
+}
+
+.text-sm .mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  line-height: 18px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .py-4 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
+/* Custom scrollbar for better UX */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}

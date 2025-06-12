@@ -1,0 +1,88 @@
+<div class="profile-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon class="header-icon">person</mat-icon>
+      Update Profile
+    </h2>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-content">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <!-- First Name -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" placeholder="Enter your first name">
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="profileForm.get('firstName')?.touched && profileForm.get('firstName')?.errors">
+            {{ getFormFieldError('firstName') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Last Name -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" placeholder="Enter your last name">
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="profileForm.get('lastName')?.touched && profileForm.get('lastName')?.errors">
+            {{ getFormFieldError('lastName') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="Enter your email">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="profileForm.get('email')?.touched && profileForm.get('email')?.errors">
+            {{ getFormFieldError('email') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Phone -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Phone</mat-label>
+          <input matInput formControlName="phone" placeholder="Enter your phone number">
+          <mat-icon matSuffix>phone</mat-icon>
+          <mat-error *ngIf="profileForm.get('phone')?.touched && profileForm.get('phone')?.errors">
+            {{ getFormFieldError('phone') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- CNP -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>CNP (Optional)</mat-label>
+          <input matInput formControlName="cnp" placeholder="Enter your CNP">
+          <mat-icon matSuffix>badge</mat-icon>
+          <mat-error *ngIf="profileForm.get('cnp')?.touched && profileForm.get('cnp')?.errors">
+            {{ getFormFieldError('cnp') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>New Password (Optional)</mat-label>
+          <input matInput type="password" formControlName="password" placeholder="Enter new password">
+          <mat-icon matSuffix>lock</mat-icon>
+          <mat-error *ngIf="profileForm.get('password')?.touched && profileForm.get('password')?.errors">
+            {{ getFormFieldError('password') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onCancel()" [disabled]="isLoading">
+      Cancel
+    </button>
+    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="isLoading || profileForm.invalid">
+      <mat-spinner *ngIf="isLoading" diameter="20" class="mr-2"></mat-spinner>
+      <mat-icon *ngIf="!isLoading">save</mat-icon>
+      {{ isLoading ? 'Updating...' : 'Update Profile' }}
+    </button>
+  </div>
+</div>

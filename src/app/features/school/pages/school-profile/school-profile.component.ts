@@ -26,7 +26,7 @@ interface DrivingCategory {
     ReactiveFormsModule
   ],
   templateUrl: './school-profile.component.html',
-  styleUrl: './school-profile.component.css'
+  styleUrls: ['./school-profile.component.css']
 })
 export class SchoolProfileComponent implements OnInit, OnDestroy {
   school: School | null = null;

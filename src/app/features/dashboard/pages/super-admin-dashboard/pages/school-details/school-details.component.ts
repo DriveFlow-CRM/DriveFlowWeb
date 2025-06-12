@@ -6,12 +6,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
+
 import { AutoSchoolService } from '../../../../../../core/services/auto-school.service';
 import { AutoSchool } from '../../../../../../models/interfaces/auto-school.model';
 import { RequestService } from '../../../../../../core/services/request.service';
 import { SchoolRequest } from '../../../../../../models/interfaces/request.model';
 import { SchoolUserService, SchoolUser } from '../../../../../../core/services/school-user.service';
-import { TeachingCategoryService, TeachingCategory } from '../../../../../../core/services/teaching-category.service';
+import { TeachingCategoryService } from '../../../../../../core/services/teaching-category.service';
+import { TeachingCategory } from '../../../../../../models/interfaces/teaching-category.model';
 import { Subscription, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfigService } from '../../../../../../core/services/config.service';

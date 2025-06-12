@@ -14,20 +14,30 @@ import { AuthService } from './core/services/auth.service';
 // Super Admin Dashboard Pages
 import { OverviewComponent } from './features/dashboard/pages/super-admin-dashboard/pages/overview/overview.component';
 import { SchoolsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/schools/schools.component';
-import { PaymentsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/payments/payments.component';
-import { StatisticsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/statistics/statistics.component';
+
 import { SchoolDetailsComponent } from './features/dashboard/pages/super-admin-dashboard/pages/school-details/school-details.component';
 
 // School Admin Dashboard Pages
 import { OverviewComponent as SchoolOverviewComponent } from './features/dashboard/pages/school-admin-dashboard/pages/overview/overview.component';
 import { CarsComponent } from './features/dashboard/pages/school-admin-dashboard/pages/cars/cars.component';
 import { InstructorsComponent as SchoolInstructorsComponent } from './features/dashboard/pages/school-admin-dashboard/pages/instructors/instructors.component';
-import { StatisticsComponent as SchoolStatisticsComponent } from './features/dashboard/pages/school-admin-dashboard/pages/statistics/statistics.component';
 import { FilesComponent } from './features/dashboard/pages/school-admin-dashboard/pages/files/files.component';
-import { PaymentsComponent as SchoolPaymentsComponent } from './features/dashboard/pages/school-admin-dashboard/pages/payments/payments.component';
+
 
 // School Profile Page
 import { SchoolProfileComponent } from './features/school/pages/school-profile/school-profile.component';
+
+// Student Dashboard Pages
+import { FileListComponent } from './features/dashboard/pages/student-dashboard/pages/file-list/file-list.component';
+import { FileDetailsComponent } from './features/dashboard/pages/student-dashboard/pages/file-details/file-details.component';
+
+// Instructor Dashboard Pages
+import { AvailabilityComponent } from './features/dashboard/pages/instructor-dashboard/pages/availability/availability.component';
+import { AssignedFilesComponent } from './features/dashboard/pages/instructor-dashboard/pages/assigned-files/assigned-files.component';
+import { AppointmentsComponent } from './features/dashboard/pages/instructor-dashboard/pages/appointments/appointments.component';
+import { InstructorOverviewComponent } from './features/dashboard/pages/instructor-dashboard/pages/overview/overview.component';
+import { StudentsComponent } from './features/dashboard/pages/instructor-dashboard/pages/students/students.component';
+
 
 export const routes: Routes = [
   // Public routes
@@ -88,8 +98,7 @@ export const routes: Routes = [
       { path: 'overview', component: OverviewComponent },
       { path: 'schools', component: SchoolsComponent },
       { path: 'schools/:id', component: SchoolDetailsComponent },
-      { path: 'payments', component: PaymentsComponent },
-      { path: 'statistics', component: StatisticsComponent },
+
     ]
   },
 
@@ -103,20 +112,32 @@ export const routes: Routes = [
       { path: 'overview', component: SchoolOverviewComponent },
       { path: 'cars', component: CarsComponent },
       { path: 'instructors', component: SchoolInstructorsComponent },
-      { path: 'statistics', component: SchoolStatisticsComponent },
+
       { path: 'files', component: FilesComponent },
-      { path: 'payments', component: SchoolPaymentsComponent },
     ]
   },
   {
     path: 'dashboard/instructor',
     component: InstructorDashboardComponent,
-    canActivate: [authGuard, dashboardGuard]
+    canActivate: [authGuard, dashboardGuard],
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: InstructorOverviewComponent },
+      { path: 'availability', component: AvailabilityComponent },
+      { path: 'students', component: StudentsComponent },
+      { path: 'appointments', component: AppointmentsComponent },
+
+      { path: 'file-details/:id', component: FileDetailsComponent }
+    ]
   },
   {
     path: 'dashboard/student',
     component: StudentDashboardComponent,
-    canActivate: [authGuard, dashboardGuard]
+    canActivate: [authGuard, dashboardGuard],
+    children: [
+      { path: '', component: FileListComponent },
+      { path: 'file/:id', component: FileDetailsComponent }
+    ]
   },
 
   // Fallback route

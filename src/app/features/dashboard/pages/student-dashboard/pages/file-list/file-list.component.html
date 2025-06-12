@@ -1,0 +1,51 @@
+<div class="p-4 md:p-6 bg-white min-h-screen">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl md:text-3xl font-bold text-dark mb-6">Dosarele mele</h1>
+
+    <!-- Loading indicator -->
+    <div *ngIf="loading" class="flex justify-center items-center p-8">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span class="ml-4 text-gray">Se încarcă dosarele...</span>
+    </div>
+
+    <!-- No files message -->
+    <div *ngIf="!loading && files.length === 0" class="text-center p-8 bg-light rounded-xl shadow">
+      <mat-icon class="text-5xl text-gray-400 mb-4">folder_off</mat-icon>
+      <p class="text-lg text-gray-600">Nu aveți niciun dosar înregistrat.</p>
+    </div>
+
+    <!-- Files grid -->
+    <div *ngIf="!loading && files.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <mat-card *ngFor="let file of files" class="rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+        <mat-card-content class="p-5">
+          <div class="flex justify-between items-center mb-4">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold"
+                  [ngClass]="getStatusClass(file.status)">
+              {{ file.status }}
+            </span>
+            <span class="text-sm text-gray-500">ID: {{ file.fileId }}</span>
+          </div>
+
+          <h2 class="text-xl font-semibold mb-2">
+            Categoria {{ file.type }}
+          </h2>
+
+          <div class="text-sm text-gray-600 mb-4">
+            <p class="mb-1">
+              <mat-icon class="align-middle text-sm mr-1">person</mat-icon>
+              <span class="align-middle">Instructor: {{ file.firstName }} {{ file.lastName }}</span>
+            </p>
+          </div>
+
+          <div class="flex justify-end">
+            <a [routerLink]="['/dashboard/student/file', file.fileId]"
+               mat-flat-button color="primary" class="w-full">
+              <mat-icon>visibility</mat-icon>
+              <span class="ml-1">Vezi detalii</span>
+            </a>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

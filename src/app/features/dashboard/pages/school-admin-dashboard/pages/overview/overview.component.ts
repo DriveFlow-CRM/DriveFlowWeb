@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './overview.component.html',
-  styleUrl: './overview.component.css'
+  styleUrls: ['./overview.component.css']
 })
 export class OverviewComponent {
 

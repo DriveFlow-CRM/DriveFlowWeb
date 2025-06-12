@@ -1,0 +1,126 @@
+.profile-dialog {
+  max-width: 500px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin: -24px -24px 24px -24px;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.header-icon {
+  margin-right: 8px;
+  font-size: 24px;
+}
+
+.dialog-header button {
+  color: white;
+}
+
+.dialog-content {
+  padding: 0 24px 24px 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.form-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  margin-bottom: 8px;
+}
+
+.mat-mdc-form-field-suffix .mat-icon {
+  color: #667eea;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  margin: 24px -24px -24px -24px;
+  background: #f8f9fa;
+}
+
+.dialog-actions button {
+  min-width: 120px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.dialog-actions button[mat-button] {
+  color: #666;
+}
+
+.dialog-actions button[mat-flat-button] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.dialog-actions button:disabled {
+  opacity: 0.6;
+}
+
+.mr-2 {
+  margin-right: 8px;
+}
+
+/* Success and Error snackbar styling */
+:host ::ng-deep .success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+:host ::ng-deep .error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .profile-dialog {
+    max-width: 95vw;
+    margin: 16px;
+  }
+
+  .dialog-header {
+    padding: 16px 20px;
+  }
+
+  .dialog-content {
+    padding: 0 20px 20px 20px;
+  }
+
+  .dialog-actions {
+    padding: 12px 20px;
+    flex-direction: column;
+  }
+
+  .dialog-actions button {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}

@@ -214,7 +214,7 @@
 }
 
 ::ng-deep .vehicle-form-dialog .mat-mdc-dialog-surface {
-  border-radius: 8px !important;
+  border-radius: 0.75rem !important;
   overflow: hidden !important;
 }
 

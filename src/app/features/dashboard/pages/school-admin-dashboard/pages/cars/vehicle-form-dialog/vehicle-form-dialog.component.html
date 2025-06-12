@@ -1,6 +1,6 @@
 <div class="dialog-container">
   <div class="dialog-header">
-    <h2>{{ data.isEditing ? 'Editează mașina' : 'Adaugă o mașină nouă' }}</h2>
+    <h2>{{ data.isEditing ? 'Editează autoturismul' : 'Adaugă un autoturism nou' }}</h2>
     <button mat-icon-button class="close-button" (click)="onCancel()">
       <mat-icon>close</mat-icon>
     </button>
@@ -154,7 +154,7 @@
 
     <div class="dialog-actions">
       <button mat-button class="cancel-btn" type="button" (click)="onCancel()">Anulare</button>
-      <button mat-raised-button class="submit-btn" color="primary" type="submit">
+      <button type="submit" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-lg shadow-md transition-all duration-300">
         {{ data.isEditing ? 'Salvare' : 'Adăugare' }}
       </button>
     </div>

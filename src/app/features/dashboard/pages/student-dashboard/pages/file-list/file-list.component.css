@@ -1,0 +1,83 @@
+.bg-light {
+  background-color: #F8FAFC;
+}
+
+.text-dark {
+  color: #1D1D1B;
+}
+
+.text-gray {
+  color: #666666;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.mat-icon {
+  vertical-align: middle;
+}
+
+/* Fix material icon size in text */
+.text-sm .mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  line-height: 18px;
+}
+
+.align-middle {
+  vertical-align: middle;
+}
+
+/* Custom card styles */
+::ng-deep .mat-mdc-card {
+  border-radius: 0.75rem !important;
+  overflow: hidden;
+}
+
+/* Custom button primary color */
+::ng-deep .mat-mdc-raised-button.mat-primary {
+  background-color: #44D9E6 !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-primary:hover {
+  background-color: #2A878F !important;
+}
+
+/* Status badge colors */
+.bg-blue-200 {
+  background-color: #bfdbfe;
+}
+
+.text-blue-800 {
+  color: #1e40af;
+}
+
+.bg-green-200 {
+  background-color: #bbf7d0;
+}
+
+.text-green-800 {
+  color: #166534;
+}
+
+.bg-red-200 {
+  background-color: #fecaca;
+}
+
+.text-red-800 {
+  color: #b91c1c;
+}
+
+.bg-gray-200 {
+  background-color: #e2e8f0;
+}
+
+.text-gray-800 {
+  color: #1f2937;
+}

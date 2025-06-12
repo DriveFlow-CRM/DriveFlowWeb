@@ -1,0 +1,156 @@
+.dialog-container {
+  padding: 0;
+  overflow: hidden;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: #1D1D1B;
+}
+
+.close-button {
+  margin-right: -12px;
+}
+
+.dialog-content {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f8fafc;
+}
+
+.cancel-btn {
+  margin-right: 8px;
+}
+
+.form-grid {
+  margin-top: 20px;
+}
+
+.pricing-info {
+  margin-bottom: 24px;
+}
+
+.pricing-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.pricing-card-header {
+  background-color: #44D9E6;
+  padding: 12px 16px;
+  color: white;
+}
+
+.pricing-card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.pricing-card-content {
+  padding: 16px;
+  background-color: #f8fafc;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #e0e0e0;
+}
+
+.price-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.price {
+  font-weight: 500;
+}
+
+.price-row.total {
+  margin-top: 16px;
+  padding-top: 8px;
+  border-top: 2px solid #e0e0e0;
+  font-weight: 600;
+}
+
+.total-price {
+  color: #44D9E6;
+  font-size: 18px;
+}
+
+.checkbox-field {
+  margin-bottom: 20px;
+}
+
+.checkbox-helper-text {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #666666;
+  margin-left: 24px;
+}
+
+/* Fix form field styling */
+mat-form-field {
+  width: 100%;
+}
+
+/* Remove vertical line and fix appearance */
+::ng-deep .mat-mdc-form-field.mat-form-field-appearance-outline .mdc-notched-outline__leading {
+  border-right-style: none !important;
+  border-radius: 4px 0 0 4px !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-form-field-appearance-outline .mdc-notched-outline__trailing {
+  border-left-style: none !important;
+  border-radius: 0 4px 4px 0 !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-form-field-appearance-outline .mdc-notched-outline__notch {
+  border-left-style: none !important;
+  border-right-style: none !important;
+}
+
+/* Focus and hover styles */
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
+  color: #44D9E6 !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline:hover .mat-form-field-outline {
+  opacity: 0.8;
+}
+
+/* Custom checkbox color */
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: #44D9E6 !important;
+}
+
+/* Error styling */
+::ng-deep .mat-error {
+  font-size: 12px;
+  margin-top: 2px;
+}

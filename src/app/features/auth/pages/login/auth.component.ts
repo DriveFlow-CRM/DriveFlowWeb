@@ -27,7 +27,7 @@ import {
     FontAwesomeModule
   ],
   templateUrl: './auth.component.html',
-  styleUrl: './auth.component.css'
+  styleUrls: ['./auth.component.css']
 })
 export class AuthComponent implements OnInit {
   // Font Awesome icons for animated background

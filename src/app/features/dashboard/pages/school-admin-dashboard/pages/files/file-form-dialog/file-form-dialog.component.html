@@ -1,0 +1,143 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ data.isEditing ? 'Editează dosar' : 'Adaugă dosar nou' }}</h2>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="fileForm" (ngSubmit)="onSubmit()">
+    <div class="dialog-content">
+      <div class="form-grid">
+        <!-- Student name (read-only if present) -->
+        <div *ngIf="data.student" class="col-span-2">
+          <div class="bg-light p-3 rounded-lg mb-4">
+            <h3 class="font-bold mb-1">Elev:</h3>
+            <p>{{ data.student.firstName }} {{ data.student.lastName }}</p>
+            <p class="text-sm text-gray">{{ data.student.email }} | {{ data.student.phoneNumber }}</p>
+          </div>
+        </div>
+
+        <!-- Start Date -->
+        <mat-form-field appearance="outline">
+          <mat-label>Data începere școlarizare</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="scholarshipStartDate">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+          <mat-error *ngIf="scholarshipStartDateControl?.invalid && scholarshipStartDateControl?.touched">
+            Data începerii este obligatorie
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Teaching Category -->
+        <mat-form-field appearance="outline">
+          <mat-label>Categoria de predare</mat-label>
+          <mat-select formControlName="teachingCategoryId">
+            <mat-option *ngFor="let category of data.teachingCategories" [value]="category.teachingCategoryId">
+              {{ category.licenseType }} ({{ category.scholarshipPrice }} RON)
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="teachingCategoryIdControl?.invalid && teachingCategoryIdControl?.touched">
+            Categoria de predare este obligatorie
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Criminal Record Expiry Date -->
+        <mat-form-field appearance="outline">
+          <mat-label>Data expirare cazier</mat-label>
+          <input matInput [matDatepicker]="criminalPicker" formControlName="criminalRecordExpiryDate">
+          <mat-datepicker-toggle matSuffix [for]="criminalPicker"></mat-datepicker-toggle>
+          <mat-datepicker #criminalPicker></mat-datepicker>
+          <mat-error *ngIf="criminalRecordExpiryDateControl?.invalid && criminalRecordExpiryDateControl?.touched">
+            Data expirării cazierului este obligatorie
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Vehicle -->
+        <mat-form-field appearance="outline">
+          <mat-label>Vehicul</mat-label>
+          <mat-select formControlName="vehicleId">
+            <mat-option [value]="null">Niciunul</mat-option>
+            <mat-option *ngFor="let vehicle of data.vehicles" [value]="vehicle.vehicleId">
+              {{ vehicle.licensePlateNumber }} ({{ vehicle.transmissionType === 'manual' ? 'Manuală' : 'Automată' }})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Medical Record Expiry Date -->
+        <mat-form-field appearance="outline">
+          <mat-label>Data expirare fișă medicală</mat-label>
+          <input matInput [matDatepicker]="medicalPicker" formControlName="medicalRecordExpiryDate">
+          <mat-datepicker-toggle matSuffix [for]="medicalPicker"></mat-datepicker-toggle>
+          <mat-datepicker #medicalPicker></mat-datepicker>
+          <mat-error *ngIf="medicalRecordExpiryDateControl?.invalid && medicalRecordExpiryDateControl?.touched">
+            Data expirării fișei medicale este obligatorie
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Instructor -->
+        <mat-form-field appearance="outline">
+          <mat-label>Instructor</mat-label>
+          <mat-select formControlName="instructorId">
+            <mat-option [value]="null">Niciunul</mat-option>
+            <mat-option *ngFor="let instructor of data.instructors" [value]="instructor.userId">
+              {{ instructor.firstName }} {{ instructor.lastName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Status -->
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option *ngFor="let option of statusOptions" [value]="option">
+              {{ option === 'APPROVED' ? 'Aprobat' :
+                 option === 'ARCHIVED' ? 'Arhivat' :
+                 option === 'EXPIRED' ? 'Expirat' :
+                 option === 'FINALISED' ? 'Finalizat' : option }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="statusControl?.invalid && statusControl?.touched">
+            Statusul este obligatoriu
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Payment Details (only when adding a new file) -->
+        <ng-container *ngIf="!data.isEditing" formGroupName="payment">
+          <div class="col-span-2">
+            <h3 class="text-lg font-medium mb-3 border-b pb-2">Detalii plată</h3>
+          </div>
+
+          <!-- Sessions Paid -->
+          <mat-form-field appearance="outline">
+            <mat-label>Ședințe plătite</mat-label>
+            <input matInput type="number" min="0" formControlName="sessionsPayed">
+          </mat-form-field>
+
+          <!-- Scholarship Base Payment -->
+          <div class="flex items-center h-[56px] pl-3">
+            <mat-checkbox formControlName="scholarshipBasePayment">
+              Plată de bază pentru școlarizare
+            </mat-checkbox>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        mat-button
+        type="button"
+        class="cancel-btn"
+        (click)="onCancel()">
+        Anulează
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit">
+        {{ data.isEditing ? 'Salvează' : 'Adaugă' }}
+      </button>
+    </div>
+  </form>
+</div>

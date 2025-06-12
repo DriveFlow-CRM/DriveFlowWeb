@@ -48,7 +48,7 @@ export function romanianLicensePlateValidator(): ValidatorFn {
     MatIconModule
   ],
   templateUrl: './vehicle-form-dialog.component.html',
-  styleUrl: './vehicle-form-dialog.component.css'
+  styleUrls: ['./vehicle-form-dialog.component.css']
 })
 export class VehicleFormDialogComponent implements OnInit {
   vehicleForm: FormGroup;

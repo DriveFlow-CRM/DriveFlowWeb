@@ -1,0 +1,304 @@
+.schedule-appointment-dialog {
+  width: 100%;
+  max-width: 550px;
+  max-height: 85vh;
+  overflow: hidden;
+}
+
+/* Dialog Header */
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(135deg, #44D9E6, #2A878F);
+  color: white;
+  margin: -24px -24px 0 -24px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-content mat-icon {
+  font-size: 32px;
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 0.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.header-content h2 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.header-content p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.9rem;
+}
+
+.close-button {
+  color: white !important;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Dialog Content */
+.dialog-content {
+  padding: 2rem !important;
+  overflow-y: auto;
+  max-height: 65vh;
+  background: #f8fafc;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Form Fields */
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-form-field-outline {
+  color: #e2e8f0;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline-thick {
+  color: #44D9E6;
+}
+
+::ng-deep .mat-mdc-form-field-label {
+  color: #64748b;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-label {
+  color: #44D9E6;
+}
+
+::ng-deep .mat-mdc-select-arrow {
+  color: #64748b;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
+  color: #44D9E6;
+}
+
+/* End Time Display */
+.end-time-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.end-time-display label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.end-time-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #44D9E6;
+  font-family: 'Courier New', monospace;
+}
+
+/* Student Summary */
+.student-summary {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.student-summary h3 {
+  margin: 0 0 1rem 0;
+  color: #1f2937;
+  font-size: 1.125rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.summary-item mat-icon {
+  font-size: 18px;
+  color: #44D9E6;
+  flex-shrink: 0;
+}
+
+.summary-item span {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Dialog Actions */
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #e2e8f0;
+  background: white;
+  margin: 0 -24px -24px -24px;
+}
+
+.dialog-actions button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+}
+
+.dialog-actions button[mat-button] {
+  color: #64748b !important;
+}
+
+.dialog-actions button[mat-button]:hover {
+  background: rgba(68, 217, 230, 0.1) !important;
+  color: #44D9E6 !important;
+}
+
+.dialog-actions button[mat-raised-button] {
+  flex: 1;
+  justify-content: center;
+}
+
+.dialog-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loading Spinner in Button */
+.dialog-actions mat-spinner {
+  margin-right: 0.5rem;
+}
+
+/* Error Messages */
+::ng-deep .mat-mdc-form-field-error {
+  color: #ef4444;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Date Picker */
+::ng-deep .mat-datepicker-toggle {
+  color: #64748b;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-datepicker-toggle {
+  color: #44D9E6;
+}
+
+/* Select Dropdown */
+::ng-deep .mat-mdc-select-panel {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .mat-mdc-option {
+  padding: 0.75rem 1rem;
+}
+
+::ng-deep .mat-mdc-option:hover {
+  background: rgba(68, 217, 230, 0.1);
+}
+
+::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  background: rgba(68, 217, 230, 0.2);
+  color: #44D9E6;
+}
+
+/* Textarea */
+::ng-deep .mat-mdc-form-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .schedule-appointment-dialog {
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+
+  .dialog-header {
+    padding: 1rem;
+  }
+
+  .header-content {
+    gap: 0.75rem;
+  }
+
+  .header-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .dialog-content {
+    padding: 1rem !important;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dialog-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .dialog-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}

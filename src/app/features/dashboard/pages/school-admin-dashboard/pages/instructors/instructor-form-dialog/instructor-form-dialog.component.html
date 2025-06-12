@@ -1,0 +1,101 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ data.isEditing ? 'Editează instructor' : 'Adaugă instructor nou' }}</h2>
+    <button mat-icon-button class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="instructorForm" (ngSubmit)="onSubmit()">
+    <div class="dialog-content">
+      <div class="form-grid">
+        <!-- First Name -->
+        <mat-form-field appearance="outline">
+          <mat-label>Prenume</mat-label>
+          <input matInput formControlName="firstName" placeholder="Ex. Ion">
+          <mat-error *ngIf="isFieldInvalid('firstName')">
+            {{ getErrorMessage('firstName') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Last Name -->
+        <mat-form-field appearance="outline">
+          <mat-label>Nume</mat-label>
+          <input matInput formControlName="lastName" placeholder="Ex. Popescu">
+          <mat-error *ngIf="isFieldInvalid('lastName')">
+            {{ getErrorMessage('lastName') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" placeholder="Ex. ion.popescu@example.com" type="email">
+          <mat-error *ngIf="isFieldInvalid('email')">
+            {{ getErrorMessage('email') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Phone -->
+        <mat-form-field appearance="outline">
+          <mat-label>Telefon</mat-label>
+          <input matInput formControlName="phone" placeholder="Ex. 0712345678">
+          <mat-error *ngIf="isFieldInvalid('phone')">
+            {{ getErrorMessage('phone') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline" class="col-span-2">
+          <mat-label>{{ data.isEditing ? 'Parola nouă (opțional)' : 'Parola' }}</mat-label>
+          <input
+            matInput
+            formControlName="password"
+            [type]="passwordVisible ? 'text' : 'password'"
+            placeholder="Introduceți parola">
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="'Arată parola'"
+            [attr.aria-pressed]="passwordVisible">
+            <mat-icon>{{ passwordVisible ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="isFieldInvalid('password')">
+            {{ getErrorMessage('password') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Teaching Categories -->
+        <mat-form-field appearance="outline" class="col-span-2">
+          <mat-label>Categorii de predare</mat-label>
+          <mat-select formControlName="teachingCategoryIds" multiple>
+            <mat-option *ngFor="let category of data.teachingCategories" [value]="category.teachingCategoryId">
+              Categoria {{ category.licenseType }} - {{ category.sessionCost }} RON
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="isFieldInvalid('teachingCategoryIds')">
+            {{ getErrorMessage('teachingCategoryIds') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        mat-button
+        type="button"
+        class="cancel-btn"
+        (click)="onCancel()">
+        Anulează
+      </button>
+      <button
+        mat-flat-button
+        class="submit-btn"
+        type="submit">
+        {{ data.isEditing ? 'Salvează' : 'Adaugă' }}
+      </button>
+    </div>
+  </form>
+</div>
