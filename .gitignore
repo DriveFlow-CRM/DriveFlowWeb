@@ -47,3 +47,6 @@ Thumbs.db
 .env.development
 .env.test
 .env.production
+
+# Local data and certificates
+/data/

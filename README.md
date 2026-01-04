@@ -116,4 +116,120 @@ API endpoints and other configuration settings are managed through the ConfigSer
 
 ## License
 
+## Dockerized Deployment (Nginx + HTTPS via Certbot)
+
+This repository includes a production-ready Docker setup to build the Angular app, serve it via Nginx, and enable HTTPS with Let’s Encrypt (Certbot). It follows the well-known Nginx + Certbot Compose pattern where Nginx serves the ACME challenge and then uses the generated certificates. See the related issue for context and requirements: [DriveFlowWeb Issue #3](https://github.com/DriveFlow-CRM/DriveFlowWeb/issues/3#issue-3578177443).
+
+### Prerequisites
+
+- A VPS or server with a public IPv4
+- DNS A record pointing `FRONTEND_DOMAIN` to your server’s IP
+- Docker and Docker Compose installed
+- Open ports: 80 (HTTP) and 443 (HTTPS) on your firewall/security group
+
+### Files added
+
+- `Dockerfile`: Multi-stage build (Node to build Angular → Nginx to serve)
+- `docker-compose.yml`: Nginx service and a Certbot utility service sharing volumes
+- `nginx/default.conf.template`: HTTPS config (rendered via environment variables)
+- `nginx/http-only.conf.template`: HTTP-only config (used before certs exist)
+- `docker/entrypoint.sh`: Renders the appropriate Nginx config at container start
+- `scripts/init-cert.sh`: One-time helper to obtain the initial certificate
+- `scripts/renew-certs.sh`: Helper to renew and reload Nginx
+
+### Environment variables
+
+Create a `.env` file in the project root. Use the following keys:
+
+```
+FRONTEND_DOMAIN=app.example.com
+BACKEND_URL=https://api.example.com
+LETSENCRYPT_EMAIL=admin@example.com
+USE_STAGING=false
+```
+
+- `FRONTEND_DOMAIN`: Your site’s domain (must resolve to this server)
+- `BACKEND_URL`: Backend API base URL; Nginx proxies `/api/*` to this URL
+- `LETSENCRYPT_EMAIL`: Email for Let’s Encrypt registration and expiry notices
+- `USE_STAGING`: Use `true` for test certificates, `false` for production
+
+You may also keep a `.env.sample` file with the same keys for reference.
+
+### Build and run (first time)
+
+1) Build image and start Nginx (HTTP-only will be used until certs exist):
+
+```bash
+docker compose up -d --build nginx
+```
+
+2) Obtain the Let’s Encrypt certificate (make sure DNS is set and port 80 is reachable):
+
+```bash
+# Staging (safe test)
+USE_STAGING=true ./scripts/init-cert.sh
+
+# Production (real certificate)
+USE_STAGING=false ./scripts/init-cert.sh
+```
+
+This script requests the certificate into `./data/certbot/conf`, then restarts Nginx.
+
+3) Verify HTTPS:
+
+```bash
+curl -I https://$FRONTEND_DOMAIN
+```
+
+### Renewals
+
+Let’s Encrypt certificates are valid for 90 days. Renew with:
+
+```bash
+./scripts/renew-certs.sh
+```
+
+For unattended renewal, set up a cron on the host (runs daily):
+
+```cron
+0 3 * * * cd /path/to/DriveFlowWeb && ./scripts/renew-certs.sh >> /var/log/driveflowweb-renew.log 2>&1
+```
+
+### Notes
+- Deployment quick commands (no explanations)
+
+Fresh clone
+```bash
+cp .env.sample .env && nano .env
+./scripts/run-all.sh
+```
+
+After pulling updates
+```bash
+docker compose up -d --build nginx
+```
+
+Server restarted
+```bash
+docker compose up -d nginx
+docker compose ps
+```
+
+Domain changed
+```bash
+nano .env   # update FRONTEND_DOMAIN
+docker compose up -d --build nginx
+USE_STAGING=false ./scripts/init-cert.sh
+```
+
+Manual renew (cron-safe)
+```bash
+./scripts/renew-certs.sh
+```
+
+- The Nginx config serves the Angular build from `/usr/share/nginx/html` and provides SPA routing via `try_files`.
+- Requests to `/api/*` are reverse-proxied to `BACKEND_URL`. You can remove or change this behavior in `nginx/*.template`.
+- Configuration is injected using environment variables and `envsubst` at container start (Nginx does not natively interpolate env vars in configs; this is the recommended approach).
+
+
 This project is licensed under the MIT License - see the LICENSE file for details.
