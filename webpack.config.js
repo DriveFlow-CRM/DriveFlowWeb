@@ -22,11 +22,16 @@ EXPOSED_ENV_VARS.forEach((key) => {
   }
 });
 
-// Map the gathered env vars to process.env.* so Angular can read them
+// Map the gathered env vars to process.env.* so Angular can read them.
+// Also stub a minimal process object so runtime guards (typeof process !== 'undefined')
+// remain truthy in the browser bundle.
 const envKeys = Object.entries(combinedEnv).reduce((prev, [key, value]) => {
   prev[`process.env.${key}`] = JSON.stringify(value);
   return prev;
 }, {});
+
+envKeys['process.env'] = JSON.stringify(combinedEnv);
+envKeys['process'] = JSON.stringify({ env: combinedEnv });
 
 module.exports = {
   plugins: [
