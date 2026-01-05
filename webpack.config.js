@@ -1,12 +1,30 @@
 const dotenv = require('dotenv');
 const webpack = require('webpack');
 
-// Load environment variables from .env file
-const env = dotenv.config().parsed || {};
+// Load environment variables from .env file if it exists
+const envResult = dotenv.config();
+const fileEnv = envResult.error ? {} : envResult.parsed || {};
 
-// Map environment variables from .env to process.env.*
-const envKeys = Object.keys(env).reduce((prev, next) => {
-  prev[`process.env.${next}`] = JSON.stringify(env[next]);
+// Only expose explicit keys to the client bundle
+const EXPOSED_ENV_VARS = new Set([
+  ...Object.keys(fileEnv),
+  'API_BASE_URL',
+  'FRONTEND_DOMAIN',
+  'LETSENCRYPT_EMAIL'
+]);
+
+// Prefer runtime environment variables (Cloudflare, CI, etc.), fall back to .env
+const combinedEnv = {};
+EXPOSED_ENV_VARS.forEach((key) => {
+  const value = process.env[key] ?? fileEnv[key];
+  if (typeof value !== 'undefined') {
+    combinedEnv[key] = value;
+  }
+});
+
+// Map the gathered env vars to process.env.* so Angular can read them
+const envKeys = Object.entries(combinedEnv).reduce((prev, [key, value]) => {
+  prev[`process.env.${key}`] = JSON.stringify(value);
   return prev;
 }, {});
 
