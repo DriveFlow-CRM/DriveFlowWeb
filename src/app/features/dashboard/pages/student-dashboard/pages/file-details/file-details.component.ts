@@ -9,13 +9,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 
 import { StudentFileService, AvailableSlot, AvailableSlotsResponse, CreateFileAppointmentDto } from '../../../../../../core/services/student-file.service';
 import { AuthService } from '../../../../../../core/services/auth.service';
+import { NotificationService } from '../../../../../../core/services/notification.service';
 import { StudentFileDetails, Appointment } from '../../../../../../models/interfaces/student-file.model';
 import { CreateAppointmentDialogComponent } from '../create-appointment-dialog/create-appointment-dialog.component';
 
@@ -33,7 +33,6 @@ import { CreateAppointmentDialogComponent } from '../create-appointment-dialog/c
     MatTabsModule,
     MatDividerModule,
     MatTooltipModule,
-    MatSnackBarModule,
     MatDialogModule,
     MatMenuModule,
     MatBadgeModule
@@ -56,7 +55,7 @@ export class FileDetailsComponent implements OnInit {
     private studentFileService: StudentFileService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -204,21 +203,11 @@ export class FileDetailsComponent implements OnInit {
   }
 
   private showSuccessMessage(message: string): void {
-    this.snackBar.open(message, 'Închide', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      panelClass: ['success-snackbar']
-    });
+    this.notificationService.showSuccess(message);
   }
 
   private showErrorMessage(message: string): void {
-    this.snackBar.open(message, 'Închide', {
-      duration: 5000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      panelClass: ['error-snackbar']
-    });
+    this.notificationService.showError(message);
   }
 
   // Format date strings to local format
