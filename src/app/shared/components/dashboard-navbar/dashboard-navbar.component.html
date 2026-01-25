@@ -34,13 +34,12 @@
     <!-- User actions -->
     <div class="user-actions">
       <div class="user-info">
-        <span class="user-email" *ngIf="userEmail">{{ userEmail }}</span>
-        <span class="user-role" *ngIf="userRole === 'SuperAdmin'">Super Admin</span>
-        <span class="user-role" *ngIf="userRole === 'SchoolAdmin'">School Admin</span>
+        <span class="user-name" *ngIf="userName">{{ userName }}</span>
+        <span class="user-role" *ngIf="roleDisplayName">{{ roleDisplayName }}</span>
       </div>
-      <button class="logout-button" (click)="handleLogout()">
+      <button class="logout-button" (click)="handleLogout()" title="Deconectare">
         <span class="material-icons">logout</span>
-        <span class="button-text">Logout</span>
+        <span class="button-text">Ieșire</span>
       </button>
     </div>
   </div>
