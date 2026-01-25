@@ -33,9 +33,11 @@ const envKeys = Object.entries(combinedEnv).reduce((prev, [key, value]) => {
 envKeys['process.env'] = JSON.stringify(combinedEnv);
 envKeys['process'] = JSON.stringify({ env: combinedEnv });
 
-module.exports = {
-  plugins: [
-    // Make environment variables available to your app
+// Export as a function for Angular 19 custom-webpack compatibility
+module.exports = (config) => {
+  config.plugins = config.plugins || [];
+  config.plugins.push(
     new webpack.DefinePlugin(envKeys)
-  ]
+  );
+  return config;
 };
