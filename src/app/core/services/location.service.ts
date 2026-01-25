@@ -1,32 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { ConfigService } from './config.service';
-import { County, City, Address } from '../../models/interfaces/auto-school.model';
-
-export interface CountyCreateDto {
-  name: string;
-  abbreviation: string;
-}
-
-export interface CityCreateDto {
-  name: string;
-  countyId: number;
-}
-
-export interface AddressCreateDto {
-  streetName: string;
-  addressNumber: string;
-  postcode: string;
-  cityId: number;
-}
-
-export interface AddressUpdateDto {
-  streetName: string;
-  addressNumber: string;
-  postcode: string;
-  cityId: number;
-}
+import { ErrorHandlerService } from './error-handler.service';
+import {
+  County,
+  City,
+  Address,
+  CountyCreateDto,
+  CityCreateDto,
+  AddressCreateDto,
+  AddressUpdateDto
+} from '../../models/interfaces/location.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,22 +22,29 @@ export class LocationService {
 
   constructor(
     private http: HttpClient,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private errorHandler: ErrorHandlerService
   ) {
     this.apiUrl = this.configService.getApiBaseUrl();
   }
 
   // County API methods
   getCounties(): Observable<County[]> {
-    return this.http.get<County[]>(`${this.apiUrl}County/get`);
+    return this.http.get<County[]>(`${this.apiUrl}County/get`).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
-  createCounty(county: CountyCreateDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}County`, county);
+  createCounty(county: CountyCreateDto): Observable<County> {
+    return this.http.post<County>(`${this.apiUrl}County`, county).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
-  deleteCounty(countyId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}County/${countyId}`);
+  deleteCounty(countyId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}County/${countyId}`).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
   // City API methods
@@ -60,15 +53,21 @@ export class LocationService {
     if (countyId) {
       url += `?countyId=${countyId}`;
     }
-    return this.http.get<City[]>(url);
+    return this.http.get<City[]>(url).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
-  createCity(city: CityCreateDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}City/create`, city);
+  createCity(city: CityCreateDto): Observable<City> {
+    return this.http.post<City>(`${this.apiUrl}City/create`, city).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
-  deleteCity(cityId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}City/${cityId}`);
+  deleteCity(cityId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}City/${cityId}`).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
   // Address API methods
@@ -77,18 +76,26 @@ export class LocationService {
     if (cityId) {
       url += `?cityId=${cityId}`;
     }
-    return this.http.get<Address[]>(url);
+    return this.http.get<Address[]>(url).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
-  createAddress(address: AddressCreateDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}Address/create`, address);
+  createAddress(address: AddressCreateDto): Observable<Address> {
+    return this.http.post<Address>(`${this.apiUrl}Address/create`, address).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
-  updateAddress(addressId: number, address: AddressUpdateDto): Observable<any> {
-    return this.http.put(`${this.apiUrl}Address/update/${addressId}`, address);
+  updateAddress(addressId: number, address: AddressUpdateDto): Observable<Address> {
+    return this.http.put<Address>(`${this.apiUrl}Address/update/${addressId}`, address).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
-  deleteAddress(addressId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}Address/delete/${addressId}`);
+  deleteAddress(addressId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}Address/delete/${addressId}`).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 }
