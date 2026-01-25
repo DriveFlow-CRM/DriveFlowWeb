@@ -1,14 +1,103 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import './styles/components.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Override Angular Material styles with Tailwind-compatible colors */
+/* ============================================
+   CSS Custom Properties (Design Tokens)
+   ============================================ */
 :root {
-  --primary-color: #2563EB; /* Tailwind blue-600 */
-  --accent-color: #10B981;  /* Tailwind emerald-500 */
-  --warn-color: #EF4444;    /* Tailwind red-500 */
+  /* Brand colors (from tailwind.config.js) */
+  --color-primary: #44D9E6;
+  --color-primary-dark: #2A878F;
+  --color-dark: #1D1D1B;
+  --color-light: #F8FAFC;
+  --color-gray: #1A1A1A;
+
+  /* Semantic colors */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Legacy support for existing Material overrides */
+  --primary-color: var(--color-primary);
+  --accent-color: var(--color-success);
+  --warn-color: var(--color-error);
+
+  /* Spacing scale */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+}
+
+/* ============================================
+   Snackbar Notification Styles
+   ============================================ */
+.snackbar-notification {
+  font-family: 'Inter', 'Helvetica', 'Arial', sans-serif !important;
+}
+
+.snackbar-notification .mdc-snackbar__surface {
+  border-radius: var(--radius-md) !important;
+  min-width: 300px !important;
+}
+
+.snackbar-success .mdc-snackbar__surface {
+  background-color: var(--color-success) !important;
+}
+
+.snackbar-success .mdc-snackbar__label,
+.snackbar-success .mat-mdc-button {
+  color: white !important;
+}
+
+.snackbar-error .mdc-snackbar__surface {
+  background-color: var(--color-error) !important;
+}
+
+.snackbar-error .mdc-snackbar__label,
+.snackbar-error .mat-mdc-button {
+  color: white !important;
+}
+
+.snackbar-warning .mdc-snackbar__surface {
+  background-color: var(--color-warning) !important;
+}
+
+.snackbar-warning .mdc-snackbar__label,
+.snackbar-warning .mat-mdc-button {
+  color: white !important;
+}
+
+.snackbar-info .mdc-snackbar__surface {
+  background-color: var(--color-info) !important;
+}
+
+.snackbar-info .mdc-snackbar__label,
+.snackbar-info .mat-mdc-button {
+  color: white !important;
 }
 
 .mat-stepper-horizontal {
