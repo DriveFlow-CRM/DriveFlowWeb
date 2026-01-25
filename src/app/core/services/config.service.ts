@@ -1,22 +1,41 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 
 /**
- * Configuration service that provides application-wide settings
- * This service abstracts environment-specific configurations
+ * Runtime configuration interface
+ */
+interface RuntimeConfig {
+  apiBaseUrl?: string;
+}
+
+// Global window extension for runtime config
+declare global {
+  interface Window {
+    __APP_CONFIG__?: RuntimeConfig;
+  }
+}
+
+/**
+ * Configuration service that provides application-wide settings.
+ * 
+ * Configuration priority:
+ * 1. Runtime config from window.__APP_CONFIG__ (set by deployment scripts)
+ * 2. Default API URL
+ * 
+ * For deployments (Netlify, Docker, etc.), set window.__APP_CONFIG__ before 
+ * Angular bootstraps, or use the config.json approach.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService {
-  // API Base URL - in a real environment this would come from environment variables
-  // or be injected during the build process
   private readonly apiBaseUrl: string;
+  private readonly DEFAULT_API_URL = 'https://api.driveflow.dpdns.org/api/';
 
   constructor() {
-    // In a production environment, this would be injected during build
-    // For Angular applications, we can use build-time environment injection
     this.apiBaseUrl = this.getEnvironmentApiUrl();
-    console.log('ConfigService initialized with API URL:', this.apiBaseUrl);
+    if (isDevMode()) {
+      console.log('ConfigService initialized with API URL:', this.apiBaseUrl);
+    }
   }
 
   /**
@@ -34,20 +53,15 @@ export class ConfigService {
   }
 
   /**
-   * Get API URL from environment - using process.env variables
-   * These are injected by webpack from .env locally or from Netlify environment variables in production
+   * Get API URL from environment
+   * Checks window.__APP_CONFIG__ for runtime configuration
    */
   private getEnvironmentApiUrl(): string {
-    // First try to get from process.env (injected by webpack)
-    // @ts-ignore - process.env is available at runtime thanks to webpack.DefinePlugin
-    const envUrl = typeof process !== 'undefined' && process.env && process.env.API_BASE_URL;
-
-    if (envUrl) {
-      return envUrl;
+    // Check runtime config (set via index.html script or environment injection)
+    if (typeof window !== 'undefined' && window.__APP_CONFIG__?.apiBaseUrl) {
+      return window.__APP_CONFIG__.apiBaseUrl;
     }
 
-    // Default development URL as fallback
-    const defaultUrl = 'https://drive-flow-crm-api-cb1a9f783ea2.herokuapp.com/api/';
-    return defaultUrl;
+    return this.DEFAULT_API_URL;
   }
 }
