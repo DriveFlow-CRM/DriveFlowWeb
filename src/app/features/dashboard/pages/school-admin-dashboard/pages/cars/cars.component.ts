@@ -46,8 +46,7 @@ interface FuelTypeOption {
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    HttpClientModule,
-    VehicleFormDialogComponent
+    HttpClientModule
   ],
   templateUrl: './cars.component.html',
   styleUrls: ['./cars.component.css']
