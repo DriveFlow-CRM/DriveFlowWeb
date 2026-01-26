@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { LoadingService } from '../../../core/services/loading.service';
@@ -18,6 +18,7 @@ import { LoadingService } from '../../../core/services/loading.service';
   selector: 'app-loading-bar',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="loading-bar-container" *ngIf="isLoading" role="progressbar" aria-label="Se încarcă...">
       <div class="loading-bar"></div>
@@ -67,13 +68,17 @@ export class LoadingBarComponent implements OnInit, OnDestroy {
   isLoading = false;
   private destroy$ = new Subject<void>();
 
-  constructor(private loadingService: LoadingService) {}
+  constructor(
+    private loadingService: LoadingService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadingService.loading$
       .pipe(takeUntil(this.destroy$))
       .subscribe(state => {
         this.isLoading = state.isLoading;
+        this.cdr.markForCheck();
       });
   }
 
