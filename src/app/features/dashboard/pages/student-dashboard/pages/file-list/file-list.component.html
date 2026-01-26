@@ -1,51 +1,214 @@
-<div class="p-4 md:p-6 bg-white min-h-screen">
-  <div class="max-w-4xl mx-auto">
-    <h1 class="text-2xl md:text-3xl font-bold text-dark mb-6">Dosarele mele</h1>
+<div class="min-h-screen p-4 md:p-6">
+  <div class="max-w-5xl mx-auto">
+    <!-- Page Header -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+      <h1 class="text-2xl md:text-3xl font-bold text-dark mb-2">Dosarele Mele</h1>
+      <p class="text-gray-600">Vizualizează și gestionează dosarele tale de școlarizare</p>
+    </div>
 
-    <!-- Loading indicator -->
-    <div *ngIf="loading" class="flex justify-center items-center p-8">
-      <mat-spinner diameter="40"></mat-spinner>
-      <span class="ml-4 text-gray">Se încarcă dosarele...</span>
+    <!-- Stats Card -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div class="flex items-center gap-3">
+          <div class="p-3 bg-primary bg-opacity-10 rounded-xl">
+            <mat-icon class="text-primary text-2xl">insights</mat-icon>
+          </div>
+          <div>
+            <h2 class="text-lg font-semibold text-dark">Statistici Progres</h2>
+            <p class="text-sm text-gray-500">Evoluția performanței tale</p>
+          </div>
+        </div>
+
+        <!-- Time Range Toggle -->
+        <mat-button-toggle-group 
+          [(ngModel)]="selectedTimeRange" 
+          (change)="onTimeRangeChange()"
+          class="stats-toggle">
+          <mat-button-toggle value="all" class="!rounded-l-lg">Tot timpul</mat-button-toggle>
+          <mat-button-toggle value="month" class="!rounded-r-lg">Ultima lună</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- Stats Loading -->
+      <div *ngIf="statsLoading" class="flex items-center justify-center py-12">
+        <mat-spinner diameter="40"></mat-spinner>
+        <span class="ml-4 text-gray-500">Se încarcă statisticile...</span>
+      </div>
+
+      <!-- Stats Error -->
+      <div *ngIf="!statsLoading && statsError" class="text-center py-8 bg-gray-50 rounded-xl">
+        <mat-icon class="text-4xl text-gray-400 mb-2">error_outline</mat-icon>
+        <p class="text-gray-600">{{ statsError }}</p>
+      </div>
+
+      <!-- Stats Content -->
+      <div *ngIf="!statsLoading && !statsError">
+        <!-- Summary Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+          <div class="p-4 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-2 mb-1">
+              <mat-icon class="text-primary text-lg">event</mat-icon>
+              <span class="text-xs font-semibold text-gray-500 uppercase">Sesiuni</span>
+            </div>
+            <p class="text-2xl font-bold text-dark">{{ totalSessions }}</p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-2 mb-1">
+              <mat-icon class="text-primary text-lg">trending_up</mat-icon>
+              <span class="text-xs font-semibold text-gray-500 uppercase">Media Puncte</span>
+            </div>
+            <p class="text-2xl font-bold text-dark">{{ averageScore }}</p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-xl col-span-2 md:col-span-1">
+            <div class="flex items-center gap-2 mb-1">
+              <mat-icon class="text-primary text-lg">folder</mat-icon>
+              <span class="text-xs font-semibold text-gray-500 uppercase">Dosare Active</span>
+            </div>
+            <p class="text-2xl font-bold text-dark">{{ files.length }}</p>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="bg-gray-50 rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-gray-700 mb-4">Evoluția Scorului Mediu</h3>
+          
+          <div *ngIf="chartData.length === 0" class="text-center py-8">
+            <mat-icon class="text-4xl text-gray-300 mb-2">show_chart</mat-icon>
+            <p class="text-gray-500 text-sm">Nu există date suficiente pentru grafic</p>
+          </div>
+
+          <div *ngIf="chartData.length > 0" class="relative h-40">
+            <!-- SVG Chart -->
+            <svg viewBox="0 0 100 60" class="w-full h-full" preserveAspectRatio="none">
+              <!-- Grid lines -->
+              <line x1="0" y1="15" x2="100" y2="15" stroke="#e5e7eb" stroke-width="0.5"/>
+              <line x1="0" y1="30" x2="100" y2="30" stroke="#e5e7eb" stroke-width="0.5"/>
+              <line x1="0" y1="45" x2="100" y2="45" stroke="#e5e7eb" stroke-width="0.5"/>
+              
+              <!-- Area fill -->
+              <polygon 
+                [attr.points]="getChartAreaPoints()" 
+                fill="url(#chartGradient)" 
+                opacity="0.3"/>
+              
+              <!-- Line -->
+              <polyline 
+                [attr.points]="getChartPoints()" 
+                fill="none" 
+                stroke="#44D9E6" 
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+              
+              <!-- Points -->
+              <g *ngFor="let point of chartData; let i = index">
+                <circle 
+                  [attr.cx]="(i / (chartData.length - 1 || 1)) * 100"
+                  [attr.cy]="60 - (point.avg / getChartMaxValue()) * 60"
+                  r="2"
+                  fill="#44D9E6"/>
+              </g>
+              
+              <!-- Gradient definition -->
+              <defs>
+                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#44D9E6" stop-opacity="0.6"/>
+                  <stop offset="100%" stop-color="#44D9E6" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <!-- X-axis labels -->
+            <div class="flex justify-between mt-2 text-xs text-gray-400">
+              <span *ngIf="chartData.length > 0">{{ formatChartDate(chartData[0].date) }}</span>
+              <span *ngIf="chartData.length > 1">{{ formatChartDate(chartData[chartData.length - 1].date) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading indicator for files -->
+    <div *ngIf="loading" class="bg-white rounded-xl shadow-md p-12 flex flex-col items-center justify-center">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p class="mt-4 text-gray-500">Se încarcă dosarele...</p>
     </div>
 
     <!-- No files message -->
-    <div *ngIf="!loading && files.length === 0" class="text-center p-8 bg-light rounded-xl shadow">
-      <mat-icon class="text-5xl text-gray-400 mb-4">folder_off</mat-icon>
-      <p class="text-lg text-gray-600">Nu aveți niciun dosar înregistrat.</p>
+    <div *ngIf="!loading && files.length === 0" class="bg-white rounded-xl shadow-md p-12 text-center">
+      <div class="p-4 bg-gray-100 rounded-full inline-block mb-4">
+        <mat-icon class="text-5xl text-gray-400">folder_off</mat-icon>
+      </div>
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">Niciun dosar înregistrat</h2>
+      <p class="text-gray-500">Nu aveți încă niciun dosar de școlarizare.</p>
     </div>
 
     <!-- Files grid -->
-    <div *ngIf="!loading && files.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <mat-card *ngFor="let file of files" class="rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
-        <mat-card-content class="p-5">
-          <div class="flex justify-between items-center mb-4">
-            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold"
-                  [ngClass]="getStatusClass(file.status)">
-              {{ file.status }}
-            </span>
-            <span class="text-sm text-gray-500">ID: {{ file.fileId }}</span>
+    <div *ngIf="!loading && files.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+      <div *ngFor="let file of files" 
+           class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300">
+        <!-- Card Header -->
+        <div class="p-4 border-b border-gray-100 flex items-center gap-4">
+          <div 
+            class="w-14 h-14 rounded-xl flex items-center justify-center text-white text-xl font-bold"
+            [style.background-color]="getLicenseTypeColor(file.type)">
+            {{ file.type }}
           </div>
-
-          <h2 class="text-xl font-semibold mb-2">
-            Categoria {{ file.type }}
-          </h2>
-
-          <div class="text-sm text-gray-600 mb-4">
-            <p class="mb-1">
-              <mat-icon class="align-middle text-sm mr-1">person</mat-icon>
-              <span class="align-middle">Instructor: {{ file.firstName }} {{ file.lastName }}</span>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-lg font-semibold text-dark">Categoria {{ file.type }}</h2>
+            <p class="text-sm text-gray-500 flex items-center gap-1">
+              <mat-icon class="text-sm">person</mat-icon>
+              {{ file.firstName }} {{ file.lastName }}
             </p>
           </div>
+          <span 
+            class="px-3 py-1 rounded-full text-xs font-semibold"
+            [ngClass]="getStatusClass(file.status)">
+            {{ getStatusLabel(file.status) }}
+          </span>
+        </div>
 
-          <div class="flex justify-end">
-            <a [routerLink]="['/dashboard/student/file', file.fileId]"
-               mat-flat-button color="primary" class="w-full">
-              <mat-icon>visibility</mat-icon>
-              <span class="ml-1">Vezi detalii</span>
-            </a>
+        <!-- Card Content - Progress -->
+        <div class="p-4">
+          <!-- Progress Bar -->
+          <div class="mb-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-medium text-gray-700">Progres lecții</span>
+              <span class="text-sm font-bold text-primary">
+                {{ file.lessonsCompleted || 0 }} / {{ file.lessonsRequired || 30 }}
+              </span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+              <div 
+                class="bg-primary h-2.5 rounded-full transition-all duration-500"
+                [style.width.%]="file.progressPercentage || 0">
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">{{ file.progressPercentage || 0 }}% completat</p>
           </div>
-        </mat-card-content>
-      </mat-card>
+
+          <!-- Quick Stats -->
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="p-3 bg-gray-50 rounded-lg text-center">
+              <mat-icon class="text-primary text-lg mb-1">check_circle</mat-icon>
+              <p class="text-lg font-bold text-dark">{{ file.lessonsCompleted || 0 }}</p>
+              <p class="text-xs text-gray-500">Lecții finalizate</p>
+            </div>
+            <div class="p-3 bg-gray-50 rounded-lg text-center">
+              <mat-icon class="text-gray-400 text-lg mb-1">pending</mat-icon>
+              <p class="text-lg font-bold text-dark">{{ (file.lessonsRequired || 30) - (file.lessonsCompleted || 0) }}</p>
+              <p class="text-xs text-gray-500">Lecții rămase</p>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <a [routerLink]="['/dashboard/student/file', file.fileId]"
+             class="w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2">
+            <mat-icon>visibility</mat-icon>
+            Vezi Detalii
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </div>

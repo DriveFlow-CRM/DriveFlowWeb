@@ -13,11 +13,23 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 
-import { StudentFileService, AvailableSlot, AvailableSlotsResponse, CreateFileAppointmentDto } from '../../../../../../core/services/student-file.service';
+import { 
+  StudentFileService, 
+  AvailableSlot, 
+  AvailableSlotsResponse, 
+  SessionFormSummary,
+  SessionFormDetails
+} from '../../../../../../core/services/student-file.service';
 import { AuthService } from '../../../../../../core/services/auth.service';
 import { NotificationService } from '../../../../../../core/services/notification.service';
 import { StudentFileDetails, Appointment } from '../../../../../../models/interfaces/student-file.model';
 import { CreateAppointmentDialogComponent } from '../create-appointment-dialog/create-appointment-dialog.component';
+
+interface ExpandedForm extends SessionFormSummary {
+  expanded: boolean;
+  loading: boolean;
+  details: SessionFormDetails | null;
+}
 
 @Component({
   selector: 'app-file-details',
@@ -48,6 +60,14 @@ export class FileDetailsComponent implements OnInit {
   loadingSlots: boolean = false;
   downloadingInvoice: boolean = false;
   currentStudentId: string = '';
+
+  // Tab state
+  selectedTabIndex: number = 0;
+
+  // Session forms
+  sessionForms: ExpandedForm[] = [];
+  loadingForms: boolean = false;
+  formsError: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -107,9 +127,92 @@ export class FileDetailsComponent implements OnInit {
         error: (error: any) => {
           console.error('Error loading available slots:', error);
           this.loadingSlots = false;
-          // Don't show error for slots as it's secondary data
         }
       });
+  }
+
+  onTabChange(index: number): void {
+    this.selectedTabIndex = index;
+    if (index === 1 && this.sessionForms.length === 0 && !this.loadingForms) {
+      this.loadSessionForms();
+    }
+  }
+
+  loadSessionForms(): void {
+    this.loadingForms = true;
+    this.formsError = '';
+
+    this.studentFileService.getSessionForms(this.currentStudentId, { fileId: this.fileId })
+      .subscribe({
+        next: (data) => {
+          // Handle both array response (with fileId) and paginated response
+          const forms = Array.isArray(data) ? data : data.items;
+          this.sessionForms = forms.map(form => ({
+            ...form,
+            expanded: false,
+            loading: false,
+            details: null
+          }));
+          this.loadingForms = false;
+        },
+        error: (error) => {
+          console.error('Error loading session forms:', error);
+          this.formsError = 'Nu s-au putut încărca formularele de sesiune';
+          this.loadingForms = false;
+        }
+      });
+  }
+
+  toggleFormExpand(form: ExpandedForm): void {
+    if (form.expanded) {
+      form.expanded = false;
+      return;
+    }
+
+    // Collapse all other forms
+    this.sessionForms.forEach(f => f.expanded = false);
+    form.expanded = true;
+
+    // Load details if not already loaded
+    if (!form.details && !form.loading) {
+      this.loadFormDetails(form);
+    }
+  }
+
+  loadFormDetails(form: ExpandedForm): void {
+    form.loading = true;
+    this.studentFileService.getSessionFormDetails(form.id)
+      .subscribe({
+        next: (details) => {
+          form.details = details;
+          form.loading = false;
+        },
+        error: (error) => {
+          console.error('Error loading form details:', error);
+          form.loading = false;
+          this.showErrorMessage('Nu s-au putut încărca detaliile formularului');
+        }
+      });
+  }
+
+  getResultClass(result: string): string {
+    return result === 'PASSED' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+  }
+
+  getResultIcon(result: string): string {
+    return result === 'PASSED' ? 'check_circle' : 'cancel';
+  }
+
+  getResultLabel(result: string): string {
+    return result === 'PASSED' ? 'Promovat' : 'Nepromovat';
+  }
+
+  getScoreColor(totalPoints: number, maxPoints: number): string {
+    // Lower points is better (penalty points)
+    const percentage = (totalPoints / maxPoints) * 100;
+    if (percentage <= 50) return 'text-green-600';
+    if (percentage <= 75) return 'text-yellow-600';
+    return 'text-red-600';
   }
 
   downloadInvoice(): void {
@@ -210,7 +313,6 @@ export class FileDetailsComponent implements OnInit {
     this.notificationService.showError(message);
   }
 
-  // Format date strings to local format
   formatDate(dateString: string): string {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
@@ -221,12 +323,21 @@ export class FileDetailsComponent implements OnInit {
     });
   }
 
+  formatDateShort(dateString: string): string {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ro-RO', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+  }
+
   formatTime(timeString: string): string {
     if (!timeString) return 'N/A';
     return timeString;
   }
 
-  // Get status color for badges
   getStatusClass(status: string): string {
     switch (status.toLowerCase()) {
       case 'pending':
@@ -263,13 +374,11 @@ export class FileDetailsComponent implements OnInit {
     }
   }
 
-  // Get transmission type text
   getTransmissionType(type: string): string {
     if (!type) return 'Nu este specificat';
     return type.toLowerCase() === 'manual' ? 'Manuală' : 'Automată';
   }
 
-  // Get status text in Romanian
   getStatusText(status: string): string {
     switch (status.toLowerCase()) {
       case 'pending':

@@ -102,16 +102,16 @@ export class CreateAppointmentDialogComponent implements OnInit {
   }
 
   getDateButtonClass(date: string): string {
-    const baseClass = 'border-gray-300 text-gray-700 hover:border-primary hover:text-primary';
-    const selectedClass = 'border-primary bg-primary text-white hover:bg-primary-dark';
+    const baseClass = 'bg-gray-100 text-gray-700 hover:bg-primary hover:bg-opacity-10 hover:text-primary';
+    const selectedClass = 'bg-primary text-white hover:bg-primary-dark';
 
     return this.selectedDate === date ? selectedClass : baseClass;
   }
 
   getTimeButtonClass(slot: AvailableSlot): string {
     const timeSlotValue = `${slot.startHour}-${slot.endHour}`;
-    const baseClass = 'border-gray-300 text-gray-700 hover:border-primary hover:text-primary';
-    const selectedClass = 'border-primary bg-primary text-white hover:bg-primary-dark';
+    const baseClass = 'bg-gray-100 text-gray-700 hover:bg-primary hover:bg-opacity-10 hover:text-primary';
+    const selectedClass = 'bg-primary text-white hover:bg-primary-dark';
 
     return this.selectedTimeSlot === timeSlotValue ? selectedClass : baseClass;
   }
