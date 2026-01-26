@@ -22,6 +22,75 @@ export interface CreateFileAppointmentDto {
   endHour: string; // HH:mm format
 }
 
+// Stats interfaces
+export interface MistakeTopItem {
+  id_item: number;
+  count: number;
+}
+
+export interface MistakeSeries {
+  date: string;
+  totalPoints: number;
+  topItems: MistakeTopItem[];
+}
+
+export interface MistakeHeatmap {
+  items: number[];
+  sessions: number[];
+  counts: number[][];
+}
+
+export interface MovingAverage {
+  date: string;
+  avg: number;
+}
+
+export interface MistakeStats {
+  series: MistakeSeries[];
+  heatmap: MistakeHeatmap;
+  movingAverage: MovingAverage[];
+}
+
+export interface FileStats {
+  fileId: number;
+  stats: MistakeStats;
+}
+
+// Session Form interfaces
+export interface SessionFormSummary {
+  id: number;
+  date: string;
+  totalPoints: number;
+  maxPoints: number;
+  result: 'PASSED' | 'FAILED' | string;
+}
+
+export interface SessionFormMistake {
+  id_item: number;
+  description: string;
+  count: number;
+  penaltyPoints: number;
+}
+
+export interface SessionFormDetails {
+  id: number;
+  appointmentDate: string;
+  studentName: string;
+  instructorName: string;
+  totalPoints: number;
+  maxPoints: number;
+  result: 'PASSED' | 'FAILED' | string;
+  mistakes: SessionFormMistake[];
+  isLocked: boolean;
+}
+
+export interface SessionFormsPaginatedResponse {
+  page: number;
+  pageSize: number;
+  total: number;
+  items: SessionFormSummary[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -86,5 +155,70 @@ export class StudentFileService {
       .pipe(
         catchError(error => this.errorHandler.handleHttpError(error))
       );
+  }
+
+  // Get mistake stats for a student
+  getMistakeStats(
+    studentId: string, 
+    options?: { from?: string; to?: string; fileId?: number }
+  ): Observable<FileStats[] | MistakeStats> {
+    let params = new HttpParams();
+    
+    if (options?.from) {
+      params = params.set('from', options.from);
+    }
+    if (options?.to) {
+      params = params.set('to', options.to);
+    }
+    if (options?.fileId) {
+      params = params.set('fileId', options.fileId.toString());
+    }
+
+    return this.http.get<FileStats[] | MistakeStats>(
+      `${this.apiUrl}student/${studentId}/stats/mistakes`,
+      { params }
+    ).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
+  }
+
+  // Get session forms for a student
+  getSessionForms(
+    studentId: string,
+    options?: { from?: string; to?: string; page?: number; pageSize?: number; fileId?: number }
+  ): Observable<SessionFormsPaginatedResponse | SessionFormSummary[]> {
+    let params = new HttpParams();
+    
+    if (options?.from) {
+      params = params.set('from', options.from);
+    }
+    if (options?.to) {
+      params = params.set('to', options.to);
+    }
+    if (options?.page) {
+      params = params.set('page', options.page.toString());
+    }
+    if (options?.pageSize) {
+      params = params.set('pageSize', options.pageSize.toString());
+    }
+    if (options?.fileId) {
+      params = params.set('fileId', options.fileId.toString());
+    }
+
+    return this.http.get<SessionFormsPaginatedResponse | SessionFormSummary[]>(
+      `${this.apiUrl}students/${studentId}/session-forms`,
+      { params }
+    ).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
+  }
+
+  // Get session form details by ID
+  getSessionFormDetails(formId: number): Observable<SessionFormDetails> {
+    return this.http.get<SessionFormDetails>(
+      `${this.apiUrl}session-forms/${formId}`
+    ).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 }
