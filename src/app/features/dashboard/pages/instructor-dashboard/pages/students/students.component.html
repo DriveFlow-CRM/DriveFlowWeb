@@ -1,167 +1,200 @@
-<div class="students-page">
+<!-- Students Page -->
+<div class="min-h-screen p-4 md:p-6">
   <!-- Header Section -->
-  <div class="page-header">
-    <div class="header-content">
-      <h1 class="page-title">My Students</h1>
-      <p class="page-subtitle">Manage and track your assigned students</p>
-    </div>
-    <div class="header-actions">
-      <button mat-raised-button color="primary" (click)="exportStudentList()">
+  <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-dark mb-2">Cursanții Mei</h1>
+        <p class="text-gray-600">Gestionează și urmărește cursanții asignați</p>
+      </div>
+      <button 
+        (click)="exportStudentList()"
+        class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
         <mat-icon>download</mat-icon>
-        Export List
+        Exportă Lista
       </button>
     </div>
   </div>
 
   <!-- Filters Section -->
-  <div class="filters-section">
-    <div class="filters-row">
+  <div class="bg-white rounded-xl shadow-md p-4 md:p-6 mb-6">
+    <div class="flex flex-col lg:flex-row gap-4 mb-4">
       <!-- Search -->
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search students</mat-label>
-        <input matInput
-               [(ngModel)]="searchTerm"
-               (input)="applyFilters()"
-               placeholder="Name or email">
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-
-      <!-- Status Filter -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Status</mat-label>
-        <mat-select [(value)]="selectedStatus" (selectionChange)="applyFilters()">
-          <mat-option *ngFor="let option of statusOptions" [value]="option.value">
-            {{ option.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- License Type Filter -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>License Type</mat-label>
-        <mat-select [(value)]="selectedLicenseType" (selectionChange)="applyFilters()">
-          <mat-option *ngFor="let option of licenseTypeOptions" [value]="option.value">
-            {{ option.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- View Mode Toggle -->
-      <div class="view-toggle">
-        <button mat-icon-button
-                [class.active]="viewMode === 'cards'"
-                (click)="viewMode = 'cards'"
-                matTooltip="Card View">
-          <mat-icon>view_module</mat-icon>
-        </button>
-        <button mat-icon-button
-                [class.active]="viewMode === 'table'"
-                (click)="viewMode = 'table'"
-                matTooltip="Table View">
-          <mat-icon>view_list</mat-icon>
-        </button>
+      <div class="flex-1">
+        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Caută cursanți</label>
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="applyFilters()"
+            placeholder="Nume sau email..."
+            class="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all bg-white">
+          <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</mat-icon>
+        </div>
       </div>
 
-      <!-- Clear Filters -->
-      <button mat-stroked-button (click)="clearFilters()" class="clear-filters-btn">
-        <mat-icon>clear</mat-icon>
-        Clear Filters
-      </button>
+      <!-- Status Filter -->
+      <div class="w-full lg:w-48">
+        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Status</label>
+        <select
+          [(ngModel)]="selectedStatus"
+          (change)="applyFilters()"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all bg-white appearance-none cursor-pointer">
+          <option *ngFor="let option of statusOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- License Type Filter -->
+      <div class="w-full lg:w-48">
+        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Categorie</label>
+        <select
+          [(ngModel)]="selectedLicenseType"
+          (change)="applyFilters()"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all bg-white appearance-none cursor-pointer">
+          <option *ngFor="let option of licenseTypeOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- View Toggle & Clear -->
+      <div class="flex items-end gap-2 pb-0.5">
+        <div class="flex border border-gray-200 rounded-lg overflow-hidden">
+          <button 
+            (click)="viewMode = 'cards'"
+            [class]="viewMode === 'cards' ? 'bg-primary text-white' : 'bg-white text-gray-500 hover:bg-gray-50'"
+            class="p-2.5 transition-colors"
+            matTooltip="Vizualizare carduri">
+            <mat-icon>view_module</mat-icon>
+          </button>
+          <button 
+            (click)="viewMode = 'table'"
+            [class]="viewMode === 'table' ? 'bg-primary text-white' : 'bg-white text-gray-500 hover:bg-gray-50'"
+            class="p-2.5 transition-colors"
+            matTooltip="Vizualizare tabel">
+            <mat-icon>view_list</mat-icon>
+          </button>
+        </div>
+
+        <button 
+          (click)="clearFilters()" 
+          class="text-gray-500 hover:text-gray-700 px-3 py-2.5 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-1">
+          <mat-icon class="text-sm">clear</mat-icon>
+          <span class="hidden sm:inline">Resetează</span>
+        </button>
+      </div>
     </div>
 
     <!-- Results Summary -->
-    <div class="results-summary">
-      <span class="results-count">{{ totalItems }} students found</span>
-      <span class="results-info" *ngIf="searchTerm || selectedStatus !== 'all' || selectedLicenseType !== 'all'">
-        (filtered from {{ assignedStudents.length }} total)
+    <div class="flex items-center gap-2 text-sm">
+      <span class="font-semibold text-dark">{{ totalItems }} cursanți găsiți</span>
+      <span *ngIf="searchTerm || selectedStatus !== 'all' || selectedLicenseType !== 'all'" class="text-gray-500">
+        (filtrat din {{ assignedStudents.length }} total)
       </span>
     </div>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
-    <mat-spinner diameter="50"></mat-spinner>
-    <p>Loading students...</p>
+  <div *ngIf="isLoading" class="bg-white rounded-xl shadow-md p-12 flex flex-col items-center justify-center">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p class="mt-4 text-gray-500">Se încarcă cursanții...</p>
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="!isLoading && assignedStudents.length === 0" class="empty-state">
-    <mat-icon class="empty-icon">people_outline</mat-icon>
-    <h2>No Students Assigned</h2>
-    <p>You don't have any students assigned yet. Students will appear here once they are assigned to you by the school administrator.</p>
+  <div *ngIf="!isLoading && assignedStudents.length === 0" class="bg-white rounded-xl shadow-md p-12 text-center">
+    <div class="p-4 bg-gray-100 rounded-full inline-block mb-4">
+      <mat-icon class="text-5xl text-gray-400">people_outline</mat-icon>
+    </div>
+    <h2 class="text-xl font-semibold text-gray-700 mb-2">Niciun cursant asignat</h2>
+    <p class="text-gray-500 max-w-md mx-auto">Nu aveți încă cursanți asignați. Cursanții vor apărea aici odată ce administratorul școlii îi asignează.</p>
   </div>
 
   <!-- No Results State -->
-  <div *ngIf="!isLoading && assignedStudents.length > 0 && filteredStudents.length === 0" class="no-results-state">
-    <mat-icon class="empty-icon">search_off</mat-icon>
-    <h2>No Results Found</h2>
-    <p>No students match your current filters. Try adjusting your search criteria.</p>
-    <button mat-raised-button color="primary" (click)="clearFilters()">
-      Clear All Filters
+  <div *ngIf="!isLoading && assignedStudents.length > 0 && filteredStudents.length === 0" class="bg-white rounded-xl shadow-md p-12 text-center">
+    <div class="p-4 bg-gray-100 rounded-full inline-block mb-4">
+      <mat-icon class="text-5xl text-gray-400">search_off</mat-icon>
+    </div>
+    <h2 class="text-xl font-semibold text-gray-700 mb-2">Niciun rezultat găsit</h2>
+    <p class="text-gray-500 mb-4">Niciun cursant nu corespunde filtrelor selectate.</p>
+    <button 
+      (click)="clearFilters()"
+      class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-lg font-medium transition-colors">
+      Resetează filtrele
     </button>
   </div>
 
   <!-- Students Content -->
-  <div *ngIf="!isLoading && filteredStudents.length > 0" class="students-content">
-
+  <div *ngIf="!isLoading && filteredStudents.length > 0">
     <!-- Card View -->
-    <div *ngIf="viewMode === 'cards'" class="students-grid">
-      <div *ngFor="let student of getCurrentPageStudents()" class="student-card">
-        <div class="card-header">
-          <div class="student-avatar">
-            <mat-icon>person</mat-icon>
+    <div *ngIf="viewMode === 'cards'" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 mb-6">
+      <div *ngFor="let student of getCurrentPageStudents()" 
+           class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300">
+        <!-- Card Header -->
+        <div class="p-4 border-b border-gray-100 flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-primary bg-opacity-10 flex items-center justify-center flex-shrink-0">
+            <mat-icon class="text-primary">person</mat-icon>
           </div>
-          <div class="student-info">
-            <h3 class="student-name">{{ student.firstName }} {{ student.lastName }}</h3>
-            <p class="student-email">{{ student.email }}</p>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-dark truncate">{{ student.firstName }} {{ student.lastName }}</h3>
+            <p class="text-sm text-gray-500 truncate">{{ student.email }}</p>
           </div>
-          <div class="student-status">
-            <mat-chip [style.background-color]="getStatusColor(student.status)"
-                     [style.color]="'white'">
-              <mat-icon>{{ getStatusIcon(student.status) }}</mat-icon>
-              {{ student.status }}
-            </mat-chip>
-          </div>
+          <mat-chip 
+            [style.background-color]="getStatusColor(student.status)"
+            class="text-white text-xs">
+            {{ student.status }}
+          </mat-chip>
         </div>
 
-        <div class="card-content">
-          <div class="student-details">
-            <div class="detail-item">
-              <mat-icon>phone</mat-icon>
+        <!-- Card Content -->
+        <div class="p-4">
+          <div class="space-y-2 text-sm">
+            <div class="flex items-center gap-2 text-gray-600">
+              <mat-icon class="text-primary text-lg">phone</mat-icon>
               <span>{{ student.phoneNumber }}</span>
             </div>
-            <div class="detail-item">
-              <mat-icon>directions_car</mat-icon>
-              <span>{{ student.licensePlateNumber || 'No vehicle assigned' }}</span>
+            <div class="flex items-center gap-2 text-gray-600">
+              <mat-icon class="text-primary text-lg">directions_car</mat-icon>
+              <span>{{ student.licensePlateNumber || 'Fără vehicul asignat' }}</span>
             </div>
-            <div class="detail-item">
-              <mat-icon>settings</mat-icon>
-              <span>{{ student.transmissionType || 'Not specified' }}</span>
+            <div class="flex items-center gap-2 text-gray-600">
+              <mat-icon class="text-primary text-lg">settings</mat-icon>
+              <span>{{ student.transmissionType || 'Nespecificat' }}</span>
             </div>
-            <div class="detail-item">
-              <mat-icon>event</mat-icon>
-              <span>Started: {{ student.scholarshipStartDate | date:'shortDate' }}</span>
+            <div class="flex items-center gap-2 text-gray-600">
+              <mat-icon class="text-primary text-lg">event</mat-icon>
+              <span>Început: {{ student.scholarshipStartDate | date:'shortDate' }}</span>
             </div>
           </div>
 
-          <div class="license-badge">
-            <span class="license-type"
-                  [style.background-color]="getLicenseTypeColor(student.type)">
-              Category {{ student.type }}
+          <div class="mt-4 flex justify-end">
+            <span 
+              class="px-3 py-1 rounded-full text-xs font-semibold text-white"
+              [style.background-color]="getLicenseTypeColor(student.type)">
+              Categoria {{ student.type }}
             </span>
           </div>
         </div>
 
-        <div class="card-actions">
-          <button mat-button (click)="viewStudentDetails(student)">
-            <mat-icon>visibility</mat-icon>
-            View Details
+        <!-- Card Actions -->
+        <div class="p-3 border-t border-gray-100 flex items-center gap-2 bg-gray-50">
+          <button 
+            (click)="viewStudentDetails(student)"
+            class="flex-1 text-primary hover:bg-primary hover:bg-opacity-10 px-3 py-2 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-1">
+            <mat-icon class="text-lg">visibility</mat-icon>
+            Detalii
           </button>
-          <button mat-button (click)="scheduleLesson(student)">
-            <mat-icon>event_available</mat-icon>
-            Schedule
+          <button 
+            (click)="scheduleLesson(student)"
+            class="flex-1 text-green-600 hover:bg-green-50 px-3 py-2 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-1">
+            <mat-icon class="text-lg">event_available</mat-icon>
+            Programează
           </button>
-          <button mat-icon-button (click)="contactStudent(student)" matTooltip="Contact Student">
+          <button 
+            (click)="contactStudent(student)"
+            class="p-2 text-gray-400 hover:text-primary hover:bg-gray-100 rounded-lg transition-colors"
+            matTooltip="Contactează">
             <mat-icon>email</mat-icon>
           </button>
         </div>
@@ -169,99 +202,101 @@
     </div>
 
     <!-- Table View -->
-    <div *ngIf="viewMode === 'table'" class="table-container">
-      <table mat-table [dataSource]="getCurrentPageStudents()" class="students-table">
-
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Student</th>
-          <td mat-cell *matCellDef="let student">
-            <div class="table-student-info">
-              <div class="table-avatar">
-                <mat-icon>person</mat-icon>
+    <div *ngIf="viewMode === 'table'" class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+      <div class="overflow-x-auto">
+        <table mat-table [dataSource]="getCurrentPageStudents()" class="w-full">
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50 text-gray-600 font-semibold">Cursant</th>
+            <td mat-cell *matCellDef="let student" class="py-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-primary bg-opacity-10 flex items-center justify-center flex-shrink-0">
+                  <mat-icon class="text-lg text-primary">person</mat-icon>
+                </div>
+                <div>
+                  <div class="font-medium text-dark">{{ student.firstName }} {{ student.lastName }}</div>
+                  <div class="text-sm text-gray-500">{{ student.email }}</div>
+                </div>
               </div>
-              <div>
-                <div class="table-student-name">{{ student.firstName }} {{ student.lastName }}</div>
-                <div class="table-student-email">{{ student.email }}</div>
+            </td>
+          </ng-container>
+
+          <!-- Contact Column -->
+          <ng-container matColumnDef="contact">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50 text-gray-600 font-semibold">Contact</th>
+            <td mat-cell *matCellDef="let student" class="text-sm text-gray-600">
+              {{ student.phoneNumber }}
+            </td>
+          </ng-container>
+
+          <!-- License Type Column -->
+          <ng-container matColumnDef="licenseType">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50 text-gray-600 font-semibold">Categorie</th>
+            <td mat-cell *matCellDef="let student">
+              <span 
+                class="px-2 py-1 rounded-lg text-xs font-semibold text-white"
+                [style.background-color]="getLicenseTypeColor(student.type)">
+                {{ student.type }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Vehicle Column -->
+          <ng-container matColumnDef="vehicle">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50 text-gray-600 font-semibold">Vehicul</th>
+            <td mat-cell *matCellDef="let student" class="text-sm">
+              <div class="text-gray-700">{{ student.licensePlateNumber || 'Neasignat' }}</div>
+              <div class="text-xs text-gray-400">{{ student.transmissionType }}</div>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50 text-gray-600 font-semibold">Status</th>
+            <td mat-cell *matCellDef="let student">
+              <mat-chip 
+                [style.background-color]="getStatusColor(student.status)"
+                class="text-white text-xs">
+                {{ student.status }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50 text-gray-600 font-semibold">Acțiuni</th>
+            <td mat-cell *matCellDef="let student">
+              <div class="flex gap-1">
+                <button mat-icon-button (click)="viewStudentDetails(student)" matTooltip="Vezi detalii" class="text-gray-500 hover:text-primary">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button (click)="scheduleLesson(student)" matTooltip="Programează lecție" class="text-gray-500 hover:text-green-600">
+                  <mat-icon>event_available</mat-icon>
+                </button>
+                <button mat-icon-button (click)="contactStudent(student)" matTooltip="Contactează" class="text-gray-500 hover:text-primary">
+                  <mat-icon>email</mat-icon>
+                </button>
               </div>
-            </div>
-          </td>
-        </ng-container>
+            </td>
+          </ng-container>
 
-        <!-- Contact Column -->
-        <ng-container matColumnDef="contact">
-          <th mat-header-cell *matHeaderCellDef>Contact</th>
-          <td mat-cell *matCellDef="let student">
-            <div class="contact-info">
-              <div>{{ student.phoneNumber }}</div>
-            </div>
-          </td>
-        </ng-container>
-
-        <!-- License Type Column -->
-        <ng-container matColumnDef="licenseType">
-          <th mat-header-cell *matHeaderCellDef>License</th>
-          <td mat-cell *matCellDef="let student">
-            <span class="table-license-badge"
-                  [style.background-color]="getLicenseTypeColor(student.type)">
-              {{ student.type }}
-            </span>
-          </td>
-        </ng-container>
-
-        <!-- Vehicle Column -->
-        <ng-container matColumnDef="vehicle">
-          <th mat-header-cell *matHeaderCellDef>Vehicle</th>
-          <td mat-cell *matCellDef="let student">
-            <div class="vehicle-info">
-              <div>{{ student.licensePlateNumber || 'Not assigned' }}</div>
-              <div class="vehicle-transmission">{{ student.transmissionType }}</div>
-            </div>
-          </td>
-        </ng-container>
-
-        <!-- Status Column -->
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef>Status</th>
-          <td mat-cell *matCellDef="let student">
-            <mat-chip [style.background-color]="getStatusColor(student.status)"
-                     [style.color]="'white'">
-              {{ student.status }}
-            </mat-chip>
-          </td>
-        </ng-container>
-
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let student">
-            <div class="table-actions">
-              <button mat-icon-button (click)="viewStudentDetails(student)" matTooltip="View Details">
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button mat-icon-button (click)="scheduleLesson(student)" matTooltip="Schedule Lesson">
-                <mat-icon>event_available</mat-icon>
-              </button>
-              <button mat-icon-button (click)="contactStudent(student)" matTooltip="Contact">
-                <mat-icon>email</mat-icon>
-              </button>
-            </div>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="['name', 'contact', 'licenseType', 'vehicle', 'status', 'actions']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['name', 'contact', 'licenseType', 'vehicle', 'status', 'actions'];"></tr>
-      </table>
+          <tr mat-header-row *matHeaderRowDef="['name', 'contact', 'licenseType', 'vehicle', 'status', 'actions']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['name', 'contact', 'licenseType', 'vehicle', 'status', 'actions'];" 
+              class="hover:bg-gray-50 transition-colors"></tr>
+        </table>
+      </div>
     </div>
 
     <!-- Pagination -->
-    <mat-paginator
-      [length]="totalItems"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="pageSizeOptions"
-      [pageIndex]="pageIndex"
-      (page)="onPageChange($event)"
-      showFirstLastButtons>
-    </mat-paginator>
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+      <mat-paginator
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="pageIndex"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
   </div>
 </div>

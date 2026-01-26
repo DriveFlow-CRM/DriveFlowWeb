@@ -1,131 +1,148 @@
-<div class="schedule-appointment-dialog">
-  <div mat-dialog-title class="dialog-header">
-    <div class="header-content">
-      <mat-icon>event_available</mat-icon>
+<!-- Schedule Appointment Dialog -->
+<div class="w-full max-w-lg">
+  <!-- Dialog Header -->
+  <div class="flex items-center justify-between p-6 border-b border-gray-100">
+    <div class="flex items-center gap-4">
+      <div class="p-3 bg-primary bg-opacity-10 rounded-xl">
+        <mat-icon class="text-primary text-2xl">event_available</mat-icon>
+      </div>
       <div>
-        <h2>Schedule Appointment</h2>
-        <p>{{ data.student.firstName }} {{ data.student.lastName }}</p>
+        <h2 class="text-xl font-semibold text-dark">Programează Lecție</h2>
+        <p class="text-sm text-gray-500">{{ data.student.firstName }} {{ data.student.lastName }}</p>
       </div>
     </div>
-    <button mat-icon-button (click)="onCancel()" class="close-button">
+    <button 
+      (click)="onCancel()" 
+      class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <div mat-dialog-content class="dialog-content">
-    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
-      <div class="form-grid">
-        <!-- Date -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Date</mat-label>
-          <input matInput
-                 [matDatepicker]="picker"
-                 formControlName="date"
-                 [min]="minDate"
-                 readonly>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="appointmentForm.get('date')?.invalid && appointmentForm.get('date')?.touched">
-            {{ getFormFieldError('date') }}
-          </mat-error>
-        </mat-form-field>
+  <!-- Dialog Content -->
+  <mat-dialog-content class="!p-6 !m-0">
+    <form [formGroup]="appointmentForm">
+      <!-- Date Selection -->
+      <div class="mb-6">
+        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Data</label>
+        <div class="relative">
+          <input 
+            type="date" 
+            formControlName="date"
+            [min]="minDate | date:'yyyy-MM-dd'"
+            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all bg-white">
+        </div>
+        <p *ngIf="appointmentForm.get('date')?.invalid && appointmentForm.get('date')?.touched" 
+           class="text-red-500 text-sm mt-2">
+          Selectează o dată validă
+        </p>
+      </div>
 
+      <!-- Time & Duration Row -->
+      <div class="grid grid-cols-2 gap-4 mb-6">
         <!-- Start Time -->
-        <mat-form-field appearance="outline">
-          <mat-label>Start Time</mat-label>
-          <mat-select formControlName="startTime">
-            <mat-option *ngFor="let time of timeSlots" [value]="time">
-              {{ time }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="appointmentForm.get('startTime')?.invalid && appointmentForm.get('startTime')?.touched">
-            {{ getFormFieldError('startTime') }}
-          </mat-error>
-        </mat-form-field>
-
-        <!-- Duration -->
-        <mat-form-field appearance="outline">
-          <mat-label>Duration</mat-label>
-          <mat-select formControlName="duration">
-            <mat-option *ngFor="let duration of durations" [value]="duration.value">
-              {{ duration.label }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="appointmentForm.get('duration')?.invalid && appointmentForm.get('duration')?.touched">
-            {{ getFormFieldError('duration') }}
-          </mat-error>
-        </mat-form-field>
-
-        <!-- End Time Display -->
-        <div class="end-time-display">
-          <label>End Time</label>
-          <div class="end-time-value">
-            {{ getEndTime() || 'Select start time and duration' }}
-          </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Ora început</label>
+          <select
+            formControlName="startTime"
+            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all bg-white appearance-none cursor-pointer custom-select">
+            <option value="" disabled>Alege ora</option>
+            <option *ngFor="let time of timeSlots" [value]="time">{{ time }}</option>
+          </select>
+          <p *ngIf="appointmentForm.get('startTime')?.invalid && appointmentForm.get('startTime')?.touched" 
+             class="text-red-500 text-sm mt-1">
+            Selectează ora de început
+          </p>
         </div>
 
-        <!-- Appointment Type -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Appointment Type</mat-label>
-          <mat-select formControlName="type">
-            <mat-option *ngFor="let type of appointmentTypes" [value]="type.value">
-              {{ type.label }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="appointmentForm.get('type')?.invalid && appointmentForm.get('type')?.touched">
-            {{ getFormFieldError('type') }}
-          </mat-error>
-        </mat-form-field>
+        <!-- Duration -->
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Durată</label>
+          <select
+            formControlName="duration"
+            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all bg-white appearance-none cursor-pointer custom-select">
+            <option *ngFor="let duration of durations" [value]="duration.value">{{ duration.label }}</option>
+          </select>
+        </div>
+      </div>
 
-        <!-- Notes -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Notes (Optional)</mat-label>
-          <textarea matInput
-                    formControlName="notes"
-                    rows="3"
-                    placeholder="Add any additional notes or instructions..."></textarea>
-        </mat-form-field>
+      <!-- Calculated End Time Display -->
+      <div *ngIf="getEndTime()" class="mb-6 p-4 bg-primary bg-opacity-5 rounded-xl border-2 border-primary border-opacity-20">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <mat-icon class="text-primary">schedule</mat-icon>
+            <span class="text-gray-600">Interval programat:</span>
+          </div>
+          <span class="text-lg font-bold text-primary">
+            {{ appointmentForm.get('startTime')?.value }} - {{ getEndTime() }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Appointment Type -->
+      <div class="mb-6">
+        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Tip programare</label>
+        <select
+          formControlName="type"
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all bg-white appearance-none cursor-pointer custom-select">
+          <option *ngFor="let type of appointmentTypes" [value]="type.value">{{ type.label }}</option>
+        </select>
+      </div>
+
+      <!-- Notes -->
+      <div class="mb-6">
+        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Note (opțional)</label>
+        <textarea
+          formControlName="notes"
+          rows="3"
+          placeholder="Adaugă note sau instrucțiuni suplimentare..."
+          class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all bg-white resize-none"></textarea>
       </div>
 
       <!-- Student Info Summary -->
-      <div class="student-summary">
-        <h3>Student Information</h3>
-        <div class="summary-grid">
-          <div class="summary-item">
-            <mat-icon>person</mat-icon>
+      <div class="p-4 bg-gray-50 rounded-xl">
+        <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+          <mat-icon class="text-primary text-lg">person</mat-icon>
+          Informații Cursant
+        </h3>
+        <div class="grid grid-cols-2 gap-2 text-sm">
+          <div class="flex items-center gap-2 text-gray-600">
+            <mat-icon class="text-gray-400 text-base">badge</mat-icon>
             <span>{{ data.student.firstName }} {{ data.student.lastName }}</span>
           </div>
-          <div class="summary-item">
-            <mat-icon>email</mat-icon>
-            <span>{{ data.student.email }}</span>
-          </div>
-          <div class="summary-item">
-            <mat-icon>phone</mat-icon>
+          <div class="flex items-center gap-2 text-gray-600">
+            <mat-icon class="text-gray-400 text-base">phone</mat-icon>
             <span>{{ data.student.phoneNumber || 'N/A' }}</span>
           </div>
-          <div class="summary-item">
-            <mat-icon>directions_car</mat-icon>
-            <span>{{ data.student.licensePlateNumber || 'No vehicle assigned' }}</span>
+          <div class="flex items-center gap-2 text-gray-600">
+            <mat-icon class="text-gray-400 text-base">email</mat-icon>
+            <span class="truncate">{{ data.student.email }}</span>
+          </div>
+          <div class="flex items-center gap-2 text-gray-600">
+            <mat-icon class="text-gray-400 text-base">directions_car</mat-icon>
+            <span>{{ data.student.licensePlateNumber || 'Fără vehicul' }}</span>
           </div>
         </div>
       </div>
     </form>
-  </div>
+  </mat-dialog-content>
 
-  <div mat-dialog-actions class="dialog-actions">
-    <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">
-      <mat-icon>close</mat-icon>
-      Cancel
+  <!-- Dialog Actions -->
+  <mat-dialog-actions class="!p-4 !px-6 border-t border-gray-100 !m-0 flex gap-3 justify-end">
+    <button 
+      type="button" 
+      (click)="onCancel()" 
+      [disabled]="isLoading" 
+      class="px-5 py-2.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors font-medium">
+      Anulează
     </button>
-    <button mat-raised-button
-            color="primary"
-            type="submit"
-            (click)="onSubmit()"
-            [disabled]="appointmentForm.invalid || isLoading">
-      <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+    <button 
+      type="button"
+      (click)="onSubmit()"
+      [disabled]="appointmentForm.invalid || isLoading"
+      class="bg-primary hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg font-medium transition-colors inline-flex items-center justify-center gap-2 min-w-[160px]">
+      <mat-spinner diameter="18" *ngIf="isLoading"></mat-spinner>
       <mat-icon *ngIf="!isLoading">event_available</mat-icon>
-      <span *ngIf="!isLoading">Schedule Appointment</span>
-      <span *ngIf="isLoading">Scheduling...</span>
+      <span>{{ isLoading ? 'Se programează...' : 'Programează' }}</span>
     </button>
-  </div>
+  </mat-dialog-actions>
 </div>
