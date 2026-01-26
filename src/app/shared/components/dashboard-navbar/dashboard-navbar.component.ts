@@ -2,12 +2,11 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-
-interface NavItem {
-  path: string;
-  icon: string;
-  label: string;
-}
+import { 
+  NavItem, 
+  getNavigationConfig, 
+  getRoleDisplayName 
+} from '../../../core/config/navigation.config';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -22,35 +21,9 @@ export class DashboardNavbarComponent implements OnInit, OnDestroy {
   isMobile: boolean = false;
   userName = '';
   userRole = '';
+  roleDisplayName = '';
   baseRoute = '';
   navItems: NavItem[] = [];
-
-  // Super Admin navigation items
-  private superAdminNavItems: NavItem[] = [
-    { path: 'overview', icon: 'dashboard', label: 'Overview' },
-    { path: 'schools', icon: 'school', label: 'Schools' }
-  ];
-
-  // School Admin navigation items
-  private schoolAdminNavItems: NavItem[] = [
-    { path: 'overview', icon: 'dashboard', label: 'Prezentare generală' },
-    { path: 'cars', icon: 'directions_car', label: 'Autoturisme' },
-    { path: 'instructors', icon: 'person', label: 'Instructori' },
-    { path: 'files', icon: 'folder', label: 'Dosare' }
-  ];
-
-  // Student navigation items
-  private studentNavItems: NavItem[] = [
-    { path: '', icon: 'folder', label: 'Dosarele mele' }
-  ];
-
-  // Instructor navigation items
-  private instructorNavItems: NavItem[] = [
-    { path: 'overview', icon: 'dashboard', label: 'Dashboard' },
-    { path: 'availability', icon: 'event_available', label: 'Availability' },
-    { path: 'students', icon: 'people', label: 'My Students' },
-    { path: 'appointments', icon: 'calendar_today', label: 'Schedule' }
-  ];
 
   constructor(
     private authService: AuthService,
@@ -62,20 +35,13 @@ export class DashboardNavbarComponent implements OnInit, OnDestroy {
     if (userData) {
       this.userName = `${userData.firstName} ${userData.lastName}`;
       this.userRole = userData.userType;
-
-      // Set navigation items based on role
-      if (this.userRole === 'SuperAdmin') {
-        this.baseRoute = '/dashboard/super-admin';
-        this.navItems = this.superAdminNavItems;
-      } else if (this.userRole === 'SchoolAdmin') {
-        this.baseRoute = '/dashboard/school-admin';
-        this.navItems = this.schoolAdminNavItems;
-      } else if (this.userRole === 'Student') {
-        this.baseRoute = '/dashboard/student';
-        this.navItems = this.studentNavItems;
-      } else if (this.userRole === 'Instructor') {
-        this.baseRoute = '/dashboard/instructor';
-        this.navItems = this.instructorNavItems;
+      
+      // Get navigation config for user role
+      const config = getNavigationConfig(this.userRole);
+      if (config) {
+        this.baseRoute = config.baseRoute;
+        this.navItems = config.navItems;
+        this.roleDisplayName = config.roleDisplayName;
       }
     }
 

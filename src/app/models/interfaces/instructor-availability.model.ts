@@ -31,6 +31,7 @@ export interface InstructorAppointment {
 }
 
 export interface InstructorAssignedFile {
+  fileId: number;
   firstName: string;
   lastName: string;
   phoneNumber: string;

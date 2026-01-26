@@ -4,10 +4,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../../core/services/auth.service';
 import { InstructorAvailabilityService } from '../../../../../../core/services/instructor-availability.service';
+import { NotificationService } from '../../../../../../core/services/notification.service';
 
 interface DashboardStats {
   todayAppointments: number;
@@ -32,8 +32,7 @@ interface RecentActivity {
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatProgressSpinnerModule
   ],
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.css']
@@ -56,7 +55,7 @@ export class InstructorOverviewComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private availabilityService: InstructorAvailabilityService,
-    private snackBar: MatSnackBar,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
@@ -86,7 +85,7 @@ export class InstructorOverviewComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error loading dashboard data:', error);
-          this.snackBar.open('Failed to load dashboard data', 'Close', { duration: 3000 });
+          this.notificationService.showError('Nu s-au putut încărca datele. Încercați din nou.');
           this.isLoading = false;
         }
       });
@@ -107,16 +106,16 @@ export class InstructorOverviewComponent implements OnInit {
     this.recentActivities = [
       {
         type: 'appointment',
-        title: 'Today\'s Schedule',
-        description: `You have ${this.stats.todayAppointments} appointments today`,
-        time: 'Today',
+        title: 'Programul de astăzi',
+        description: `Aveți ${this.stats.todayAppointments} programări astăzi`,
+        time: 'Astăzi',
         icon: 'event'
       },
       {
         type: 'student',
-        title: 'Active Students',
-        description: `Managing ${this.stats.totalStudents} students`,
-        time: 'Current',
+        title: 'Cursanți activi',
+        description: `Gestionați ${this.stats.totalStudents} cursanți`,
+        time: 'Actual',
         icon: 'people'
       }
     ];

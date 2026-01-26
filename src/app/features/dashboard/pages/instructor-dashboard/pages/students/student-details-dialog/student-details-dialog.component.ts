@@ -8,9 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { StudentService, StudentFileDto } from '../../../../../../../core/services/student.service';
-import { AppointmentService, AppointmentDto } from '../../../../../../../core/services/appointment.service';
-import { InstructorAssignedFile } from '../../../../../../../models/interfaces/instructor-availability.model';
+import { InstructorAssignedFile, FileDetails } from '../../../../../../../models/interfaces/instructor-availability.model';
+import { InstructorAvailabilityService } from '../../../../../../../core/services/instructor-availability.service';
 
 @Component({
   selector: 'app-student-details-dialog',
@@ -30,79 +29,61 @@ import { InstructorAssignedFile } from '../../../../../../../models/interfaces/i
   styleUrls: ['./student-details-dialog.component.css']
 })
 export class StudentDetailsDialogComponent implements OnInit {
-  studentDetails: StudentFileDto | null = null;
-  studentAppointments: AppointmentDto[] = [];
+  student: InstructorAssignedFile;
+  fileDetails: FileDetails | null = null;
   isLoading = false;
-  isLoadingAppointments = false;
+  errorMessage = '';
 
   constructor(
     public dialogRef: MatDialogRef<StudentDetailsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { student: InstructorAssignedFile },
-    private studentService: StudentService,
-    private appointmentService: AppointmentService,
+    private instructorService: InstructorAvailabilityService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.student = data.student;
+  }
 
   ngOnInit(): void {
-    this.loadStudentDetails();
-    this.loadStudentAppointments();
+    this.loadFileDetails();
   }
 
-  loadStudentDetails(): void {
-    // Note: We need to find a way to get studentId from the student email or other identifier
-    // For now, we'll use the existing data from InstructorAssignedFile
-    this.studentDetails = {
-      fileId: 0, // Not available in InstructorAssignedFile interface
-      status: this.data.student.status,
-      scholarshipStartDate: this.data.student.scholarshipStartDate,
-      criminalRecordExpiryDate: '', // Not available in InstructorAssignedFile interface
-      medicalRecordExpiryDate: '', // Not available in InstructorAssignedFile interface
-      type: this.data.student.type,
-      firstName: this.data.student.firstName,
-      lastName: this.data.student.lastName,
-      email: this.data.student.email,
-      phoneNumber: this.data.student.phoneNumber,
-      licensePlateNumber: this.data.student.licensePlateNumber,
-      transmissionType: this.data.student.transmissionType
-    };
-  }
+  loadFileDetails(): void {
+    const fileId = this.student.fileId;
+    
+    if (!fileId) {
+      // No fileId available - just show basic info from student object
+      this.isLoading = false;
+      return;
+    }
 
-  loadStudentAppointments(): void {
-    // Since we don't have fileId in InstructorAssignedFile, we'll show placeholder
-    this.isLoadingAppointments = true;
-    // We would use student ID here, but we'll show a placeholder for now
-    this.isLoadingAppointments = false;
-    this.studentAppointments = [];
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.instructorService.getFileDetails(fileId).subscribe({
+      next: (details) => {
+        this.fileDetails = details;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading file details:', error);
+        // Don't show error, just use basic data from student object
+        this.isLoading = false;
+      }
+    });
   }
 
   getStatusColor(status: string): string {
-    switch (status?.toLowerCase()) {
-      case 'active':
-        return '#10B981';
-      case 'pending':
-        return '#F59E0B';
-      case 'completed':
-        return '#6366F1';
-      case 'archived':
-        return '#6B7280';
-      default:
-        return '#64748B';
+    if (status?.toUpperCase() === 'APPROVED') {
+      return '#10B981'; // green
     }
+    return '#6B7280'; // gray
   }
 
   getStatusIcon(status: string): string {
-    switch (status?.toLowerCase()) {
-      case 'active':
-        return 'check_circle';
-      case 'pending':
-        return 'schedule';
-      case 'completed':
-        return 'task_alt';
-      case 'archived':
-        return 'archive';
-      default:
-        return 'help';
+    if (status?.toUpperCase() === 'APPROVED') {
+      return 'check_circle';
     }
+    return 'help_outline';
   }
 
   getLicenseTypeColor(type: string): string {
@@ -122,31 +103,46 @@ export class StudentDetailsDialogComponent implements OnInit {
 
   formatDate(dateString: string): string {
     if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('ro-RO', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     });
   }
 
-  formatTime(timeString: string): string {
-    if (!timeString) return 'N/A';
-    return timeString;
+  getTransmissionLabel(type: string): string {
+    switch (type?.toUpperCase()) {
+      case 'MANUAL':
+        return 'Manuală';
+      case 'AUTOMATIC':
+        return 'Automată';
+      default:
+        return type || 'N/A';
+    }
+  }
+
+  getProgressPercentage(): number {
+    if (!this.fileDetails) return 0;
+    const lessons = this.fileDetails.lessonsMade?.length || 0;
+    const required = this.fileDetails.minDrivingLessonsRequired || 1;
+    return Math.min(Math.round((lessons / required) * 100), 100);
   }
 
   contactStudent(): void {
-    if (this.studentDetails?.phoneNumber) {
-      window.open(`tel:${this.studentDetails.phoneNumber}`, '_self');
+    const phone = this.fileDetails?.phoneNo || this.student?.phoneNumber;
+    if (phone) {
+      window.open(`tel:${phone}`, '_self');
     } else {
-      this.snackBar.open('No phone number available', 'Close', { duration: 3000 });
+      this.snackBar.open('Număr de telefon indisponibil', 'Închide', { duration: 3000 });
     }
   }
 
   emailStudent(): void {
-    if (this.studentDetails?.email) {
-      window.open(`mailto:${this.studentDetails.email}`, '_self');
+    const email = this.fileDetails?.email || this.student?.email;
+    if (email) {
+      window.open(`mailto:${email}`, '_self');
     } else {
-      this.snackBar.open('No email address available', 'Close', { duration: 3000 });
+      this.snackBar.open('Adresă email indisponibilă', 'Închide', { duration: 3000 });
     }
   }
 

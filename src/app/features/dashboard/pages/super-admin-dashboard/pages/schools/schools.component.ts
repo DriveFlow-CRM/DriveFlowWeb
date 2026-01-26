@@ -6,7 +6,8 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { RouterModule, Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { AutoSchoolService } from '../../../../../../core/services/auto-school.service';
 import { AutoSchool, CreateAutoSchoolRequest, UpdateAutoSchoolRequest, UpdateSchoolAdminRequest, County, City, Address } from '../../../../../../models/interfaces/auto-school.model';
-import { LocationService, AddressCreateDto, AddressUpdateDto } from '../../../../../../core/services/location.service';
+import { LocationService } from '../../../../../../core/services/location.service';
+import { AddressCreateDto, AddressUpdateDto } from '../../../../../../models/interfaces/location.model';
 import { Subscription } from 'rxjs';
 
 @Component({

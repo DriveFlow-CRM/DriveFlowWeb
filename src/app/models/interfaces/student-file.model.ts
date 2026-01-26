@@ -12,26 +12,38 @@ export interface StudentFileDetails {
   scholarshipStartDate: string;
   criminalRecordExpiryDate: string;
   medicalRecordExpiryDate: string;
-  payment: {
-    scholarshipPayment: boolean;
-    sessionsPayed: number;
-  };
-  instructor: {
-    userId: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    role: string;
-  };
-  vehicle?: {
-    licensePlateNumber: string;
-    transmissionType: string;
-    color: string;
-    type: string;
-  };
+  payment: PaymentInfo;
+  instructor: InstructorInfo;
+  vehicle?: VehicleInfo;
   appointments: Appointment[];
   appointmentsCompleted: number;
+}
+
+export interface PaymentInfo {
+  scholarshipPayment: boolean;
+  sessionsPayed: number;
+}
+
+export interface InstructorInfo {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: string;
+}
+
+export interface VehicleInfo {
+  licensePlateNumber: string;
+  transmissionType: string;
+  color: string;
+  brand: string;
+  model: string;
+  yearOfProduction: number;
+  fuelType: string;
+  engineSizeLiters: number;
+  powertrainType: string;
+  type: string;
 }
 
 export interface Appointment {

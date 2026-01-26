@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { ConfigService } from './config.service';
+import { ErrorHandlerService } from './error-handler.service';
 import { School, TeachingCategory } from '../models/school.model';
 import { EnrollmentForm } from '../models/enrollment.model';
 import { SchoolStatus } from '../types/school.types';
@@ -22,7 +24,8 @@ export class SchoolService {
 
   constructor(
     private http: HttpClient,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private errorHandler: ErrorHandlerService
   ) {
     this.baseUrl = this.configService.getApiBaseUrl();
   }
@@ -31,7 +34,9 @@ export class SchoolService {
    * Get schools listing for the landing page
    */
   getSchoolsListing(): Observable<SchoolListing[]> {
-    return this.http.get<SchoolListing[]>(`${this.baseUrl}schoolspage/schools`);
+    return this.http.get<SchoolListing[]>(`${this.baseUrl}schoolspage/schools`).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
   /**
@@ -39,7 +44,8 @@ export class SchoolService {
    */
   getAllSchools(): Observable<School[]> {
     return this.http.get<School[]>(`${this.baseUrl}schoolspage/schools`).pipe(
-      map(schools => schools.map(school => this.mapApiResponseToSchool(school)))
+      map(schools => schools.map(school => this.mapApiResponseToSchool(school))),
+      catchError(error => this.errorHandler.handleHttpError(error))
     );
   }
 
@@ -48,15 +54,18 @@ export class SchoolService {
    */
   getSchoolById(id: string): Observable<School> {
     return this.http.get<School>(`${this.baseUrl}schoolspage/schools/${id}`).pipe(
-      map(school => this.mapApiResponseToSchool(school))
+      map(school => this.mapApiResponseToSchool(school)),
+      catchError(error => this.errorHandler.handleHttpError(error))
     );
   }
 
   /**
    * Submit enrollment form
    */
-  submitEnrollment(form: EnrollmentForm): Observable<any> {
-    return this.http.post(`${this.baseUrl}enrollments`, form);
+  submitEnrollment(form: EnrollmentForm): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}enrollments`, form).pipe(
+      catchError(error => this.errorHandler.handleHttpError(error))
+    );
   }
 
   /**

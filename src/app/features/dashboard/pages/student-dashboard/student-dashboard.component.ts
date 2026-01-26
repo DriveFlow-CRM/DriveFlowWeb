@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { DashboardNavbarComponent } from '../../../../shared/components/dashboard-navbar/dashboard-navbar.component';
-import { FileListComponent } from './pages/file-list/file-list.component';
-import { FileDetailsComponent } from './pages/file-details/file-details.component';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -13,9 +11,7 @@ import { FileDetailsComponent } from './pages/file-details/file-details.componen
     CommonModule,
     RouterModule,
     RouterOutlet,
-    DashboardNavbarComponent,
-    FileListComponent,
-    FileDetailsComponent
+    DashboardNavbarComponent
   ],
   templateUrl: './student-dashboard.component.html',
   styleUrls: ['./student-dashboard.component.css']

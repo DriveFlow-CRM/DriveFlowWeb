@@ -11,28 +11,23 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "customWebpackConfig": {
-              "path": "./webpack.config.js"
-            },
-            "allowedCommonJsDependencies": [
-              "@fullcalendar/core",
-              "@fullcalendar/daygrid",
-              "@fullcalendar/interaction",
-              "@fullcalendar/list",
-              "@fullcalendar/timegrid"
-            ],
             "outputPath": "dist/drive-flow-web",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "config.json",
+                "input": "src/",
+                "output": "/"
+              }
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -42,7 +37,14 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "@fullcalendar/core",
+              "@fullcalendar/daygrid",
+              "@fullcalendar/interaction",
+              "@fullcalendar/list",
+              "@fullcalendar/timegrid"
+            ]
           },
           "configurations": {
             "production": {
@@ -69,22 +71,19 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "DriveFlowWeb:build:production"
+              "buildTarget": "DriveFlowWeb:build:production"
             },
             "development": {
-              "browserTarget": "DriveFlowWeb:build:development"
+              "buildTarget": "DriveFlowWeb:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "DriveFlowWeb:build"
-          }
+          "builder": "@angular-devkit/build-angular:extract-i18n"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -106,5 +105,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

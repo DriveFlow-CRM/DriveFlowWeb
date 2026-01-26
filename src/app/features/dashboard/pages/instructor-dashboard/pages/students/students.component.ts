@@ -199,29 +199,18 @@ export class StudentsComponent implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return '#10b981'; // green
-      case 'archived':
-        return '#6b7280'; // gray
-      case 'pending':
-        return '#f59e0b'; // orange
-      default:
-        return '#6b7280';
+    // Green for APPROVED, gray for everything else
+    if (status?.toUpperCase() === 'APPROVED') {
+      return '#10b981'; // green
     }
+    return '#6b7280'; // gray
   }
 
   getStatusIcon(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return 'check_circle';
-      case 'archived':
-        return 'archive';
-      case 'pending':
-        return 'schedule';
-      default:
-        return 'help';
+    if (status?.toUpperCase() === 'APPROVED') {
+      return 'check_circle';
     }
+    return 'help_outline';
   }
 
   getLicenseTypeColor(type: string): string {
