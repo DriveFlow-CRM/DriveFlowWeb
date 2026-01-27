@@ -9,11 +9,17 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 
 import { InstructorAvailabilityService } from '../../../../../../core/services/instructor-availability.service';
 import { AuthService } from '../../../../../../core/services/auth.service';
 import { InstructorAppointment, InstructorAvailability } from '../../../../../../models/interfaces/instructor-availability.model';
+
+import { AppointmentActionDialogComponent, AppointmentActionResult } from './appointment-action-dialog/appointment-action-dialog.component';
+import { SessionFormDialogComponent, SessionFormDialogData } from './session-form-dialog/session-form-dialog.component';
+import { SessionResultDialogComponent } from './session-result-dialog/session-result-dialog.component';
+import { SessionFormResult } from '../../../../../../models/interfaces/session-form.model';
 
 interface WeekDay {
   date: Date;
@@ -43,7 +49,8 @@ interface TimeSlot {
     MatCardModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatChipsModule
+    MatChipsModule,
+    MatDialogModule
   ],
   templateUrl: './appointments.component.html',
   styleUrls: ['./appointments.component.css']
@@ -88,7 +95,8 @@ export class AppointmentsComponent implements OnInit {
   constructor(
     private availabilityService: InstructorAvailabilityService,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -110,7 +118,7 @@ export class AppointmentsComponent implements OnInit {
   getStartOfWeek(date: Date): Date {
     const d = new Date(date);
     const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
     return new Date(d.setDate(diff));
   }
 
@@ -146,7 +154,6 @@ export class AppointmentsComponent implements OnInit {
     const startDate = this.formatDate(this.currentWeekStart);
     const endDate = this.formatDate(endOfWeek);
 
-    // Load both appointments and availability data
     forkJoin({
       appointments: this.availabilityService.getInstructorAppointments(this.instructorId, startDate, endDate),
       availability: this.availabilityService.getInstructorAvailability(this.instructorId)
@@ -166,13 +173,11 @@ export class AppointmentsComponent implements OnInit {
   }
 
   distributeDataToWeek(): void {
-    // Clear existing data
     this.currentWeek.forEach(day => {
       day.appointments = [];
       day.availability = [];
     });
 
-    // Distribute appointments to their respective days
     this.appointments.forEach(appointment => {
       const appointmentDate = new Date(appointment.date);
       const weekDay = this.currentWeek.find(day => this.isSameDay(day.date, appointmentDate));
@@ -181,7 +186,6 @@ export class AppointmentsComponent implements OnInit {
       }
     });
 
-    // Distribute availability to their respective days
     this.availability.forEach(avail => {
       const availDate = new Date(avail.date);
       const weekDay = this.currentWeek.find(day => this.isSameDay(day.date, availDate));
@@ -190,7 +194,6 @@ export class AppointmentsComponent implements OnInit {
       }
     });
 
-    // Sort appointments and availability by time for each day
     this.currentWeek.forEach(day => {
       day.appointments.sort((a, b) => a.startHour.localeCompare(b.startHour));
       day.availability.sort((a, b) => a.startHour.localeCompare(b.startHour));
@@ -255,16 +258,52 @@ export class AppointmentsComponent implements OnInit {
   }
 
   onAppointmentClick(appointment: InstructorAppointment): void {
-    const message = `${appointment.firstName} ${appointment.lastName} - ${appointment.type} (${appointment.startHour} - ${appointment.endHour})`;
-    this.snackBar.open(message, 'Close', {
-      duration: 4000,
-      panelClass: ['appointment-info-snackbar']
+    const dialogRef = this.dialog.open(AppointmentActionDialogComponent, {
+      data: { appointment },
+      panelClass: 'appointment-action-dialog',
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe((result: AppointmentActionResult) => {
+      if (result === 'session-form') {
+        this.openSessionFormDialog(appointment);
+      }
+    });
+  }
+
+  openSessionFormDialog(appointment: InstructorAppointment): void {
+    const dialogData: SessionFormDialogData = {
+      appointment,
+      fileId: appointment.fileId
+    };
+
+    const dialogRef = this.dialog.open(SessionFormDialogComponent, {
+      data: dialogData,
+      width: '700px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      panelClass: 'session-form-dialog',
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe((result: SessionFormResult | null) => {
+      if (result) {
+        this.showResultDialog(result);
+      }
+    });
+  }
+
+  showResultDialog(result: SessionFormResult): void {
+    this.dialog.open(SessionResultDialogComponent, {
+      data: result,
+      panelClass: 'session-result-dialog',
+      autoFocus: false
     });
   }
 
   onAvailabilityClick(availability: InstructorAvailability): void {
-    const message = `Available: ${availability.startHour} - ${availability.endHour}`;
-    this.snackBar.open(message, 'Close', {
+    const message = `Disponibil: ${availability.startHour} - ${availability.endHour}`;
+    this.snackBar.open(message, 'OK', {
       duration: 3000,
       panelClass: ['availability-info-snackbar']
     });
@@ -302,4 +341,3 @@ export class AppointmentsComponent implements OnInit {
     return date.toISOString().split('T')[0];
   }
 }
-
