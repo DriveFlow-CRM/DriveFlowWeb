@@ -1,0 +1,241 @@
+/* Appointment Action Dialog */
+
+.dialog-container {
+  min-width: 360px;
+  max-width: 450px;
+  background: white;
+  overflow: hidden;
+}
+
+/* Header */
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem;
+  color: white;
+}
+
+.dialog-header.type-theory {
+  background: linear-gradient(135deg, #34A853 0%, #2d8a47 100%);
+}
+
+.dialog-header.type-practical {
+  background: linear-gradient(135deg, #4285F4 0%, #3367d6 100%);
+}
+
+.dialog-header.type-exam {
+  background: linear-gradient(135deg, #EA4335 0%, #c5352a 100%);
+}
+
+.dialog-header.type-default {
+  background: linear-gradient(135deg, #44D9E6 0%, #2A878F 100%);
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  width: fit-content;
+}
+
+.student-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.appointment-time {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.close-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Content */
+.dialog-content {
+  padding: 1.5rem;
+}
+
+/* Details Grid */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.detail-item .material-icons {
+  color: #9ca3af;
+  font-size: 1.25rem;
+  margin-top: 0.125rem;
+}
+
+.detail-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+/* Action Section */
+.action-section {
+  margin-top: 1rem;
+}
+
+.btn-session-form {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+  background: #f0f9ff;
+  border: 2px solid #bae6fd;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.btn-session-form:hover {
+  background: #e0f2fe;
+  border-color: #7dd3fc;
+}
+
+.btn-session-form .material-icons:first-child {
+  font-size: 2rem;
+  color: #0284c7;
+}
+
+.btn-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #0284c7;
+}
+
+.btn-subtitle {
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.btn-session-form .arrow {
+  color: #0284c7;
+}
+
+/* Info Message */
+.info-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.info-message .material-icons {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 1.5rem;
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-close {
+  padding: 0.625rem 1.5rem;
+  background: white;
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-close:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .dialog-container {
+    min-width: unset;
+    max-width: unset;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dialog Panel Override */
+::ng-deep .appointment-action-dialog .mat-mdc-dialog-container {
+  padding: 0 !important;
+}
+
+::ng-deep .appointment-action-dialog .mat-mdc-dialog-surface {
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
+}
