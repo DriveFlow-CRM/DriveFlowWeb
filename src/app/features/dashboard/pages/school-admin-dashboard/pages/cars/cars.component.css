@@ -1,210 +1,96 @@
-.cars-container {
-  padding: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+/* Cars Component Styles */
+
+:host {
+  display: block;
+  width: 100%;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
+/* Card hover effects */
+.bg-white {
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 500;
+/* Smooth animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Loading state */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+.grid > div {
+  animation: fadeInUp 0.3s ease-out;
 }
 
-.loading-container p {
-  margin-top: 16px;
-  color: #666;
+/* Stagger animation for cards */
+.grid > div:nth-child(1) { animation-delay: 0.05s; }
+.grid > div:nth-child(2) { animation-delay: 0.1s; }
+.grid > div:nth-child(3) { animation-delay: 0.15s; }
+.grid > div:nth-child(4) { animation-delay: 0.2s; }
+.grid > div:nth-child(5) { animation-delay: 0.25s; }
+.grid > div:nth-child(6) { animation-delay: 0.3s; }
+
+/* Material icons alignment */
+.material-icons {
+  vertical-align: middle;
+  line-height: 1;
 }
 
-/* No data message */
-.no-data {
-  padding: 40px;
-  text-align: center;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+/* Search input focus state */
+input:focus {
+  outline: none;
 }
 
-/* Vehicle cards grid */
-.vehicles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.vehicle-card {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  position: relative;
-}
-
-.vehicle-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.vehicle-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #3f51b5;
-  color: white;
-  padding: 12px 16px;
-}
-
-.license-plate {
-  background-color: #FFFFFF;
-  color: #000000;
-  padding: 8px 10px;
+::-webkit-scrollbar-track {
+  background: transparent;
   border-radius: 4px;
-  font-weight: 700;
-  font-size: 16px;
-  border: 2px solid #122F7C;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  letter-spacing: 1px;
-  display: inline-flex;
-  align-items: center;
-  font-family: 'Arial', sans-serif;
-  position: relative;
 }
 
-.license-plate::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 20px;
-  background-color: #122F7C;
-  border-radius: 2px 0 0 2px;
-  margin-right: 8px;
-}
-
-.license-plate span {
-  margin-left: 24px;
-}
-
-.license-type {
-  padding: 4px 8px;
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
-  font-weight: 600;
-  font-size: 14px;
 }
 
-.tag-b {
-  background-color: #4caf50;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
 }
 
-.tag-c {
-  background-color: #ff9800;
+/* Gradient backgrounds */
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
 }
 
-.tag-d {
-  background-color: #f44336;
+.from-primary {
+  --tw-gradient-from: #44D9E6;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(68, 217, 230, 0));
 }
 
-.tag-e {
-  background-color: #9c27b0;
+.to-primary-dark {
+  --tw-gradient-to: #2A878F;
 }
 
-.vehicle-body {
-  padding: 16px;
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .p-4.md\:p-6 {
+    padding: 1rem;
+  }
+  
+  .text-2xl.md\:text-3xl {
+    font-size: 1.5rem;
+  }
 }
 
-.vehicle-body h2 {
-  margin: 0 0 16px 0;
-  font-size: 20px;
-  color: #333;
-}
-
-.vehicle-details {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.detail-item {
-  display: flex;
-  align-items: baseline;
-}
-
-.label {
-  font-weight: 500;
-  color: #666;
-  margin-right: 8px;
-  min-width: 80px;
-}
-
-.value {
-  color: #333;
-}
-
-.documents {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #eee;
-}
-
-.document {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #f5f5f5;
-}
-
-.document:last-child {
-  border-bottom: none;
-}
-
-.doc-label {
-  font-weight: 500;
-  color: #666;
-}
-
-.doc-date {
-  color: #333;
-}
-
-.expired {
-  color: #f44336 !important;
-  font-weight: 500;
-}
-
-.vehicle-actions {
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.vehicle-card:hover .vehicle-actions {
-  opacity: 1;
-}
-
-/* Global dialog styles */
+/* Dialog overrides */
 ::ng-deep .vehicle-form-dialog {
   padding: 0 !important;
 }
@@ -216,42 +102,4 @@
 ::ng-deep .vehicle-form-dialog .mat-mdc-dialog-surface {
   border-radius: 0.75rem !important;
   overflow: hidden !important;
-}
-
-/* Fix the vertical line in form fields */
-::ng-deep .mat-mdc-form-field-appearance-outline .mdc-notched-outline__leading {
-  border-right-style: none !important;
-}
-
-::ng-deep .mat-mdc-form-field-appearance-outline .mdc-notched-outline__trailing {
-  border-left-style: none !important;
-}
-
-::ng-deep .mat-mdc-form-field-appearance-outline .mdc-notched-outline__notch {
-  border-left-style: none !important;
-  border-right-style: none !important;
-}
-
-@media (max-width: 768px) {
-  .vehicles-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .header button {
-    margin-top: 16px;
-    align-self: stretch;
-  }
-
-  .vehicle-actions {
-    opacity: 1;
-    position: static;
-    display: flex;
-    justify-content: flex-end;
-    padding: 8px 16px 16px;
-  }
 }
