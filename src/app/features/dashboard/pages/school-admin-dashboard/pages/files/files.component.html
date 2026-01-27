@@ -1,220 +1,366 @@
-<div class="bg-white min-h-screen p-4 md:p-6">
+<!-- Files Management Page -->
+<div class="min-h-screen p-4 md:p-6">
   <div class="max-w-7xl mx-auto">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-      <h1 class="text-2xl md:text-3xl font-bold text-dark">Dosare</h1>
-
-      <!-- Search and Add buttons -->
-      <div class="flex items-center gap-4 w-full sm:w-auto">
-        <div class="relative flex-grow">
-          <input
-            type="text"
-            [(ngModel)]="searchTerm"
-            (input)="searchFiles()"
-            placeholder="Caută elev..."
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-          <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400">
-            <mat-icon>search</mat-icon>
-          </span>
+    <!-- Page Header -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-dark mb-2">Dosare Cursanți</h1>
+          <p class="text-gray-600">Gestionează dosarele de școlarizare și plățile cursanților</p>
         </div>
-
         <button
-          class="w-full sm:w-auto min-w-[160px] bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center shadow-md transition-all duration-300"
-          (click)="openAddStudentDialog()">
-          <mat-icon>person_add</mat-icon>
-          <span class="ml-1">Adaugă elev</span>
+          (click)="openAddStudentDialog()"
+          class="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all duration-300 hover:shadow-lg">
+          <span class="material-icons">person_add</span>
+          <span>Adaugă cursant</span>
         </button>
       </div>
     </div>
 
-    <!-- Loading spinner -->
-    <div *ngIf="filesLoading" class="flex flex-col items-center justify-center p-8 bg-light rounded-xl shadow">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p class="mt-4 text-gray">Se încarcă dosarele...</p>
-    </div>
-
-    <!-- No files message -->
-    <div *ngIf="!filesLoading && filteredFiles.length === 0" class="bg-light p-8 text-center rounded-xl shadow">
-      <p class="text-gray">Nu există dosare înregistrate. Adăugați un elev nou pentru a crea dosare.</p>
-    </div>
-
-    <!-- Files list -->
-    <div *ngIf="!filesLoading && filteredFiles.length > 0" class="space-y-6">
-      <!-- Student cards with files -->
-      <div *ngFor="let fileWithStudent of filteredFiles" class="bg-white rounded-xl shadow-lg overflow-hidden">
-        <!-- Student header -->
-        <div class="bg-primary p-4 flex justify-between items-center">
-          <div class="flex items-center">
-            <div class="bg-white text-dark px-3 py-2 rounded-md border-2 border-primary-dark font-bold">
-              {{ fileWithStudent.studentData.firstName }} {{ fileWithStudent.studentData.lastName }}
-            </div>
-            <div class="ml-4">
-              <span class="text-white flex items-center">
-                <mat-icon class="text-sm mr-1">email</mat-icon>
-                {{ fileWithStudent.studentData.email }}
-              </span>
-            </div>
+    <!-- Summary Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-green-500">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-green-100 rounded-lg">
+            <span class="material-icons text-green-600">people</span>
           </div>
-
-          <div class="flex items-center">
-            <div class="mr-4 text-white text-sm">
-              <span class="flex items-center">
-                <mat-icon class="text-sm mr-1">phone</mat-icon>
-                {{ fileWithStudent.studentData.phoneNumber }}
-              </span>
-              <span class="flex items-center mt-1">
-                <mat-icon class="text-sm mr-1">badge</mat-icon>
-                {{ fileWithStudent.studentData.cnp }}
-              </span>
-            </div>
-
-            <button
-              mat-mini-fab
-              color="accent"
-              (click)="toggleExpand(fileWithStudent.studentData.studentId)"
-              matTooltip="{{ expandedStudentId === fileWithStudent.studentData.studentId ? 'Restrânge' : 'Extinde' }} dosare"
-              class="shadow-lg">
-              <mat-icon>{{ expandedStudentId === fileWithStudent.studentData.studentId ? 'expand_less' : 'expand_more' }}</mat-icon>
-            </button>
-          </div>
-        </div>
-
-        <!-- Student actions -->
-        <div class="px-6 py-4 flex justify-between items-center border-b border-gray-200">
           <div>
-            <p class="text-gray-500">Număr dosare: {{ fileWithStudent.files.length }}</p>
+            <p class="text-2xl font-bold text-dark">{{ summaryStats.totalStudents }}</p>
+            <p class="text-xs text-gray-500 uppercase">Cursanți</p>
           </div>
-          <div class="flex gap-2">
-            <button
-              mat-icon-button
-              color="primary"
-              (click)="openAddFileDialog(fileWithStudent.studentData)"
-              matTooltip="Adaugă dosar nou">
-              <mat-icon>add_circle</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              color="primary"
-              (click)="openEditStudentDialog(fileWithStudent.studentData)"
-              matTooltip="Editează elev">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              color="warn"
-              (click)="confirmDeleteStudent(fileWithStudent.studentData)"
-              matTooltip="Șterge elev">
-              <mat-icon>delete</mat-icon>
-            </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-primary">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-primary bg-opacity-10 rounded-lg">
+            <span class="material-icons text-primary">folder_open</span>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-dark">{{ summaryStats.activeFiles }}</p>
+            <p class="text-xs text-gray-500 uppercase">Active</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-amber-500">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-amber-100 rounded-lg">
+            <span class="material-icons text-amber-600">payments</span>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-dark">{{ summaryStats.pendingPayments }}</p>
+            <p class="text-xs text-gray-500 uppercase">Plăți în așteptare</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-purple-500">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-purple-100 rounded-lg">
+            <span class="material-icons text-purple-600">check_circle</span>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-dark">{{ summaryStats.completedFiles }}</p>
+            <p class="text-xs text-gray-500 uppercase">Finalizate</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="bg-white rounded-xl shadow-md p-4 mb-6">
+      <div class="flex flex-col md:flex-row gap-4">
+        <!-- Search Input -->
+        <div class="flex-1 relative">
+          <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <span class="material-icons text-gray-400">search</span>
+          </span>
+          <input
+            type="text"
+            [value]="searchTerm"
+            (input)="onSearchInput($event)"
+            placeholder="Caută după nume, email, telefon sau CNP..."
+            class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          />
+          <button 
+            *ngIf="searchTerm"
+            (click)="searchTerm = ''; applyFilters()"
+            class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+
+        <!-- Status Filter Chips -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-sm text-gray-500 hidden md:inline">Status:</span>
+          <button 
+            *ngFor="let status of fileStatusOptions"
+            (click)="setStatusFilter(status)"
+            class="px-3 py-2 rounded-lg text-sm font-medium transition-all"
+            [ngClass]="selectedStatusFilter === status 
+              ? 'bg-primary text-white' 
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+            {{ getStatusText(status) }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Active filters indicator -->
+      <div *ngIf="searchTerm || selectedStatusFilter !== 'ALL'" class="mt-3 flex items-center gap-2">
+        <span class="text-sm text-gray-500">Filtre active:</span>
+        <span *ngIf="searchTerm" class="inline-flex items-center gap-1 px-2 py-1 bg-primary bg-opacity-10 text-primary rounded-lg text-sm">
+          "{{ searchTerm }}"
+          <button (click)="searchTerm = ''; applyFilters()" class="hover:text-primary-dark">
+            <span class="material-icons text-sm">close</span>
+          </button>
+        </span>
+        <span *ngIf="selectedStatusFilter !== 'ALL'" class="inline-flex items-center gap-1 px-2 py-1 bg-primary bg-opacity-10 text-primary rounded-lg text-sm">
+          {{ getStatusText(selectedStatusFilter) }}
+          <button (click)="setStatusFilter('ALL')" class="hover:text-primary-dark">
+            <span class="material-icons text-sm">close</span>
+          </button>
+        </span>
+        <button (click)="clearFilters()" class="text-sm text-gray-500 hover:text-primary underline">
+          Șterge toate
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="filesLoading" class="bg-white rounded-xl shadow-md p-12 flex flex-col items-center justify-center">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p class="mt-4 text-gray-500">Se încarcă dosarele...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!filesLoading && filteredFiles.length === 0 && files.length === 0" class="bg-white rounded-xl shadow-md p-12 text-center">
+      <div class="p-4 bg-gray-100 rounded-full inline-block mb-4">
+        <span class="material-icons text-5xl text-gray-400">folder_off</span>
+      </div>
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">Niciun dosar înregistrat</h2>
+      <p class="text-gray-500 mb-6">Adăugați primul cursant pentru a începe gestionarea dosarelor.</p>
+      <button 
+        (click)="openAddStudentDialog()"
+        class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-xl font-medium transition-colors inline-flex items-center gap-2">
+        <span class="material-icons">person_add</span>
+        Adaugă cursant
+      </button>
+    </div>
+
+    <!-- No Results State -->
+    <div *ngIf="!filesLoading && filteredFiles.length === 0 && files.length > 0" class="bg-white rounded-xl shadow-md p-12 text-center">
+      <div class="p-4 bg-amber-100 rounded-full inline-block mb-4">
+        <span class="material-icons text-5xl text-amber-500">search_off</span>
+      </div>
+      <h2 class="text-xl font-semibold text-gray-700 mb-2">Niciun rezultat găsit</h2>
+      <p class="text-gray-500 mb-4">Încercați să modificați criteriile de căutare sau filtrele.</p>
+      <button 
+        (click)="clearFilters()"
+        class="text-primary hover:text-primary-dark font-medium inline-flex items-center gap-1">
+        <span class="material-icons text-sm">refresh</span>
+        Resetează filtrele
+      </button>
+    </div>
+
+    <!-- Students List -->
+    <div *ngIf="!filesLoading && filteredFiles.length > 0" class="space-y-4">
+      <div 
+        *ngFor="let fileWithStudent of filteredFiles" 
+        class="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
+        
+        <!-- Student Card Header -->
+        <div 
+          class="p-4 md:p-5 cursor-pointer"
+          (click)="toggleExpand(fileWithStudent.studentData.studentId)">
+          <div class="flex items-center gap-4">
+            <!-- Avatar -->
+            <div class="w-14 h-14 rounded-xl bg-primary flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+              {{ getInitials(fileWithStudent.studentData) }}
+            </div>
+
+            <!-- Student Info -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="text-lg font-semibold text-dark truncate">
+                  {{ fileWithStudent.studentData.firstName }} {{ fileWithStudent.studentData.lastName }}
+                </h3>
+                <span class="px-2 py-0.5 bg-primary bg-opacity-10 text-primary text-xs font-semibold rounded-full">
+                  {{ getTotalFilesCount(fileWithStudent) }} {{ getTotalFilesCount(fileWithStudent) === 1 ? 'dosar' : 'dosare' }}
+                </span>
+              </div>
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
+                <span class="flex items-center gap-1">
+                  <span class="material-icons text-sm">email</span>
+                  {{ fileWithStudent.studentData.email }}
+                </span>
+                <span class="flex items-center gap-1">
+                  <span class="material-icons text-sm">phone</span>
+                  {{ fileWithStudent.studentData.phoneNumber }}
+                </span>
+                <span class="flex items-center gap-1 hidden md:flex">
+                  <span class="material-icons text-sm">badge</span>
+                  {{ fileWithStudent.studentData.cnp }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Actions & Expand Button -->
+            <div class="flex items-center gap-2">
+              <button 
+                mat-icon-button 
+                (click)="$event.stopPropagation(); openEditStudentDialog(fileWithStudent.studentData)"
+                matTooltip="Editează cursant"
+                class="text-gray-400 hover:text-primary">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button 
+                mat-icon-button 
+                (click)="$event.stopPropagation(); confirmDeleteStudent(fileWithStudent.studentData)"
+                matTooltip="Șterge cursant"
+                class="text-gray-400 hover:text-red-500">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center transition-transform duration-300"
+                   [class.rotate-180]="expandedStudentId === fileWithStudent.studentData.studentId">
+                <span class="material-icons text-gray-500">expand_more</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Files section (expandable) -->
-        <div *ngIf="expandedStudentId === fileWithStudent.studentData.studentId" class="px-6 py-4">
-          <!-- No files message -->
-          <div *ngIf="fileWithStudent.files.length === 0" class="text-center p-4">
-            <p class="text-gray-500">Acest elev nu are dosare create.</p>
-            <button
-              mat-flat-button
-              color="primary"
-              class="mt-2"
-              (click)="openAddFileDialog(fileWithStudent.studentData)">
-              <mat-icon>add</mat-icon> Adaugă dosar
+        <!-- Expanded Files Section -->
+        <div 
+          *ngIf="expandedStudentId === fileWithStudent.studentData.studentId"
+          class="border-t border-gray-100 bg-gray-50 p-4 md:p-5 animate-slideDown">
+          
+          <!-- Add File Button -->
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="font-medium text-gray-700">Dosare de școlarizare</h4>
+            <button 
+              (click)="openAddFileDialog(fileWithStudent.studentData)"
+              class="bg-primary hover:bg-primary-dark text-white text-sm font-medium py-2 px-4 rounded-lg inline-flex items-center gap-1 transition-colors">
+              <span class="material-icons text-sm">add</span>
+              Dosar nou
             </button>
           </div>
 
-          <!-- Files list -->
+          <!-- No Files -->
+          <div *ngIf="fileWithStudent.files.length === 0" class="text-center py-8 bg-white rounded-xl border-2 border-dashed border-gray-200">
+            <span class="material-icons text-4xl text-gray-300 mb-2">folder_open</span>
+            <p class="text-gray-500">Acest cursant nu are dosare create.</p>
+          </div>
+
+          <!-- Files Grid -->
           <div *ngIf="fileWithStudent.files.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div *ngFor="let file of fileWithStudent.files" class="bg-light rounded-lg p-4 border border-gray-200">
-              <div class="flex justify-between items-start mb-3">
-                <div>
-                  <div class="flex items-center">
-                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold mr-2"
-                          [ngClass]="getStatusColor(file.status)">
+            <div 
+              *ngFor="let file of fileWithStudent.files" 
+              class="bg-white rounded-xl p-4 border border-gray-200 hover:border-primary transition-all">
+              
+              <!-- File Header -->
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold"
+                       [ngClass]="file.status === 'APPROVED' ? 'bg-green-500' : 
+                                  file.status === 'FINALISED' ? 'bg-purple-500' : 
+                                  file.status === 'EXPIRED' ? 'bg-red-500' : 'bg-gray-500'">
+                    {{ file.teachingCategory.licenseType || '?' }}
+                  </div>
+                  <div>
+                    <h5 class="font-semibold text-dark">Categoria {{ file.teachingCategory.licenseType || 'N/A' }}</h5>
+                    <span 
+                      class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold"
+                      [ngClass]="getStatusColor(file.status)">
                       {{ getStatusText(file.status) }}
                     </span>
-                    <span class="text-sm font-medium text-gray-600">ID: {{ file.fileId }}</span>
                   </div>
-                  <h3 class="font-bold mt-1">Categoria {{ file.teachingCategory.licenseType }}</h3>
                 </div>
-                <div class="flex">
-                  <button
-                    mat-icon-button
-                    color="primary"
+                <div class="flex gap-1">
+                  <button 
+                    mat-icon-button 
                     (click)="openEditFileDialog(file)"
-                    matTooltip="Editează dosar">
+                    matTooltip="Editează dosar"
+                    class="text-gray-400 hover:text-primary small-icon-btn">
                     <mat-icon>edit</mat-icon>
                   </button>
-                  <button
-                    mat-icon-button
-                    color="accent"
+                  <button 
+                    mat-icon-button 
                     (click)="openEditPaymentDialog(file)"
-                    matTooltip="Editează plată">
+                    matTooltip="Editează plată"
+                    class="text-gray-400 hover:text-green-600 small-icon-btn">
                     <mat-icon>payments</mat-icon>
                   </button>
-                  <button
-                    mat-icon-button
-                    color="warn"
+                  <button 
+                    mat-icon-button 
                     (click)="confirmDeleteFile(file, fileWithStudent.studentData.firstName + ' ' + fileWithStudent.studentData.lastName)"
-                    matTooltip="Șterge dosar">
+                    matTooltip="Șterge dosar"
+                    class="text-gray-400 hover:text-red-500 small-icon-btn">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>
               </div>
 
-              <!-- File details -->
-              <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              <!-- Payment Progress -->
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-medium text-gray-700">Progres plată</span>
+                  <span class="text-sm font-bold" 
+                        [ngClass]="isPaymentComplete(file) ? 'text-green-600' : 'text-amber-600'">
+                    {{ getPaymentProgress(file) }}%
+                  </span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    class="h-2 rounded-full transition-all duration-500"
+                    [ngClass]="isPaymentComplete(file) ? 'bg-green-500' : 'bg-amber-500'"
+                    [style.width.%]="getPaymentProgress(file)">
+                  </div>
+                </div>
+                <p class="text-xs mt-1" 
+                   [ngClass]="isPaymentComplete(file) ? 'text-green-600' : 'text-amber-600'">
+                  {{ getPaymentStatusText(file) }}
+                </p>
+              </div>
+
+              <!-- File Details Grid -->
+              <div class="grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <p class="text-gray-500">Data începere:</p>
+                  <p class="text-gray-500 text-xs">Data începere</p>
                   <p class="font-medium">{{ formatDate(file.scholarshipStartDate) }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500">Instructor:</p>
+                  <p class="text-gray-500 text-xs">Instructor</p>
                   <p class="font-medium">{{ file.instructor ? (file.instructor.firstName + ' ' + file.instructor.lastName) : 'Nealocat' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500">Exp. cazier:</p>
-                  <p class="font-medium">{{ formatDate(file.criminalRecordExpiryDate) }}</p>
-                </div>
-                <div>
-                  <p class="text-gray-500">Vehicul:</p>
+                  <p class="text-gray-500 text-xs">Vehicul</p>
                   <p class="font-medium">{{ file.vehicle ? file.vehicle.licensePlateNumber : 'Nealocat' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500">Exp. fișă medicală:</p>
-                  <p class="font-medium">{{ formatDate(file.medicalRecordExpiryDate) }}</p>
-                </div>
-                <div>
-                  <p class="text-gray-500">Transmisie:</p>
-                  <p class="font-medium">{{ file.vehicle ? (file.vehicle.transmissionType === 'manual' ? 'Manuală' : 'Automată') : 'N/A' }}</p>
+                  <p class="text-gray-500 text-xs">Ședințe plătite</p>
+                  <p class="font-medium">
+                    {{ file.payment.sessionsPayed || 0 }} / {{ file.teachingCategory.minDrivingLessonsReq || 0 }}
+                  </p>
                 </div>
               </div>
 
-              <!-- Payment details -->
-              <div class="mt-4 pt-3 border-t border-gray-200">
-                <div class="flex justify-between items-center mb-2">
-                  <h4 class="font-semibold">Detalii plată</h4>
-                  <span class="text-sm text-gray-500">ID: {{ file.payment.paymentId }}</span>
-                </div>
-                <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                  <div>
-                    <p class="text-gray-500">Preț școlarizare:</p>
-                    <p class="font-medium">{{ formatCurrency(file.teachingCategory.scholarshipPrice) }}</p>
+              <!-- Document Dates (Collapsible) -->
+              <details class="mt-3 group">
+                <summary class="list-none flex items-center gap-1 cursor-pointer text-sm text-gray-500 hover:text-primary">
+                  <span class="material-icons text-sm transform group-open:rotate-90 transition-transform">chevron_right</span>
+                  Documente necesare
+                </summary>
+                <div class="mt-2 p-3 bg-gray-50 rounded-lg text-sm">
+                  <div class="flex justify-between py-1 border-b border-gray-100">
+                    <span class="text-gray-500">Exp. cazier:</span>
+                    <span class="font-medium">{{ formatDate(file.criminalRecordExpiryDate) }}</span>
                   </div>
-                  <div>
-                    <p class="text-gray-500">Cost ședință:</p>
-                    <p class="font-medium">{{ formatCurrency(file.teachingCategory.sessionCost) }}</p>
-                  </div>
-                  <div>
-                    <p class="text-gray-500">Plată de bază:</p>
-                    <p class="font-medium">{{ file.payment.scholarshipBasePayment ? 'Da' : 'Nu' }}</p>
-                  </div>
-                  <div>
-                    <p class="text-gray-500">Ședințe plătite:</p>
-                    <p class="font-medium">{{ file.payment.sessionsPayed }} / {{ file.teachingCategory.minDrivingLessonsReq }}</p>
+                  <div class="flex justify-between py-1">
+                    <span class="text-gray-500">Exp. fișă medicală:</span>
+                    <span class="font-medium">{{ formatDate(file.medicalRecordExpiryDate) }}</span>
                   </div>
                 </div>
-              </div>
+              </details>
             </div>
           </div>
         </div>
