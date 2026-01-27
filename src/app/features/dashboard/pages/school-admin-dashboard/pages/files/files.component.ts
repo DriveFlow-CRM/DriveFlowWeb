@@ -19,6 +19,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBadgeModule } from '@angular/material/badge';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { FileService } from '../../../../../../core/services/file.service';
 import { StudentService } from '../../../../../../core/services/student.service';
@@ -37,6 +39,13 @@ import { Student } from '../../../../../../models/interfaces/student.model';
 import { Instructor } from '../../../../../../models/interfaces/instructor.model';
 import { Vehicle } from '../../../../../../models/interfaces/vehicle.model';
 import { TeachingCategory } from '../../../../../../models/interfaces/teaching-category.model';
+
+interface SummaryStats {
+  totalStudents: number;
+  activeFiles: number;
+  pendingPayments: number;
+  completedFiles: number;
+}
 
 @Component({
   selector: 'app-files',
@@ -82,7 +91,20 @@ export class FilesComponent implements OnInit {
   filteredFiles: FileWithStudent[] = [];
   expandedStudentId: string | null = null;
 
-  fileStatusOptions: string[] = ['APPROVED', 'ARCHIVED', 'EXPIRED', 'FINALISED'];
+  // Status filter
+  selectedStatusFilter: string = 'ALL';
+  fileStatusOptions: string[] = ['ALL', 'APPROVED', 'ARCHIVED', 'EXPIRED', 'FINALISED'];
+
+  // Summary stats
+  summaryStats: SummaryStats = {
+    totalStudents: 0,
+    activeFiles: 0,
+    pendingPayments: 0,
+    completedFiles: 0
+  };
+
+  // Debounce subject for search
+  private searchSubject = new Subject<string>();
 
   constructor(
     private fileService: FileService,
@@ -105,6 +127,15 @@ export class FilesComponent implements OnInit {
       this.loadVehicles();
       this.loadTeachingCategories();
     }
+
+    // Setup search debounce
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(term => {
+      this.searchTerm = term;
+      this.applyFilters();
+    });
   }
 
   // Load all files for the school
@@ -114,7 +145,8 @@ export class FilesComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.files = data;
-          this.filteredFiles = [...this.files];
+          this.applyFilters();
+          this.calculateSummaryStats();
           this.filesLoading = false;
         },
         error: (error) => {
@@ -179,26 +211,96 @@ export class FilesComponent implements OnInit {
       });
   }
 
-  // Search and filter files
-  searchFiles(): void {
-    if (!this.searchTerm.trim()) {
-      this.filteredFiles = [...this.files];
-      return;
+  // Calculate summary statistics
+  calculateSummaryStats(): void {
+    const uniqueStudents = new Set(this.files.map(f => f.studentData?.studentId));
+    this.summaryStats.totalStudents = uniqueStudents.size;
+
+    let activeCount = 0;
+    let pendingPayments = 0;
+    let completedCount = 0;
+
+    this.files.forEach(fileWithStudent => {
+      if (fileWithStudent.files) {
+        fileWithStudent.files.forEach(file => {
+          if (file.status === 'APPROVED') {
+            activeCount++;
+            // Check for pending payments
+            if (file.payment && file.teachingCategory) {
+              if (!file.payment.scholarshipBasePayment || 
+                  file.payment.sessionsPayed < file.teachingCategory.minDrivingLessonsReq) {
+                pendingPayments++;
+              }
+            }
+          }
+          if (file.status === 'FINALISED') {
+            completedCount++;
+          }
+        });
+      }
+    });
+
+    this.summaryStats.activeFiles = activeCount;
+    this.summaryStats.pendingPayments = pendingPayments;
+    this.summaryStats.completedFiles = completedCount;
+  }
+
+  // Handle search input with debounce
+  onSearchInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.searchSubject.next(target.value);
+  }
+
+  // Apply all filters (search + status)
+  applyFilters(): void {
+    let result = [...this.files];
+
+    // Apply search filter
+    if (this.searchTerm.trim()) {
+      const term = this.searchTerm.toLowerCase().trim();
+      result = result.filter(fileWithStudent => {
+        const student = fileWithStudent.studentData;
+        if (!student) return false;
+        
+        const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
+        const email = student.email?.toLowerCase() || '';
+        const phone = student.phoneNumber?.toLowerCase() || '';
+        const cnp = student.cnp?.toLowerCase() || '';
+
+        return fullName.includes(term) ||
+          email.includes(term) ||
+          phone.includes(term) ||
+          cnp.includes(term);
+      });
     }
 
-    const term = this.searchTerm.toLowerCase().trim();
-    this.filteredFiles = this.files.filter(fileWithStudent => {
-      const student = fileWithStudent.studentData;
-      const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
-      const email = student.email.toLowerCase();
-      const phone = student.phoneNumber?.toLowerCase() || '';
-      const cnp = student.cnp?.toLowerCase() || '';
+    // Apply status filter
+    if (this.selectedStatusFilter !== 'ALL') {
+      result = result.filter(fileWithStudent => {
+        if (!fileWithStudent.files) return false;
+        return fileWithStudent.files.some(f => f.status === this.selectedStatusFilter);
+      });
+    }
 
-      return fullName.includes(term) ||
-        email.includes(term) ||
-        phone.includes(term) ||
-        cnp.includes(term);
-    });
+    this.filteredFiles = result;
+  }
+
+  // Set status filter
+  setStatusFilter(status: string): void {
+    this.selectedStatusFilter = status;
+    this.applyFilters();
+  }
+
+  // Clear all filters
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.selectedStatusFilter = 'ALL';
+    this.applyFilters();
+  }
+
+  // Search and filter files (legacy method for compatibility)
+  searchFiles(): void {
+    this.applyFilters();
   }
 
   // Toggle student card expansion
@@ -208,6 +310,61 @@ export class FilesComponent implements OnInit {
     } else {
       this.expandedStudentId = studentId;
     }
+  }
+
+  // Calculate payment progress percentage
+  getPaymentProgress(file: StudentFile): number {
+    if (!file.payment || !file.teachingCategory) return 0;
+    
+    const basePaymentValue = file.payment.scholarshipBasePayment ? 50 : 0;
+    const sessionsProgress = file.teachingCategory.minDrivingLessonsReq > 0
+      ? (file.payment.sessionsPayed / file.teachingCategory.minDrivingLessonsReq) * 50
+      : 0;
+    
+    return Math.min(100, Math.round(basePaymentValue + sessionsProgress));
+  }
+
+  // Get payment status text
+  getPaymentStatusText(file: StudentFile): string {
+    if (!file.payment || !file.teachingCategory) return 'N/A';
+    
+    const issues: string[] = [];
+    if (!file.payment.scholarshipBasePayment) {
+      issues.push('Lipsă plată de bază');
+    }
+    if (file.payment.sessionsPayed < file.teachingCategory.minDrivingLessonsReq) {
+      const remaining = file.teachingCategory.minDrivingLessonsReq - file.payment.sessionsPayed;
+      issues.push(`${remaining} ședințe neplătite`);
+    }
+    
+    if (issues.length === 0) return 'Plată completă';
+    return issues.join(' • ');
+  }
+
+  // Check if payment is complete
+  isPaymentComplete(file: StudentFile): boolean {
+    if (!file.payment || !file.teachingCategory) return false;
+    return file.payment.scholarshipBasePayment && 
+           file.payment.sessionsPayed >= file.teachingCategory.minDrivingLessonsReq;
+  }
+
+  // Get total files count for a student
+  getTotalFilesCount(fileWithStudent: FileWithStudent): number {
+    return fileWithStudent.files?.length || 0;
+  }
+
+  // Get active files count for a student
+  getActiveFilesCount(fileWithStudent: FileWithStudent): number {
+    if (!fileWithStudent.files) return 0;
+    return fileWithStudent.files.filter(f => f.status === 'APPROVED').length;
+  }
+
+  // Get student initials for avatar
+  getInitials(student: StudentData): string {
+    if (!student) return '?';
+    const first = student.firstName?.charAt(0)?.toUpperCase() || '';
+    const last = student.lastName?.charAt(0)?.toUpperCase() || '';
+    return `${first}${last}`;
   }
 
   // Open dialog to add a new student with file
@@ -292,9 +449,9 @@ export class FilesComponent implements OnInit {
       width: '500px',
       data: {
         payment: file.payment,
-        sessionCost: file.teachingCategory.sessionCost,
-        scholarshipPrice: file.teachingCategory.scholarshipPrice,
-        minDrivingLessons: file.teachingCategory.minDrivingLessonsReq
+        sessionCost: file.teachingCategory?.sessionCost,
+        scholarshipPrice: file.teachingCategory?.scholarshipPrice,
+        minDrivingLessons: file.teachingCategory?.minDrivingLessonsReq
       }
     });
 
@@ -427,11 +584,11 @@ export class FilesComponent implements OnInit {
   // Get status badge color
   getStatusColor(status: string): string {
     switch (status) {
-      case 'APPROVED': return 'bg-green-200 text-green-800';
-      case 'ARCHIVED': return 'bg-gray-200 text-gray-800';
-      case 'EXPIRED': return 'bg-red-200 text-red-800';
-      case 'FINALISED': return 'bg-purple-200 text-purple-800';
-      default: return 'bg-gray-200 text-gray-800';
+      case 'APPROVED': return 'bg-green-100 text-green-800';
+      case 'ARCHIVED': return 'bg-gray-100 text-gray-800';
+      case 'EXPIRED': return 'bg-red-100 text-red-800';
+      case 'FINALISED': return 'bg-purple-100 text-purple-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   }
 
@@ -442,6 +599,7 @@ export class FilesComponent implements OnInit {
       case 'ARCHIVED': return 'Arhivat';
       case 'EXPIRED': return 'Expirat';
       case 'FINALISED': return 'Finalizat';
+      case 'ALL': return 'Toate';
       default: return status;
     }
   }
