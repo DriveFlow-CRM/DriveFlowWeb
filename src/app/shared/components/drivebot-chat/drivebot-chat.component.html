@@ -1,0 +1,146 @@
+<!-- DriveBot Floating Chat -->
+
+<!-- Floating Button (visible when chat is closed) -->
+<button 
+  *ngIf="!isOpen"
+  (click)="toggleChat()"
+  class="chat-fab"
+  aria-label="Deschide DriveBot">
+  <span class="online-indicator"></span>
+  <svg class="chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+  </svg>
+</button>
+
+<!-- Chat Window (visible when open) -->
+<div 
+  *ngIf="isOpen"
+  class="chat-window"
+  [class.chat-window-open]="isOpen">
+  
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="header-left">
+      <div class="bot-avatar">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2M7.5 13A1.5 1.5 0 006 14.5 1.5 1.5 0 007.5 16 1.5 1.5 0 009 14.5 1.5 1.5 0 007.5 13m9 0a1.5 1.5 0 00-1.5 1.5 1.5 1.5 0 001.5 1.5 1.5 1.5 0 001.5-1.5 1.5 1.5 0 00-1.5-1.5M12 18a2 2 0 01-2-2h4a2 2 0 01-2 2z"/>
+        </svg>
+      </div>
+      <div class="header-info">
+        <span class="bot-name">DriveBot</span>
+        <span class="bot-status">
+          <span class="status-dot"></span>
+          Online
+        </span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button (click)="clearChat()" class="header-btn" title="Conversație nouă" *ngIf="messages.length > 0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+        </svg>
+      </button>
+      <button (click)="closeChat()" class="header-btn" title="Închide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages Area -->
+  <div class="chat-messages" #messagesContainer>
+    <!-- Welcome Message (when no messages) -->
+    <div *ngIf="messages.length === 0" class="welcome-message">
+      <div class="welcome-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2M7.5 13A1.5 1.5 0 006 14.5 1.5 1.5 0 007.5 16 1.5 1.5 0 009 14.5 1.5 1.5 0 007.5 13m9 0a1.5 1.5 0 00-1.5 1.5 1.5 1.5 0 001.5 1.5 1.5 1.5 0 001.5-1.5 1.5 1.5 0 00-1.5-1.5M12 18a2 2 0 01-2-2h4a2 2 0 01-2 2z"/>
+        </svg>
+      </div>
+      <h3>Salut! Sunt DriveBot</h3>
+      <p>Asistentul tău virtual pentru școala de șoferi. Întreabă-mă despre progresul tău, lecțiile sau examenele!</p>
+      <div class="quick-prompts">
+        <button (click)="inputMessage = 'Cum mă pregătesc pentru examen?'; sendMessage()">
+          Pregătire examen
+        </button>
+        <button (click)="inputMessage = 'Care sunt greșelile mele frecvente?'; sendMessage()">
+          Greșeli frecvente
+        </button>
+        <button (click)="inputMessage = 'Cum evoluez la lecții?'; sendMessage()">
+          Progresul meu
+        </button>
+      </div>
+    </div>
+
+    <!-- Message List -->
+    <div *ngFor="let message of messages; let i = index" 
+         class="message-wrapper"
+         [class.message-user]="message.role === 'user'"
+         [class.message-assistant]="message.role === 'assistant'">
+      <div class="message-bubble">
+        <!-- User messages (plain text) -->
+        <p *ngIf="message.role === 'user'" class="message-content">{{ message.content }}</p>
+        
+        <!-- Assistant messages (markdown formatted) -->
+        <div *ngIf="message.role === 'assistant'" 
+             class="message-content markdown-content" 
+             [innerHTML]="message.content | markdown"></div>
+        
+        <!-- Typing indicator for streaming -->
+        <span *ngIf="message.role === 'assistant' && isStreaming && i === messages.length - 1 && !message.content" 
+              class="typing-indicator">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </span>
+        <!-- Cursor for streaming with content -->
+        <span *ngIf="message.role === 'assistant' && isStreaming && i === messages.length - 1 && message.content" 
+              class="streaming-cursor"></span>
+      </div>
+      <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="error-message">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+      </svg>
+      <span>{{ error }}</span>
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="chat-input-area">
+    <div class="input-wrapper">
+      <textarea
+        #messageInput
+        [(ngModel)]="inputMessage"
+        (keydown)="onKeyDown($event)"
+        [disabled]="isStreaming"
+        placeholder="Scrie un mesaj..."
+        rows="1"
+        class="chat-input"></textarea>
+      
+      <button 
+        *ngIf="!isStreaming"
+        (click)="sendMessage()"
+        [disabled]="!inputMessage.trim()"
+        class="send-btn"
+        title="Trimite">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+      </button>
+
+      <button 
+        *ngIf="isStreaming"
+        (click)="stopStreaming()"
+        class="stop-btn"
+        title="Oprește">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="6" width="12" height="12" rx="2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,67 +1,166 @@
+/* Student Form Dialog */
+
 .dialog-container {
-  padding: 0;
   overflow: hidden;
+  background: white;
 }
 
+/* Header */
 .dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
-  background-color: #f8fafc;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 1rem 1.5rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.dialog-header h2 {
+.header-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background: #44D9E6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-icon .material-icons {
+  color: white;
+  font-size: 1.25rem;
+}
+
+.dialog-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
   margin: 0;
-  font-size: 20px;
-  font-weight: 500;
-  color: #1D1D1B;
 }
 
-.close-button {
-  margin-right: -12px;
+.dialog-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
 }
 
+.close-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: all 0.15s;
+}
+
+.close-btn:hover {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
+/* Content */
 .dialog-content {
-  padding: 0;
-  max-height: 70vh;
+  max-height: 65vh;
   overflow-y: auto;
 }
 
+.form-section {
+  padding: 1.5rem;
+}
+
 .tab-content {
-  padding: 24px;
+  padding: 1.5rem;
 }
 
-.dialog-actions {
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px 24px;
-  border-top: 1px solid #e0e0e0;
-  background-color: #f8fafc;
-}
-
-.cancel-btn {
-  margin-right: 8px;
-}
-
+/* Form Grid */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 1rem;
 }
 
-/* Fix form field styling */
-mat-form-field {
-  width: 100%;
-}
-
-/* Special styling for spanning columns */
 .col-span-2 {
   grid-column: span 2;
 }
 
-/* Flexbox styles */
+/* Checkbox Wrapper */
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  height: 56px;
+}
+
+/* Info Box */
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.875rem;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #0369a1;
+}
+
+.info-box .material-icons {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-cancel {
+  padding: 0.625rem 1.25rem;
+  background: white;
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-cancel:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.btn-submit {
+  padding: 0.625rem 1.25rem;
+  background: #44D9E6;
+  color: white;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-submit:hover {
+  background: #2A878F;
+}
+
+/* Utilities */
 .flex {
   display: flex;
 }
@@ -70,72 +169,116 @@ mat-form-field {
   align-items: center;
 }
 
-/* Background colors */
-.bg-light {
-  background-color: #F8FAFC;
+.gap-3 {
+  gap: 0.75rem;
 }
 
-/* Text colors */
-.text-gray {
-  color: #666666;
+/* ===== Material Form Field Fixes ===== */
+
+/* Base form field */
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
 }
 
-.text-sm {
-  font-size: 14px;
+/* Fix vertical line in outline - remove internal borders */
+::ng-deep .mdc-notched-outline__leading {
+  border-right: none !important;
 }
 
-/* Set the tab labels to use primary color when active */
-::ng-deep .mat-tab-label-active {
-  color: #44D9E6 !important;
-  font-weight: 500;
+::ng-deep .mdc-notched-outline__trailing {
+  border-left: none !important;
 }
 
-::ng-deep .mat-tab-group.mat-primary .mat-ink-bar {
-  background-color: #44D9E6 !important;
+::ng-deep .mdc-notched-outline__notch {
+  border-left: none !important;
+  border-right: none !important;
 }
 
-/* Remove vertical line and fix appearance */
-::ng-deep .mat-mdc-form-field.mat-form-field-appearance-outline .mdc-notched-outline__leading {
-  border-right-style: none !important;
-  border-radius: 4px 0 0 4px !important;
+/* Focus state */
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #44D9E6 !important;
+  border-width: 2px !important;
 }
 
-::ng-deep .mat-mdc-form-field.mat-form-field-appearance-outline .mdc-notched-outline__trailing {
-  border-left-style: none !important;
-  border-radius: 0 4px 4px 0 !important;
-}
-
-::ng-deep .mat-mdc-form-field.mat-form-field-appearance-outline .mdc-notched-outline__notch {
-  border-left-style: none !important;
-  border-right-style: none !important;
-}
-
-/* Focus and hover styles */
-::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
   color: #44D9E6 !important;
 }
 
-::ng-deep .mat-form-field-appearance-outline:hover .mat-form-field-outline {
-  opacity: 0.8;
+/* ===== Tab Overrides ===== */
+::ng-deep .mat-mdc-tab-header {
+  border-bottom: 1px solid #e5e7eb;
 }
 
-/* Error styling */
-::ng-deep .mat-error {
-  font-size: 12px;
-  margin-top: 2px;
+::ng-deep .mat-mdc-tab:not(.mat-mdc-tab-disabled) .mdc-tab__text-label {
+  color: #6b7280;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 767px) {
+::ng-deep .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label {
+  color: #44D9E6;
+}
+
+::ng-deep .mat-mdc-tab-indicator .mdc-tab-indicator__content--underline {
+  border-color: #44D9E6 !important;
+}
+
+/* ===== Checkbox ===== */
+::ng-deep .mat-mdc-checkbox.mat-primary {
+  --mdc-checkbox-selected-checkmark-color: white;
+  --mdc-checkbox-selected-focus-icon-color: #44D9E6;
+  --mdc-checkbox-selected-hover-icon-color: #44D9E6;
+  --mdc-checkbox-selected-icon-color: #44D9E6;
+  --mdc-checkbox-selected-pressed-icon-color: #44D9E6;
+}
+
+/* ===== Scrollbar ===== */
+.dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dialog-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dialog-content::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 640px) {
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .col-span-2 {
+    grid-column: span 1;
   }
 
   .dialog-content {
     max-height: 60vh;
   }
 
-  .col-span-2 {
-    grid-column: span 1;
+  .dialog-footer {
+    flex-direction: column-reverse;
   }
+
+  .dialog-footer button {
+    width: 100%;
+  }
+}
+
+/* ===== Dialog Panel ===== */
+::ng-deep .student-form-dialog .mat-mdc-dialog-container {
+  padding: 0 !important;
+}
+
+::ng-deep .student-form-dialog .mat-mdc-dialog-surface {
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
 }

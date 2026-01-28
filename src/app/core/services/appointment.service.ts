@@ -6,10 +6,9 @@ import { catchError } from 'rxjs/operators';
 import { ErrorHandlerService } from './error-handler.service';
 
 export interface CreateAppointmentDto {
-  date: string; // format: date-time
+  date: string; // format: YYYY-MM-DD
   startHour: string; // HH:mm format
   endHour: string; // HH:mm format
-  fileId: number;
 }
 
 export interface UpdateAppointmentDto {
@@ -63,9 +62,9 @@ export class AppointmentService {
     );
   }
 
-  // Create a new appointment
-  createAppointment(appointmentData: CreateAppointmentDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}Appointment/create`, appointmentData)
+  // Create a new appointment for a file
+  createAppointment(fileId: number, appointmentData: CreateAppointmentDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}student/files/${fileId}/appointments`, appointmentData)
       .pipe(
         catchError(error => this.errorHandler.handleHttpError(error))
       );
