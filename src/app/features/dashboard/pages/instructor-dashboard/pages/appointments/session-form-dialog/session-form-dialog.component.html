@@ -1,0 +1,123 @@
+<!-- Session Form Dialog -->
+<div class="dialog-container">
+  <!-- Header -->
+  <div class="dialog-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <span class="material-icons">assignment</span>
+      </div>
+      <div class="header-text">
+        <h2 class="dialog-title">Fișă de ședință</h2>
+        <p class="dialog-subtitle">
+          {{ data.appointment.firstName }} {{ data.appointment.lastName }} • 
+          {{ data.appointment.date | date:'dd.MM.yyyy' }} • 
+          {{ data.appointment.startHour }} - {{ data.appointment.endHour }}
+        </p>
+      </div>
+    </div>
+    <button type="button" (click)="onCancel()" class="close-btn" [disabled]="isSubmitting">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="dialog-content">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Se încarcă formularul...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="hasError && !isLoading" class="error-state">
+      <span class="material-icons">error_outline</span>
+      <p>{{ errorMessage }}</p>
+      <button (click)="loadFormData()" class="btn-retry">
+        <span class="material-icons">refresh</span>
+        Reîncearcă
+      </button>
+    </div>
+
+    <!-- Form Content -->
+    <div *ngIf="!isLoading && !hasError" class="form-content">
+      <!-- Score Summary -->
+      <div class="score-summary" [ngClass]="getResultClass()">
+        <div class="score-display">
+          <span class="score-value">{{ totalPoints }}</span>
+          <span class="score-separator">/</span>
+          <span class="score-max">{{ maxPoints }}</span>
+        </div>
+        <div class="score-label">
+          <span *ngIf="getResultStatus() === 'PENDING'">Puncte de penalizare</span>
+          <span *ngIf="getResultStatus() === 'OK'">Admis</span>
+          <span *ngIf="getResultStatus() === 'FAILED'">Respins</span>
+        </div>
+        <div class="score-info">
+          <span class="material-icons">info_outline</span>
+          <span>Max {{ maxPoints }} puncte pentru promovare</span>
+        </div>
+      </div>
+
+      <!-- Form Items List -->
+      <div class="items-list">
+        <div class="items-header">
+          <span class="col-description">Descriere greșeală</span>
+          <span class="col-count">Nr. greșeli</span>
+          <span class="col-points">Puncte</span>
+        </div>
+
+        <div *ngFor="let item of formItems; let i = index" 
+             class="item-row"
+             [class.has-mistakes]="item.mistakeCount > 0">
+          <div class="item-description">
+            <span class="item-index">{{ i + 1 }}.</span>
+            <span class="item-text">{{ item.description }}</span>
+            <span class="item-penalty-info">({{ item.penaltyPoints }} pct/greșeală)</span>
+          </div>
+          
+          <div class="item-counter">
+            <button 
+              class="counter-btn decrement"
+              (click)="decrementMistake(item)"
+              [disabled]="item.mistakeCount === 0 || isSubmitting">
+              <span class="material-icons">remove</span>
+            </button>
+            <span class="counter-value" [class.has-value]="item.mistakeCount > 0">
+              {{ item.mistakeCount }}
+            </span>
+            <button 
+              class="counter-btn increment"
+              (click)="incrementMistake(item)"
+              [disabled]="isSubmitting">
+              <span class="material-icons">add</span>
+            </button>
+          </div>
+
+          <div class="item-points" [class.has-points]="item.totalPenalty > 0">
+            {{ item.totalPenalty }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Reset Button -->
+      <div *ngIf="hasMistakes()" class="reset-section">
+        <button (click)="resetForm()" class="btn-reset" [disabled]="isSubmitting">
+          <span class="material-icons">restart_alt</span>
+          Resetează formularul
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="dialog-footer" *ngIf="!isLoading && !hasError">
+    <button type="button" (click)="onCancel()" class="btn-cancel" [disabled]="isSubmitting">
+      Anulează
+    </button>
+    <button type="button" (click)="onSubmit()" class="btn-submit" [disabled]="isSubmitting">
+      <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+      <span *ngIf="!isSubmitting">Salvează fișa</span>
+      <span *ngIf="isSubmitting">Se salvează...</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,83 @@
+<!-- Appointment Action Dialog -->
+<div class="dialog-container">
+  <!-- Header -->
+  <div class="dialog-header" [ngClass]="getTypeClass(appointment.type)">
+    <div class="header-content">
+      <div class="type-badge">
+        {{ getTypeLabel(appointment.type) }}
+      </div>
+      <h2 class="student-name">{{ appointment.firstName }} {{ appointment.lastName }}</h2>
+      <p class="appointment-time">
+        {{ formatDate(appointment.date) }} • {{ appointment.startHour }} - {{ appointment.endHour }}
+      </p>
+    </div>
+    <button type="button" (click)="onClose()" class="close-btn">
+      <span class="material-icons">close</span>
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="dialog-content">
+    <!-- Appointment Details -->
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="material-icons">person</span>
+        <div class="detail-text">
+          <span class="detail-label">Elev</span>
+          <span class="detail-value">{{ appointment.firstName }} {{ appointment.lastName }}</span>
+        </div>
+      </div>
+
+      <div class="detail-item">
+        <span class="material-icons">phone</span>
+        <div class="detail-text">
+          <span class="detail-label">Telefon</span>
+          <span class="detail-value">{{ appointment.phoneNo || 'N/A' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-item">
+        <span class="material-icons">directions_car</span>
+        <div class="detail-text">
+          <span class="detail-label">Vehicul</span>
+          <span class="detail-value">{{ appointment.licensePlateNumber || 'N/A' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-item">
+        <span class="material-icons">schedule</span>
+        <div class="detail-text">
+          <span class="detail-label">Ora</span>
+          <span class="detail-value">{{ appointment.startHour }} - {{ appointment.endHour }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session Form Button -->
+    <div class="action-section">
+      <button 
+        *ngIf="canFillSessionForm"
+        (click)="onFillSessionForm()" 
+        class="btn-session-form">
+        <span class="material-icons">assignment</span>
+        <div class="btn-text">
+          <span class="btn-title">Completează fișa de ședință</span>
+          <span class="btn-subtitle">Înregistrează greșelile și rezultatul</span>
+        </div>
+        <span class="material-icons arrow">chevron_right</span>
+      </button>
+
+      <div *ngIf="!canFillSessionForm" class="info-message">
+        <span class="material-icons">info</span>
+        <span>Fișa de ședință poate fi completată în ziua programării sau ulterior.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="dialog-footer">
+    <button (click)="onClose()" class="btn-close">
+      Închide
+    </button>
+  </div>
+</div>

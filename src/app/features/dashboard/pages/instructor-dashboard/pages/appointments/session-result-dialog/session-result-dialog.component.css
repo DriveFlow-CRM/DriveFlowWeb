@@ -1,0 +1,142 @@
+/* Session Result Dialog */
+
+.result-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+  min-width: 300px;
+}
+
+/* Icon */
+.result-icon {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.result-icon .material-icons {
+  font-size: 3rem;
+}
+
+.passed .result-icon {
+  background: #ecfdf5;
+}
+
+.passed .result-icon .material-icons {
+  color: #10b981;
+}
+
+.failed .result-icon {
+  background: #fef2f2;
+}
+
+.failed .result-icon .material-icons {
+  color: #ef4444;
+}
+
+/* Title */
+.result-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+}
+
+.passed .result-title {
+  color: #10b981;
+}
+
+.failed .result-title {
+  color: #ef4444;
+}
+
+/* Score */
+.result-score {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.score-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.passed .score-value {
+  color: #10b981;
+}
+
+.failed .score-value {
+  color: #ef4444;
+}
+
+.score-separator {
+  font-size: 1.25rem;
+  color: #9ca3af;
+}
+
+.score-max {
+  font-size: 1.25rem;
+  color: #9ca3af;
+}
+
+.score-unit {
+  width: 100%;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Message */
+.result-message {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.5rem 0 1.5rem 0;
+  max-width: 250px;
+}
+
+/* Button */
+.btn-close {
+  padding: 0.75rem 3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.passed .btn-close {
+  background: #10b981;
+  color: white;
+}
+
+.passed .btn-close:hover {
+  background: #059669;
+}
+
+.failed .btn-close {
+  background: #ef4444;
+  color: white;
+}
+
+.failed .btn-close:hover {
+  background: #dc2626;
+}
+
+/* Dialog Panel Override */
+::ng-deep .session-result-dialog .mat-mdc-dialog-container {
+  padding: 0 !important;
+}
+
+::ng-deep .session-result-dialog .mat-mdc-dialog-surface {
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
+}
