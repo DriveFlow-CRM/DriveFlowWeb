@@ -14,41 +14,13 @@
   align-items: flex-start;
   padding: 1.5rem;
   color: white;
-}
-
-.dialog-header.type-theory {
-  background: linear-gradient(135deg, #34A853 0%, #2d8a47 100%);
-}
-
-.dialog-header.type-practical {
-  background: linear-gradient(135deg, #4285F4 0%, #3367d6 100%);
-}
-
-.dialog-header.type-exam {
-  background: linear-gradient(135deg, #EA4335 0%, #c5352a 100%);
-}
-
-.dialog-header.type-default {
   background: linear-gradient(135deg, #44D9E6 0%, #2A878F 100%);
 }
 
 .header-content {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
-
-.type-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  width: fit-content;
+  gap: 0.25rem;
 }
 
 .student-name {

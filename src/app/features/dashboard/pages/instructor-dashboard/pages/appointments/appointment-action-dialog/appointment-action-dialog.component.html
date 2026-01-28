@@ -1,11 +1,8 @@
 <!-- Appointment Action Dialog -->
 <div class="dialog-container">
   <!-- Header -->
-  <div class="dialog-header" [ngClass]="getTypeClass(appointment.type)">
+  <div class="dialog-header">
     <div class="header-content">
-      <div class="type-badge">
-        {{ getTypeLabel(appointment.type) }}
-      </div>
       <h2 class="student-name">{{ appointment.firstName }} {{ appointment.lastName }}</h2>
       <p class="appointment-time">
         {{ formatDate(appointment.date) }} • {{ appointment.startHour }} - {{ appointment.endHour }}

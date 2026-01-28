@@ -28,6 +28,7 @@ export interface InstructorAppointment {
   phoneNo: string;
   licensePlateNumber: string;
   type: string;
+  licenseId: number;
 }
 
 export interface InstructorAssignedFile {

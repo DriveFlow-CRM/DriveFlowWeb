@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { ConfigService } from './config.service';
 import { ErrorHandlerService } from './error-handler.service';
 import {
@@ -9,11 +9,6 @@ import {
   SubmitSessionFormRequest,
   SessionFormResult
 } from '../../models/interfaces/session-form.model';
-
-interface FileTeachingCategory {
-  teachingCategoryId: number;
-  licenseType: string;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -30,37 +25,14 @@ export class SessionFormService {
   }
 
   /**
-   * Get the form template by teaching category ID
-   * @param categoryId The teaching category ID (e.g., for license type A, B, C)
+   * Get the form template by license ID
+   * @param licenseId The license ID (e.g., for license type A, B, C)
    */
-  getFormByCategory(categoryId: number): Observable<SessionFormTemplate> {
+  getFormByLicense(licenseId: number): Observable<SessionFormTemplate> {
     return this.http.get<SessionFormTemplate>(
-      `${this.apiUrl}forms/by-category/${categoryId}`
+      `${this.apiUrl}forms/by-license/${licenseId}`
     ).pipe(
       catchError(error => this.errorHandler.handleHttpError(error))
-    );
-  }
-
-  /**
-   * Get the teaching category ID for a file
-   * @param fileId The file ID
-   */
-  getFileCategoryId(fileId: number): Observable<number> {
-    return this.http.get<any>(
-      `${this.apiUrl}File/${fileId}`
-    ).pipe(
-      map(file => file.teachingCategory?.teachingCategoryId || file.teachingCategoryId || 1),
-      catchError(() => of(1)) // Default to 1 if error
-    );
-  }
-
-  /**
-   * Get the form template for a file by first getting its category
-   * @param fileId The file ID
-   */
-  getFormByFileId(fileId: number): Observable<SessionFormTemplate> {
-    return this.getFileCategoryId(fileId).pipe(
-      switchMap(categoryId => this.getFormByCategory(categoryId))
     );
   }
 
