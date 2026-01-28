@@ -70,22 +70,4 @@ export class AppointmentActionDialogComponent {
       day: 'numeric'
     });
   }
-
-  getTypeLabel(type: string): string {
-    switch (type?.toLowerCase()) {
-      case 'theory': return 'Lecție teoretică';
-      case 'practical': return 'Lecție practică';
-      case 'exam': return 'Examen';
-      default: return type || 'Programare';
-    }
-  }
-
-  getTypeClass(type: string): string {
-    switch (type?.toLowerCase()) {
-      case 'theory': return 'type-theory';
-      case 'practical': return 'type-practical';
-      case 'exam': return 'type-exam';
-      default: return 'type-default';
-    }
-  }
 }

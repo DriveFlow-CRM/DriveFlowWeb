@@ -231,32 +231,6 @@ export class AppointmentsComponent implements OnInit {
     }
   }
 
-  getAppointmentTypeClass(type: string): string {
-    switch (type?.toLowerCase()) {
-      case 'theory':
-        return 'appointment-theory';
-      case 'practical':
-        return 'appointment-practical';
-      case 'exam':
-        return 'appointment-exam';
-      default:
-        return 'appointment-default';
-    }
-  }
-
-  getAppointmentTypeColor(type: string): string {
-    switch (type?.toLowerCase()) {
-      case 'theory':
-        return '#34A853';
-      case 'practical':
-        return '#4285F4';
-      case 'exam':
-        return '#EA4335';
-      default:
-        return '#44D9E6';
-    }
-  }
-
   onAppointmentClick(appointment: InstructorAppointment): void {
     const dialogRef = this.dialog.open(AppointmentActionDialogComponent, {
       data: { appointment },
@@ -273,8 +247,7 @@ export class AppointmentsComponent implements OnInit {
 
   openSessionFormDialog(appointment: InstructorAppointment): void {
     const dialogData: SessionFormDialogData = {
-      appointment,
-      fileId: appointment.fileId
+      appointment
     };
 
     const dialogRef = this.dialog.open(SessionFormDialogComponent, {

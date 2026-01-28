@@ -41,13 +41,6 @@ export class ScheduleAppointmentDialogComponent implements OnInit {
     '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'
   ];
 
-  appointmentTypes = [
-    { value: 'theory', label: 'Lecție teoretică' },
-    { value: 'practical', label: 'Lecție practică' },
-    { value: 'exam', label: 'Examen' },
-    { value: 'evaluation', label: 'Evaluare' }
-  ];
-
   durations = [
     { value: 30, label: '30 minute' },
     { value: 60, label: '1 oră' },
@@ -71,9 +64,7 @@ export class ScheduleAppointmentDialogComponent implements OnInit {
     this.appointmentForm = this.fb.group({
       date: [null, Validators.required],
       startTime: ['', Validators.required],
-      duration: [60, Validators.required],
-      type: ['practical', Validators.required],
-      notes: ['']
+      duration: [60, Validators.required]
     });
   }
 
@@ -113,11 +104,10 @@ export class ScheduleAppointmentDialogComponent implements OnInit {
       const appointmentData: CreateAppointmentDto = {
         date: this.formatDateForApi(formValue.date),
         startHour: formValue.startTime,
-        endHour: this.getEndTime(),
-        fileId: this.data.student.fileId
+        endHour: this.getEndTime()
       };
 
-      this.appointmentService.createAppointment(appointmentData).subscribe({
+      this.appointmentService.createAppointment(this.data.student.fileId, appointmentData).subscribe({
         next: (response) => {
           this.isLoading = false;
           this.snackBar.open('Programare creată cu succes!', 'Închide', {

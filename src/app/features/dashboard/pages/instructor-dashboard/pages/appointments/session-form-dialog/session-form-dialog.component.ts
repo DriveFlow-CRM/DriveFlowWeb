@@ -1,13 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { SessionFormService } from '../../../../../../../core/services/session-form.service';
-import { InstructorAvailabilityService } from '../../../../../../../core/services/instructor-availability.service';
 import {
   SessionFormTemplate,
   SessionFormItemWithMistakes,
@@ -19,7 +18,6 @@ import { InstructorAppointment } from '../../../../../../../models/interfaces/in
 
 export interface SessionFormDialogData {
   appointment: InstructorAppointment;
-  fileId: number;
 }
 
 @Component({
@@ -47,15 +45,12 @@ export class SessionFormDialogComponent implements OnInit {
   
   totalPoints = 0;
   maxPoints = 0;
-  teachingCategoryId: number | null = null;
 
   constructor(
     private dialogRef: MatDialogRef<SessionFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: SessionFormDialogData,
     private sessionFormService: SessionFormService,
-    private instructorService: InstructorAvailabilityService,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private snackBar: MatSnackBar
   ) {
     // Prevent closing by clicking outside or pressing escape
     this.dialogRef.disableClose = true;
@@ -69,12 +64,20 @@ export class SessionFormDialogComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    // Get the form template based on the file's teaching category
-    this.sessionFormService.getFormByFileId(this.data.fileId).subscribe({
+    // Get form template using the license ID from the appointment
+    const licenseId = this.data.appointment.licenseId;
+
+    if (!licenseId) {
+      this.hasError = true;
+      this.errorMessage = 'Nu s-a putut determina categoria de licență.';
+      this.isLoading = false;
+      return;
+    }
+
+    this.sessionFormService.getFormByLicense(licenseId).subscribe({
       next: (template) => {
         this.formTemplate = template;
         this.maxPoints = template.maxPoints;
-        this.teachingCategoryId = template.id_categ;
         this.formItems = template.items
           .sort((a, b) => a.orderIndex - b.orderIndex)
           .map(item => ({
@@ -151,7 +154,7 @@ export class SessionFormDialogComponent implements OnInit {
     const mistakes: MistakeEntry[] = this.formItems
       .filter(item => item.mistakeCount > 0)
       .map(item => ({
-        idItem: item.id_item,
+        id_item: item.id_item,
         count: item.mistakeCount
       }));
 

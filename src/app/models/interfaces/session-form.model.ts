@@ -15,7 +15,7 @@ export interface SessionFormTemplate {
 }
 
 export interface MistakeEntry {
-  idItem: number;
+  id_item: number;
   count: number;
 }
 
