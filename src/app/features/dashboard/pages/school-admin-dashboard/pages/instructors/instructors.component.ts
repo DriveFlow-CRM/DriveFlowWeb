@@ -15,6 +15,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { InstructorService } from '../../../../../../core/services/instructor.service';
 import { TeachingCategoryService } from '../../../../../../core/services/teaching-category.service';
@@ -29,6 +31,12 @@ import { AssignCategoryDialogComponent } from './assign-category-dialog/assign-c
 
 import { Instructor } from '../../../../../../models/interfaces/instructor.model';
 import { TeachingCategory, ApplicationUserTeachingCategory } from '../../../../../../models/interfaces/teaching-category.model';
+
+interface SummaryStats {
+  totalInstructors: number;
+  totalCategories: number;
+  avgSessionCost: number;
+}
 
 @Component({
   selector: 'app-instructors',
@@ -57,7 +65,9 @@ import { TeachingCategory, ApplicationUserTeachingCategory } from '../../../../.
 })
 export class InstructorsComponent implements OnInit {
   instructors: Instructor[] = [];
+  filteredInstructors: Instructor[] = [];
   teachingCategories: TeachingCategory[] = [];
+  filteredCategories: TeachingCategory[] = [];
   schoolId: number = 0;
   instructorsLoading: boolean = true;
   categoriesLoading: boolean = true;
@@ -65,11 +75,21 @@ export class InstructorsComponent implements OnInit {
   instructorCategories: ApplicationUserTeachingCategory[] = [];
   instructorCategoriesLoading: boolean = false;
 
-  // Columns for instructors table
-  instructorColumns: string[] = ['name', 'email', 'phone', 'actions'];
+  // Search
+  searchTermInstructors: string = '';
+  searchTermCategories: string = '';
+  private searchSubjectInstructors = new Subject<string>();
+  private searchSubjectCategories = new Subject<string>();
 
-  // Columns for teaching categories table
-  categoryColumns: string[] = ['licenseType', 'sessionCost', 'sessionDuration', 'scholarshipPrice', 'minDrivingLessonsReq', 'actions'];
+  // Summary stats
+  summaryStats: SummaryStats = {
+    totalInstructors: 0,
+    totalCategories: 0,
+    avgSessionCost: 0
+  };
+
+  // Active tab index
+  activeTabIndex: number = 0;
 
   constructor(
     private instructorService: InstructorService,
@@ -87,6 +107,24 @@ export class InstructorsComponent implements OnInit {
       this.loadInstructors();
       this.loadTeachingCategories();
     }
+
+    // Setup search debounce for instructors
+    this.searchSubjectInstructors.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(term => {
+      this.searchTermInstructors = term;
+      this.filterInstructors();
+    });
+
+    // Setup search debounce for categories
+    this.searchSubjectCategories.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(term => {
+      this.searchTermCategories = term;
+      this.filterCategories();
+    });
   }
 
   // Load instructors for the school
@@ -96,6 +134,8 @@ export class InstructorsComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.instructors = data;
+          this.filteredInstructors = [...data];
+          this.calculateSummaryStats();
           this.instructorsLoading = false;
         },
         error: (error) => {
@@ -112,6 +152,8 @@ export class InstructorsComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.teachingCategories = data;
+          this.filteredCategories = [...data];
+          this.calculateSummaryStats();
           this.categoriesLoading = false;
         },
         error: (error) => {
@@ -119,6 +161,73 @@ export class InstructorsComponent implements OnInit {
           this.categoriesLoading = false;
         }
       });
+  }
+
+  calculateSummaryStats(): void {
+    this.summaryStats.totalInstructors = this.instructors.length;
+    this.summaryStats.totalCategories = this.teachingCategories.length;
+
+    if (this.teachingCategories.length > 0) {
+      const totalCost = this.teachingCategories.reduce((sum, cat) => sum + cat.sessionCost, 0);
+      this.summaryStats.avgSessionCost = Math.round(totalCost / this.teachingCategories.length);
+    }
+  }
+
+  // Search handlers
+  onSearchInputInstructors(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.searchSubjectInstructors.next(target.value);
+  }
+
+  onSearchInputCategories(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.searchSubjectCategories.next(target.value);
+  }
+
+  filterInstructors(): void {
+    if (!this.searchTermInstructors.trim()) {
+      this.filteredInstructors = [...this.instructors];
+      return;
+    }
+
+    const term = this.searchTermInstructors.toLowerCase().trim();
+    this.filteredInstructors = this.instructors.filter(instructor => {
+      const name = `${instructor.firstName} ${instructor.lastName}`.toLowerCase();
+      const email = instructor.email?.toLowerCase() || '';
+      const phone = instructor.phone?.toLowerCase() || '';
+
+      return name.includes(term) || email.includes(term) || phone.includes(term);
+    });
+  }
+
+  filterCategories(): void {
+    if (!this.searchTermCategories.trim()) {
+      this.filteredCategories = [...this.teachingCategories];
+      return;
+    }
+
+    const term = this.searchTermCategories.toLowerCase().trim();
+    this.filteredCategories = this.teachingCategories.filter(category => {
+      const type = category.licenseType?.toLowerCase() || '';
+      return type.includes(term);
+    });
+  }
+
+  clearInstructorSearch(): void {
+    this.searchTermInstructors = '';
+    this.filterInstructors();
+  }
+
+  clearCategorySearch(): void {
+    this.searchTermCategories = '';
+    this.filterCategories();
+  }
+
+  // Get initials for avatar
+  getInitials(instructor: Instructor): string {
+    const first = instructor.firstName?.charAt(0)?.toUpperCase() || '';
+    const last = instructor.lastName?.charAt(0)?.toUpperCase() || '';
+    return `${first}${last}`;
   }
 
   // Load categories for a specific instructor
@@ -136,6 +245,11 @@ export class InstructorsComponent implements OnInit {
           this.instructorCategoriesLoading = false;
         }
       });
+  }
+
+  closeInstructorDetail(): void {
+    this.selectedInstructor = null;
+    this.instructorCategories = [];
   }
 
   // Open dialog to add a new instructor
@@ -157,14 +271,11 @@ export class InstructorsComponent implements OnInit {
 
   // Open dialog to edit an existing instructor
   openEditInstructorDialog(instructor: Instructor): void {
-    // First, load the instructor's categories
     this.instructorCategoryService.getInstructorTeachingCategories(this.schoolId, instructor.userId)
       .subscribe({
         next: (categories) => {
-          // Map the category IDs
           const teachingCategoryIds = categories.map(cat => cat.teachingCategoryId);
 
-          // Open the edit dialog with the instructor data and their categories
           const dialogRef = this.dialog.open(InstructorFormDialogComponent, {
             width: '600px',
             data: {
@@ -224,25 +335,19 @@ export class InstructorsComponent implements OnInit {
 
   // Open dialog to assign a teaching category to an instructor
   openAssignCategoryDialog(instructor: Instructor): void {
-    // Get the instructor's current categories to exclude them from options
     this.instructorCategoryService.getInstructorTeachingCategories(this.schoolId, instructor.userId)
       .subscribe({
         next: (categories) => {
-          // Get the IDs of categories the instructor already has
           const assignedCategoryIds = categories.map(cat => cat.teachingCategoryId);
-
-          // Filter out already assigned categories
           const availableCategories = this.teachingCategories.filter(
             cat => !assignedCategoryIds.includes(cat.teachingCategoryId)
           );
 
-          // If no categories are available, don't open the dialog
           if (availableCategories.length === 0) {
             alert('Acest instructor este deja asignat la toate categoriile disponibile.');
             return;
           }
 
-          // Open the dialog with available categories
           const dialogRef = this.dialog.open(AssignCategoryDialogComponent, {
             width: '400px',
             data: {
@@ -263,24 +368,20 @@ export class InstructorsComponent implements OnInit {
       });
   }
 
-  // Add a new instructor
+  // CRUD operations
   addInstructor(data: any): void {
     this.instructorService.addInstructor(this.schoolId, data)
       .subscribe({
-        next: () => {
-          this.loadInstructors();
-        },
+        next: () => this.loadInstructors(),
         error: (error) => console.error('Error adding instructor:', error)
       });
   }
 
-  // Update an existing instructor
   updateInstructor(instructorId: string, data: any): void {
     this.instructorService.updateInstructor(this.schoolId, instructorId, data)
       .subscribe({
         next: () => {
           this.loadInstructors();
-          // If this was the selected instructor, refresh their categories
           if (this.selectedInstructor && this.selectedInstructor.userId === instructorId) {
             this.loadInstructorCategories(this.selectedInstructor);
           }
@@ -289,7 +390,6 @@ export class InstructorsComponent implements OnInit {
       });
   }
 
-  // Delete an instructor
   confirmDeleteInstructor(instructor: Instructor): void {
     const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
       data: {
@@ -310,7 +410,6 @@ export class InstructorsComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loadInstructors();
-          // If this was the selected instructor, clear the selection
           if (this.selectedInstructor && this.selectedInstructor.userId === instructorId) {
             this.selectedInstructor = null;
             this.instructorCategories = [];
@@ -320,24 +419,19 @@ export class InstructorsComponent implements OnInit {
       });
   }
 
-  // Add a new teaching category
   addTeachingCategory(data: any): void {
     this.teachingCategoryService.addTeachingCategory(this.schoolId, data)
       .subscribe({
-        next: () => {
-          this.loadTeachingCategories();
-        },
+        next: () => this.loadTeachingCategories(),
         error: (error) => console.error('Error adding teaching category:', error)
       });
   }
 
-  // Update an existing teaching category
   updateTeachingCategory(categoryId: number, data: any): void {
     this.teachingCategoryService.updateTeachingCategory(this.schoolId, categoryId, data)
       .subscribe({
         next: () => {
           this.loadTeachingCategories();
-          // If we have a selected instructor, refresh their categories too
           if (this.selectedInstructor) {
             this.loadInstructorCategories(this.selectedInstructor);
           }
@@ -346,7 +440,6 @@ export class InstructorsComponent implements OnInit {
       });
   }
 
-  // Delete a teaching category
   confirmDeleteCategory(category: TeachingCategory): void {
     const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
       data: {
@@ -367,7 +460,6 @@ export class InstructorsComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loadTeachingCategories();
-          // If we have a selected instructor, refresh their categories too
           if (this.selectedInstructor) {
             this.loadInstructorCategories(this.selectedInstructor);
           }
@@ -376,7 +468,6 @@ export class InstructorsComponent implements OnInit {
       });
   }
 
-  // Assign a teaching category to an instructor
   assignCategoryToInstructor(instructorId: string, categoryId: number): void {
     const request = {
       instructorId: instructorId,
@@ -386,7 +477,6 @@ export class InstructorsComponent implements OnInit {
     this.instructorCategoryService.assignTeachingCategoryToInstructor(this.schoolId, request)
       .subscribe({
         next: () => {
-          // If this is the selected instructor, refresh their categories
           if (this.selectedInstructor && this.selectedInstructor.userId === instructorId) {
             this.loadInstructorCategories(this.selectedInstructor);
           }
@@ -395,7 +485,6 @@ export class InstructorsComponent implements OnInit {
       });
   }
 
-  // Remove a teaching category from an instructor
   confirmRemoveCategory(category: ApplicationUserTeachingCategory): void {
     if (!this.selectedInstructor) return;
 
@@ -417,7 +506,6 @@ export class InstructorsComponent implements OnInit {
     this.instructorCategoryService.removeTeachingCategoryFromInstructor(this.schoolId, applicationUserTeachingCategoryId)
       .subscribe({
         next: () => {
-          // If we have a selected instructor, refresh their categories
           if (this.selectedInstructor) {
             this.loadInstructorCategories(this.selectedInstructor);
           }
@@ -426,12 +514,11 @@ export class InstructorsComponent implements OnInit {
       });
   }
 
-  // Format currency
+  // Formatting helpers
   formatCurrency(value: number): string {
     return `${value} RON`;
   }
 
-  // Format duration in minutes
   formatDuration(minutes: number): string {
     return `${minutes} min`;
   }

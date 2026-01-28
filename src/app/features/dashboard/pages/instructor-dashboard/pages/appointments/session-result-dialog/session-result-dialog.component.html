@@ -1,0 +1,31 @@
+<!-- Session Result Dialog -->
+<div class="result-dialog" [class.passed]="isPassed" [class.failed]="!isPassed">
+  <!-- Icon -->
+  <div class="result-icon">
+    <span class="material-icons">{{ isPassed ? 'check_circle' : 'cancel' }}</span>
+  </div>
+
+  <!-- Title -->
+  <h2 class="result-title">{{ isPassed ? 'Admis!' : 'Respins' }}</h2>
+
+  <!-- Score -->
+  <div class="result-score">
+    <span class="score-value">{{ data.totalPoints }}</span>
+    <span class="score-separator">/</span>
+    <span class="score-max">{{ data.maxPoints }}</span>
+    <span class="score-unit">puncte de penalizare</span>
+  </div>
+
+  <!-- Message -->
+  <p class="result-message" *ngIf="isPassed">
+    Elevul a promovat sesiunea cu succes.
+  </p>
+  <p class="result-message" *ngIf="!isPassed">
+    Elevul a depășit numărul maxim de puncte de penalizare.
+  </p>
+
+  <!-- Button -->
+  <button (click)="onClose()" class="btn-close">
+    OK
+  </button>
+</div>

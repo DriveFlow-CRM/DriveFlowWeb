@@ -2,8 +2,8 @@
 <div class="overview-container min-h-screen bg-light p-6">
   <!-- Header -->
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-dark mb-2">Dashboard Overview</h1>
-    <p class="text-gray-600">Welcome to your super admin dashboard</p>
+    <h1 class="text-3xl font-bold text-dark mb-2">Prezentare generală</h1>
+    <p class="text-gray-600">Bine ați venit în panoul de administrare</p>
   </div>
 
   <!-- Statistics Cards -->
@@ -12,7 +12,7 @@
     <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-primary">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Schools</p>
+          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Școli</p>
           <p class="text-2xl font-bold text-dark">
             <span *ngIf="isLoadingStats" class="animate-pulse">...</span>
             <span *ngIf="!isLoadingStats">{{ totalSchools }}</span>
@@ -28,7 +28,7 @@
     <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Active Students</p>
+          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Cursanți Activi</p>
           <p class="text-2xl font-bold text-dark">
             <span *ngIf="isLoadingStats" class="animate-pulse">...</span>
             <span *ngIf="!isLoadingStats">{{ totalStudents.toLocaleString() }}</span>
@@ -44,7 +44,7 @@
     <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Instructors</p>
+          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Instructori</p>
           <p class="text-2xl font-bold text-dark">
             <span *ngIf="isLoadingStats" class="animate-pulse">...</span>
             <span *ngIf="!isLoadingStats">{{ totalInstructors }}</span>
@@ -60,7 +60,7 @@
     <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Monthly Revenue</p>
+          <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Venit Lunar</p>
           <p class="text-2xl font-bold text-dark">€{{ monthlyRevenue.toLocaleString() }}</p>
         </div>
         <div class="p-3 bg-yellow-100 rounded-full">
@@ -72,13 +72,13 @@
 
   <!-- Quick Actions -->
   <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-    <h2 class="text-xl font-semibold text-dark mb-4">Quick Actions</h2>
+    <h2 class="text-xl font-semibold text-dark mb-4">Acțiuni Rapide</h2>
     <div class="flex flex-wrap gap-4">
       <button
         (click)="openCreateSchoolModal()"
         class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
         <i class="material-icons">add</i>
-        Add New School
+        Adaugă Școală Nouă
       </button>
     </div>
   </div>

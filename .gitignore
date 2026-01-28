@@ -50,3 +50,7 @@ Thumbs.db
 
 # Local data and certificates
 /data/
+
+
+.cursor/
+.vscode/

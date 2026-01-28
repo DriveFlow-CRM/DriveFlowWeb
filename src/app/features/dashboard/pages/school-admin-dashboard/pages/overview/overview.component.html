@@ -1,15 +1,314 @@
-<div class="page-container">
-  <div class="page-header">
-    <h1>Prezentare generală</h1>
+<!-- School Admin Dashboard Overview -->
+<div class="min-h-screen p-4 md:p-6">
+  <!-- Header -->
+  <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-dark mb-2">Bine ai revenit, {{ userName }}!</h1>
+    <p class="text-gray-600">Iată situația școlii tale de șoferi</p>
   </div>
 
-  <div class="content-card">
-    <div class="card-header">
-      <span class="material-icons">dashboard</span>
-      <h2>Bine ați venit la panoul de control</h2>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-20">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p class="mt-4 text-gray-500">Se încarcă datele...</p>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!isLoading">
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
+      <!-- Total Students -->
+      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-all duration-300">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Total cursanți</p>
+            <p class="text-3xl font-bold text-dark">{{ stats.totalStudents }}</p>
+            <p class="text-xs text-green-600 font-medium mt-1">Înregistrați în sistem</p>
+          </div>
+          <div class="p-3 bg-green-100 rounded-xl">
+            <span class="material-icons text-green-600 text-2xl">people</span>
+          </div>
+        </div>
+        <button 
+          (click)="navigateToFiles()" 
+          class="mt-4 w-full text-green-600 hover:text-green-700 text-sm font-medium flex items-center justify-center gap-1 transition-colors">
+          Vezi cursanți
+          <span class="material-icons text-sm">arrow_forward</span>
+        </button>
+      </div>
+
+      <!-- Active Files -->
+      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary hover:shadow-lg transition-all duration-300">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Dosare active</p>
+            <p class="text-3xl font-bold text-dark">{{ stats.activeFiles }}</p>
+            <p class="text-xs text-primary font-medium mt-1">În desfășurare</p>
+          </div>
+          <div class="p-3 bg-primary bg-opacity-10 rounded-xl">
+            <span class="material-icons text-primary text-2xl">folder_open</span>
+          </div>
+        </div>
+        <button 
+          (click)="navigateToFiles()" 
+          class="mt-4 w-full text-primary hover:text-primary-dark text-sm font-medium flex items-center justify-center gap-1 transition-colors">
+          Vezi dosare
+          <span class="material-icons text-sm">arrow_forward</span>
+        </button>
+      </div>
+
+      <!-- Instructors -->
+      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-all duration-300">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Instructori</p>
+            <p class="text-3xl font-bold text-dark">{{ stats.totalInstructors }}</p>
+            <p class="text-xs text-blue-600 font-medium mt-1">Angajați activi</p>
+          </div>
+          <div class="p-3 bg-blue-100 rounded-xl">
+            <span class="material-icons text-blue-600 text-2xl">person</span>
+          </div>
+        </div>
+        <button 
+          (click)="navigateToInstructors()" 
+          class="mt-4 w-full text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center justify-center gap-1 transition-colors">
+          Vezi instructori
+          <span class="material-icons text-sm">arrow_forward</span>
+        </button>
+      </div>
+
+      <!-- Vehicles -->
+      <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 hover:shadow-lg transition-all duration-300">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Autoturisme</p>
+            <p class="text-3xl font-bold text-dark">{{ stats.totalVehicles }}</p>
+            <p class="text-xs text-yellow-600 font-medium mt-1">În flotă</p>
+          </div>
+          <div class="p-3 bg-yellow-100 rounded-xl">
+            <span class="material-icons text-yellow-600 text-2xl">directions_car</span>
+          </div>
+        </div>
+        <button 
+          (click)="navigateToCars()" 
+          class="mt-4 w-full text-yellow-600 hover:text-yellow-700 text-sm font-medium flex items-center justify-center gap-1 transition-colors">
+          Vezi autoturisme
+          <span class="material-icons text-sm">arrow_forward</span>
+        </button>
+      </div>
     </div>
-    <div class="card-content">
-      <p>Folosiți panoul de control pentru a gestiona școala dumneavoastră de șoferi.</p>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column (2/3) -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Document Alerts -->
+        <div class="bg-white rounded-xl shadow-md">
+          <div class="p-6 border-b border-gray-100">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="material-icons text-amber-500">warning</span>
+                <h2 class="text-lg font-semibold text-dark">Alerte documente</h2>
+              </div>
+              <button 
+                (click)="navigateToCars()"
+                class="text-sm font-medium text-primary hover:text-primary-dark transition-colors">
+                Vezi toate
+              </button>
+            </div>
+          </div>
+
+          <div class="p-6">
+            <!-- Empty State -->
+            <div *ngIf="documentAlerts.length === 0" class="flex flex-col items-center justify-center py-8 text-center">
+              <div class="p-4 bg-green-100 rounded-full mb-4">
+                <span class="material-icons text-4xl text-green-500">check_circle</span>
+              </div>
+              <h3 class="text-lg font-medium text-gray-700 mb-2">Totul este în regulă!</h3>
+              <p class="text-gray-500 text-sm">Niciun document nu expiră în următoarele 30 de zile.</p>
+            </div>
+
+            <!-- Alerts List -->
+            <div *ngIf="documentAlerts.length > 0" class="space-y-3 max-h-80 overflow-y-auto">
+              <div 
+                *ngFor="let alert of documentAlerts.slice(0, 8)" 
+                class="flex items-center gap-4 p-4 rounded-lg border-l-4 transition-all cursor-pointer hover:shadow-md"
+                [ngClass]="getAlertColor(alert.daysUntilExpiry)"
+                (click)="alert.sourceType === 'vehicle' ? navigateToCars() : navigateToFiles()">
+                <div class="p-2 rounded-lg" [ngClass]="alert.isExpired ? 'bg-red-100' : 'bg-amber-100'">
+                  <span class="material-icons text-lg" [ngClass]="alert.isExpired ? 'text-red-600' : 'text-amber-600'">
+                    {{ getAlertIcon(alert) }}
+                  </span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <!-- Vehicle Alert -->
+                  <ng-container *ngIf="alert.sourceType === 'vehicle'">
+                    <h4 class="font-medium text-dark">{{ alert.brand }} {{ alert.model }}</h4>
+                    <p class="text-sm text-gray-500">{{ alert.licensePlate }} • {{ alert.documentType }}</p>
+                  </ng-container>
+                  <!-- Student Alert -->
+                  <ng-container *ngIf="alert.sourceType === 'student'">
+                    <h4 class="font-medium text-dark">{{ alert.studentName }}</h4>
+                    <p class="text-sm text-gray-500">Cat. {{ alert.category }} • {{ alert.documentType }}</p>
+                  </ng-container>
+                </div>
+                <div class="text-right flex-shrink-0">
+                  <p class="text-sm font-semibold" [ngClass]="getAlertTextColor(alert.daysUntilExpiry)">
+                    {{ alert.isExpired ? 'Expirat' : 'Expiră în ' + alert.daysUntilExpiry + ' zile' }}
+                  </p>
+                  <p class="text-xs text-gray-400">{{ formatDate(alert.expiryDate) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Files -->
+        <div class="bg-white rounded-xl shadow-md">
+          <div class="p-6 border-b border-gray-100">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="material-icons text-primary">history</span>
+                <h2 class="text-lg font-semibold text-dark">Dosare recente</h2>
+              </div>
+              <button 
+                (click)="navigateToFiles()"
+                class="text-sm font-medium text-primary hover:text-primary-dark transition-colors">
+                Vezi toate
+              </button>
+            </div>
+          </div>
+
+          <div class="p-6">
+            <!-- Empty State -->
+            <div *ngIf="recentFiles.length === 0" class="flex flex-col items-center justify-center py-8 text-center">
+              <div class="p-4 bg-gray-100 rounded-full mb-4">
+                <span class="material-icons text-4xl text-gray-400">folder_off</span>
+              </div>
+              <h3 class="text-lg font-medium text-gray-700 mb-2">Niciun dosar</h3>
+              <p class="text-gray-500 text-sm mb-4">Nu există dosare înregistrate încă.</p>
+              <button 
+                (click)="navigateToFiles()"
+                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
+                <span class="material-icons text-sm">add</span>
+                Adaugă dosar
+              </button>
+            </div>
+
+            <!-- Files List -->
+            <div *ngIf="recentFiles.length > 0" class="space-y-3">
+              <div 
+                *ngFor="let file of recentFiles" 
+                class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-primary hover:bg-gray-100 transition-all cursor-pointer"
+                (click)="navigateToFiles()">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-primary text-white font-bold">
+                  {{ file.category }}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="font-medium text-dark">{{ file.studentName }}</h4>
+                  <p class="text-sm text-gray-500">Instructor: {{ file.instructorName }}</p>
+                </div>
+                <div class="text-right">
+                  <span 
+                    class="inline-block px-2 py-1 rounded-full text-xs font-semibold"
+                    [ngClass]="getStatusColor(file.status)">
+                    {{ getStatusText(file.status) }}
+                  </span>
+                  <p class="text-xs text-gray-400 mt-1">{{ formatDate(file.startDate) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column (1/3) -->
+      <div class="space-y-6">
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-xl shadow-md">
+          <div class="p-6 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+              <span class="material-icons text-primary">flash_on</span>
+              <h2 class="text-lg font-semibold text-dark">Acțiuni rapide</h2>
+            </div>
+          </div>
+
+          <div class="p-6">
+            <div class="grid grid-cols-2 gap-3">
+              <button 
+                (click)="navigateToFiles()"
+                class="flex flex-col items-center gap-2 p-4 bg-gray-50 hover:bg-primary hover:bg-opacity-10 border-2 border-transparent hover:border-primary rounded-xl transition-all group">
+                <span class="material-icons text-2xl text-primary">folder</span>
+                <span class="text-sm font-medium text-gray-700 group-hover:text-primary">Dosare</span>
+              </button>
+
+              <button 
+                (click)="navigateToInstructors()"
+                class="flex flex-col items-center gap-2 p-4 bg-gray-50 hover:bg-primary hover:bg-opacity-10 border-2 border-transparent hover:border-primary rounded-xl transition-all group">
+                <span class="material-icons text-2xl text-primary">person</span>
+                <span class="text-sm font-medium text-gray-700 group-hover:text-primary">Instructori</span>
+              </button>
+
+              <button 
+                (click)="navigateToCars()"
+                class="flex flex-col items-center gap-2 p-4 bg-gray-50 hover:bg-primary hover:bg-opacity-10 border-2 border-transparent hover:border-primary rounded-xl transition-all group">
+                <span class="material-icons text-2xl text-primary">directions_car</span>
+                <span class="text-sm font-medium text-gray-700 group-hover:text-primary">Autoturisme</span>
+              </button>
+
+              <button 
+                (click)="navigateToCategories()"
+                class="flex flex-col items-center gap-2 p-4 bg-gray-50 hover:bg-primary hover:bg-opacity-10 border-2 border-transparent hover:border-primary rounded-xl transition-all group">
+                <span class="material-icons text-2xl text-primary">category</span>
+                <span class="text-sm font-medium text-gray-700 group-hover:text-primary">Categorii</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Alerts -->
+        <div class="bg-white rounded-xl shadow-md">
+          <div class="p-6 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+              <span class="material-icons text-primary">payments</span>
+              <h2 class="text-lg font-semibold text-dark">Alerte plăți</h2>
+            </div>
+          </div>
+
+          <div class="p-6">
+            <!-- Empty State -->
+            <div *ngIf="paymentAlerts.length === 0" class="flex flex-col items-center justify-center py-8 text-center">
+              <div class="p-4 bg-green-100 rounded-full mb-4">
+                <span class="material-icons text-4xl text-green-500">account_balance_wallet</span>
+              </div>
+              <h3 class="text-base font-medium text-gray-700 mb-1">Plăți la zi!</h3>
+              <p class="text-gray-500 text-sm">Toate plățile sunt în regulă.</p>
+            </div>
+
+            <!-- Payment Alerts List -->
+            <div *ngIf="paymentAlerts.length > 0" class="space-y-3">
+              <div 
+                *ngFor="let alert of paymentAlerts" 
+                class="p-3 bg-amber-50 rounded-lg border-l-4 border-amber-500 cursor-pointer hover:bg-amber-100 transition-all"
+                (click)="navigateToFiles()">
+                <div class="flex items-start justify-between mb-1">
+                  <h4 class="font-medium text-dark text-sm">{{ alert.studentName }}</h4>
+                  <span class="text-xs font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">{{ alert.category }}</span>
+                </div>
+                <div class="text-xs text-gray-600">
+                  <p *ngIf="alert.missingBasePayment" class="flex items-center gap-1">
+                    <span class="material-icons text-amber-600 text-sm">warning</span>
+                    Lipsă plată de bază
+                  </p>
+                  <p class="flex items-center gap-1">
+                    <span class="material-icons text-gray-400 text-sm">event</span>
+                    Ședințe: {{ alert.sessionsPaid }} / {{ alert.sessionsRequired }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

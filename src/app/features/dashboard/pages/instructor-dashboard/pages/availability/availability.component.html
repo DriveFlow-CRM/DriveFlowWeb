@@ -1,84 +1,84 @@
-<div class="availability-page">
-  <div class="page-header">
-    <h1 class="page-title">Manage Your Availability</h1>
-    <p class="page-subtitle">Add time slots when you are available to teach. Students will be able to book lessons during these periods.</p>
+<!-- Availability Page -->
+<div class="min-h-screen p-4 md:p-6">
+  <!-- Page Header -->
+  <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-dark mb-2">Gestionează Disponibilitatea</h1>
+    <p class="text-gray-600">Adaugă intervale orare când ești disponibil pentru lecții. Cursanții pot rezerva în aceste perioade.</p>
   </div>
 
-  <div class="availability-layout">
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
     <!-- Left Column: Form -->
-    <div class="form-container">
-      <div class="card-header">
-        <h2 class="card-title">Add New Availability</h2>
+    <div class="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex items-center gap-3">
+          <span class="material-icons text-primary">event_available</span>
+          <h2 class="text-lg font-semibold text-dark">Adaugă Disponibilitate Nouă</h2>
+        </div>
       </div>
-      <div class="card-content">
+      
+      <div class="p-6">
         <form [formGroup]="availabilityForm" (ngSubmit)="onSubmit()">
-          <div class="form-row">
-            <label class="form-label">Date</label>
+          <!-- Date Input -->
+          <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Data</label>
             <input
               type="date"
               formControlName="date"
-              class="form-input"
-              placeholder="Choose a date"
-            >
-            <div *ngIf="availabilityForm.get('date')?.hasError('required') && availabilityForm.get('date')?.touched" class="error-message">
-              Date is required
-            </div>
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all">
+            <p *ngIf="availabilityForm.get('date')?.hasError('required') && availabilityForm.get('date')?.touched" 
+               class="text-red-500 text-sm mt-1">
+              Data este obligatorie
+            </p>
           </div>
 
-          <div class="form-row time-inputs">
-            <div class="time-input-group">
-              <label class="form-label">Start Time</label>
+          <!-- Time Inputs -->
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Ora început</label>
               <input
                 type="time"
                 formControlName="startHour"
-                class="form-input"
-                placeholder="HH:MM"
-              >
-              <div *ngIf="availabilityForm.get('startHour')?.hasError('required') && availabilityForm.get('startHour')?.touched" class="error-message">
-                Start time is required
-              </div>
-              <div *ngIf="availabilityForm.get('startHour')?.hasError('pattern') && availabilityForm.get('startHour')?.touched" class="error-message">
-                Use format: HH:MM
-              </div>
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all">
+              <p *ngIf="availabilityForm.get('startHour')?.hasError('required') && availabilityForm.get('startHour')?.touched" 
+                 class="text-red-500 text-sm mt-1">
+                Ora de început este obligatorie
+              </p>
             </div>
 
-            <div class="time-input-group">
-              <label class="form-label">End Time</label>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Ora sfârșit</label>
               <input
                 type="time"
                 formControlName="endHour"
-                class="form-input"
-                placeholder="HH:MM"
-              >
-              <div *ngIf="availabilityForm.get('endHour')?.hasError('required') && availabilityForm.get('endHour')?.touched" class="error-message">
-                End time is required
-              </div>
-              <div *ngIf="availabilityForm.get('endHour')?.hasError('pattern') && availabilityForm.get('endHour')?.touched" class="error-message">
-                Use format: HH:MM
-              </div>
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 outline-none transition-all">
+              <p *ngIf="availabilityForm.get('endHour')?.hasError('required') && availabilityForm.get('endHour')?.touched" 
+                 class="text-red-500 text-sm mt-1">
+                Ora de sfârșit este obligatorie
+              </p>
             </div>
           </div>
 
-          <div *ngIf="availabilityForm.hasError('invalidTimeRange')" class="time-range-error">
-            End time must be after start time
+          <!-- Time Range Error -->
+          <div *ngIf="availabilityForm.hasError('invalidTimeRange')" 
+               class="bg-red-50 text-red-600 p-3 rounded-lg border-l-4 border-red-500 mb-4 text-sm">
+            Ora de sfârșit trebuie să fie după ora de început
           </div>
 
-          <div class="form-actions">
+          <!-- Form Actions -->
+          <div class="flex flex-col sm:flex-row gap-3 mt-6">
             <button
               type="submit"
-              class="primary-button"
               [disabled]="availabilityForm.invalid || isSubmitting"
-            >
-              <mat-spinner *ngIf="isSubmitting" diameter="20" style="margin-right: 8px;"></mat-spinner>
-              {{ isSubmitting ? 'Adding...' : 'Add Availability' }}
+              class="flex-1 bg-primary hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+              <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+              {{ isSubmitting ? 'Se adaugă...' : 'Adaugă Disponibilitate' }}
             </button>
             <button
               type="button"
-              class="secondary-button"
               (click)="availabilityForm.reset()"
               [disabled]="isSubmitting"
-            >
-              Cancel
+              class="px-6 py-3 border-2 border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl font-semibold transition-all">
+              Anulează
             </button>
           </div>
         </form>
@@ -86,42 +86,58 @@
     </div>
 
     <!-- Right Column: Table -->
-    <div class="table-container">
-      <div class="card-header">
-        <h2 class="card-title">Your Availability Schedule</h2>
+    <div class="lg:col-span-3 bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex items-center gap-3">
+          <span class="material-icons text-primary">schedule</span>
+          <h2 class="text-lg font-semibold text-dark">Programul Tău de Disponibilitate</h2>
+        </div>
       </div>
-      <div class="card-content">
-        <div *ngIf="isLoading" class="loading-indicator">
+      
+      <div class="p-6">
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-12">
           <mat-spinner diameter="40"></mat-spinner>
-          <p>Loading availability data...</p>
+          <p class="mt-4 text-gray-500">Se încarcă datele...</p>
         </div>
 
-        <div *ngIf="!isLoading && availabilityIntervals.length === 0" class="no-data">
-          <p>You haven't set any availability times yet. Add your first one using the form.</p>
+        <!-- Empty State -->
+        <div *ngIf="!isLoading && availabilityIntervals.length === 0" class="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+          <div class="p-3 bg-gray-100 rounded-full inline-block mb-3">
+            <mat-icon class="text-3xl text-gray-400">event_available</mat-icon>
+          </div>
+          <p class="text-gray-500">Nu ai setat încă intervale de disponibilitate. Adaugă primul interval folosind formularul.</p>
         </div>
 
-        <div *ngIf="!isLoading && availabilityIntervals.length > 0" class="table-wrapper">
-          <table class="availability-table">
-            <thead class="table-header">
+        <!-- Table -->
+        <div *ngIf="!isLoading && availabilityIntervals.length > 0" class="overflow-x-auto rounded-xl border border-gray-200">
+          <table class="w-full">
+            <thead class="bg-gray-50">
               <tr>
-                <th class="table-header-cell">Date</th>
-                <th class="table-header-cell">Start Time</th>
-                <th class="table-header-cell">End Time</th>
-                <th class="table-header-cell">Actions</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wide">Data</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wide">Început</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wide">Sfârșit</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wide">Acțiuni</th>
               </tr>
             </thead>
-            <tbody>
-              <tr *ngFor="let interval of availabilityIntervals" class="table-row">
-                <td class="table-cell">{{ formatDisplayDate(interval.date) }}</td>
-                <td class="table-cell">{{ interval.startHour }}</td>
-                <td class="table-cell">{{ interval.endHour }}</td>
-                <td class="table-cell">
-                  <div class="action-buttons">
-                    <button class="action-button edit-button" (click)="editAvailability(interval)" title="Edit">
-                      <mat-icon>edit</mat-icon>
+            <tbody class="divide-y divide-gray-100">
+              <tr *ngFor="let interval of availabilityIntervals" class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-3 text-sm text-gray-700">{{ formatDisplayDate(interval.date) }}</td>
+                <td class="px-4 py-3 text-sm text-gray-700 font-medium">{{ interval.startHour }}</td>
+                <td class="px-4 py-3 text-sm text-gray-700 font-medium">{{ interval.endHour }}</td>
+                <td class="px-4 py-3">
+                  <div class="flex gap-2">
+                    <button 
+                      (click)="editAvailability(interval)" 
+                      class="p-2 bg-primary bg-opacity-10 text-primary hover:bg-opacity-20 rounded-lg transition-colors"
+                      matTooltip="Editează">
+                      <mat-icon class="text-lg">edit</mat-icon>
                     </button>
-                    <button class="action-button delete-button" (click)="deleteAvailability(interval.intervalId)" title="Delete">
-                      <mat-icon>delete</mat-icon>
+                    <button 
+                      (click)="deleteAvailability(interval.intervalId)" 
+                      class="p-2 bg-red-50 text-red-500 hover:bg-red-100 rounded-lg transition-colors"
+                      matTooltip="Șterge">
+                      <mat-icon class="text-lg">delete</mat-icon>
                     </button>
                   </div>
                 </td>

@@ -1,11 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, throwError, catchError } from 'rxjs';
+import { Observable, BehaviorSubject, tap, throwError, catchError } from 'rxjs';
 import { ConfigService } from './config.service';
-import { Router } from '@angular/router';
 import { ErrorHandlerService } from './error-handler.service';
 import { AuthResponse, LoginRequest, RefreshTokenRequest } from '../../models/interfaces/auth.model';
 
+/**
+ * Authentication service for handling login, logout, and token management.
+ * 
+ * NOTE: Primary auth state is managed by NgRx store. This service provides:
+ * - HTTP calls for auth endpoints
+ * - localStorage token/session management
+ * - Token retrieval for interceptors
+ * - isAuthenticated$ observable for backward compatibility
+ * 
+ * For auth state (user details, roles, etc.), prefer NgRx selectors from:
+ * `src/app/store/selectors/auth.selectors.ts`
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -15,56 +26,53 @@ export class AuthService {
   private readonly REFRESH_TOKEN_KEY = 'refresh_token';
   private readonly USER_DATA_KEY = 'user_data';
 
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasValidToken());
-  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  // Local cache for quick synchronous access (e.g., for interceptors)
+  private cachedUserData: AuthResponse | null = null;
 
-  private userData: AuthResponse | null = null;
+  // Observable for authentication state (backward compatibility)
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  
+  /**
+   * Observable that emits authentication state changes.
+   * For more detailed auth state, prefer NgRx selectors.
+   */
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
-    private router: Router,
     private errorHandler: ErrorHandlerService
   ) {
     this.API_URL = this.configService.getApiBaseUrl();
-    this.checkAuthStatus();
-    this.loadUserData();
+    this.loadCachedUserData();
+    // Initialize auth state from cached data
+    this.isAuthenticatedSubject.next(this.hasValidToken());
   }
 
-  private checkAuthStatus(): void {
-    console.log('Checking auth status');
-
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
-    const userData = localStorage.getItem(this.USER_DATA_KEY);
-
-    console.log('Token exists:', !!token);
-    console.log('Refresh token exists:', !!refreshToken);
-    console.log('User data exists:', !!userData);
-
-    const isValid = this.hasValidToken();
-    console.log('Token is valid:', isValid);
-
-    this.isAuthenticatedSubject.next(isValid);
-
-    // Only clear data if we're actually logged in but have invalid tokens
-    if (!isValid && (token || refreshToken)) {
-      console.log('Invalid token found, clearing auth state');
-      this.logout();
-    }
-  }
-
-  private loadUserData(): void {
+  /**
+   * Load user data from localStorage into memory cache
+   */
+  private loadCachedUserData(): void {
     const userData = localStorage.getItem(this.USER_DATA_KEY);
     if (userData) {
-      this.userData = JSON.parse(userData);
+      try {
+        this.cachedUserData = JSON.parse(userData);
+      } catch (e) {
+        this.cachedUserData = null;
+      }
     }
   }
 
+  /**
+   * Login with email and password
+   * @param credentials Login credentials
+   * @returns Observable of auth response
+   */
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    console.log('Login request:', credentials);
+    if (isDevMode()) {
+      console.log('AuthService: Login request for', credentials.email);
+    }
 
-    // Set appropriate headers for CORS
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -73,29 +81,25 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.API_URL}Auth`, credentials, { headers })
       .pipe(
         tap(response => {
-          console.log('Login response:', response);
-
-          // Make sure we received a valid token and refreshToken
           if (!response.token || !response.refreshToken) {
-            console.error('Invalid login response: missing token or refreshToken');
-            throw new Error('Server returned an invalid response');
+            throw new Error('Invalid server response: missing tokens');
           }
-
           this.setSession(response);
-
-          // No navigation here - let the component handle it
         }),
         catchError(error => this.errorHandler.handleHttpError(error))
       );
   }
 
+  /**
+   * Refresh the auth token using the refresh token
+   * @returns Observable of auth response
+   */
   refreshToken(): Observable<AuthResponse> {
     const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
     if (!refreshToken) {
       return throwError(() => new Error('No refresh token available'));
     }
 
-    // Set appropriate headers for CORS
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -106,66 +110,87 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.API_URL}Auth/refresh`, refreshRequest, { headers })
       .pipe(
         tap(response => {
-          console.log('Token refresh response:', response);
+          if (isDevMode()) {
+            console.log('AuthService: Token refreshed successfully');
+          }
           this.setSession(response);
         }),
         catchError(error => {
-          console.error('Token refresh error:', error);
-          this.logout();
+          if (isDevMode()) {
+            console.error('AuthService: Token refresh failed', error);
+          }
+          this.clearSession();
           return this.errorHandler.handleHttpError(error);
         })
       );
   }
 
+  /**
+   * Logout - clear all auth data
+   */
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-    localStorage.removeItem(this.USER_DATA_KEY);
-    this.userData = null;
-    this.isAuthenticatedSubject.next(false);
+    this.clearSession();
+    if (isDevMode()) {
+      console.log('AuthService: User logged out');
+    }
   }
 
+  /**
+   * Get the current auth token (for interceptor use)
+   */
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
+  /**
+   * Get cached user data (for quick synchronous access)
+   * For reactive access, use NgRx selectors instead.
+   */
   getUserData(): AuthResponse | null {
-    return this.userData;
+    return this.cachedUserData;
   }
 
-  private setSession(authResult: AuthResponse): void {
-    // Log what's being saved to localStorage for debugging
-    console.log('Saving to localStorage:', {
-      token: !!authResult.token,
-      refreshToken: !!authResult.refreshToken,
-      userData: !!authResult
-    });
-
-    localStorage.setItem(this.TOKEN_KEY, authResult.token);
-    localStorage.setItem(this.REFRESH_TOKEN_KEY, authResult.refreshToken);
-    localStorage.setItem(this.USER_DATA_KEY, JSON.stringify(authResult));
-    this.userData = authResult;
-    this.isAuthenticatedSubject.next(true);
-  }
-
-  private hasValidToken(): boolean {
+  /**
+   * Check if user has a valid token in storage
+   */
+  hasValidToken(): boolean {
     const token = localStorage.getItem(this.TOKEN_KEY);
     if (!token) {
       return false;
     }
 
-    // We could check expiration from the JWT, but using the stored user data is more reliable
     const userData = localStorage.getItem(this.USER_DATA_KEY);
-    if (userData) {
-      try {
-        const parsed = JSON.parse(userData);
-        // We don't have an explicit expiration date in the stored data, so we'll trust the token for now
-        return true;
-      } catch (e) {
-        return false;
-      }
+    if (!userData) {
+      return false;
     }
 
-    return false;
+    try {
+      JSON.parse(userData);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Store session data in localStorage and cache
+   */
+  private setSession(authResult: AuthResponse): void {
+    localStorage.setItem(this.TOKEN_KEY, authResult.token);
+    localStorage.setItem(this.REFRESH_TOKEN_KEY, authResult.refreshToken);
+    localStorage.setItem(this.USER_DATA_KEY, JSON.stringify(authResult));
+    this.cachedUserData = authResult;
+    this.isAuthenticatedSubject.next(true);
+  }
+
+  /**
+   * Clear all session data
+   */
+  private clearSession(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    localStorage.removeItem(this.USER_DATA_KEY);
+    this.cachedUserData = null;
+    this.isAuthenticatedSubject.next(false);
   }
 }
