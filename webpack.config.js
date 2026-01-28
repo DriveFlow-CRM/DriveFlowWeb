@@ -8,9 +8,7 @@ const fileEnv = envResult.error ? {} : envResult.parsed || {};
 // Only expose explicit keys to the client bundle
 const EXPOSED_ENV_VARS = new Set([
   ...Object.keys(fileEnv),
-  'API_BASE_URL',
-  'FRONTEND_DOMAIN',
-  'LETSENCRYPT_EMAIL'
+  'API_BASE_URL'
 ]);
 
 // Prefer runtime environment variables (Cloudflare, CI, etc.), fall back to .env
